@@ -1,0 +1,25 @@
+{
+    "name": "troytft/request-model-bundle",
+    "description": "Map data to object with annotations and transformers",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "RequestModelBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~8.1.2"
+    },
+    "require": {
+        "php": "^7.2",
+        "doctrine/annotations": " ~1.6"
+    }
+}
