@@ -44,7 +44,7 @@ class DataMapperTest extends TestCase
             'dd' => 'ss',
         ];
 
-        $resultContext = $this->prepareDataMapper()->map($model, $data);
+        $this->prepareDataMapper()->map($model, $data);
     }
 
     /**

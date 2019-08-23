@@ -9,12 +9,8 @@ use RequestModelBundle\Annotation\TypeInterface;
 use RequestModelBundle\Annotation\CollectionTypeInterface;
 use RequestModelBundle\Annotation\ObjectTypeInterface;
 use RequestModelBundle\Annotation\ScalarTypeInterface;
-use RequestModelBundle\Exception\FieldException;
 use Doctrine\Common\Annotations\AnnotationReader;
-use function array_key_exists;
 use function call_user_func;
-use function is_array;
-use RequestModelBundle\Transformer\TransformerInterface;
 use function sprintf;
 use function ucfirst;
 use function var_dump;
@@ -29,10 +25,6 @@ class DataMapper
      */
     private $annotationReader;
 
-    /**
-     * @var TransformerInterface[]
-     */
-    private $transformers = [];
 
     /**
      * @param AnnotationReader $annotationReader
