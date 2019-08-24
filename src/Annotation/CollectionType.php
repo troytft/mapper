@@ -8,9 +8,14 @@ namespace Mapper\Annotation;
 class CollectionType implements CollectionTypeInterface
 {
     /**
-     * @var bool
+     * @var bool|null
      */
     public $nullable;
+
+    /**
+     * @var TypeInterface
+     */
+    public $type;
 
     /**
      * {@inheritDoc}
@@ -21,11 +26,6 @@ class CollectionType implements CollectionTypeInterface
     }
 
     /**
-     * @var object
-     */
-    public $type;
-
-    /**
      * @return TypeInterface
      */
     public function getType(): TypeInterface
@@ -33,6 +33,7 @@ class CollectionType implements CollectionTypeInterface
         if (!$this->type instanceof TypeInterface) {
             throw new \InvalidArgumentException();
         }
+
         return $this->type;
     }
 }

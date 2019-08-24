@@ -21,27 +21,27 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use function call_user_func;
 use function sprintf;
 use function ucfirst;
-use function var_dump;
 
 class Mapper
 {
-    /**
-     * @var AnnotationReader
-     */
-    private $annotationReader;
-
     /**
      * @var MapperSettings
      */
     private $settings;
 
     /**
+     * @var AnnotationReader
+     */
+    private $annotationReader;
+
+    /**
+     * @param MapperSettings $settings
      * @param AnnotationReader $annotationReader
      */
-    public function __construct(AnnotationReader $annotationReader)
+    public function __construct(MapperSettings $settings, AnnotationReader $annotationReader)
     {
+        $this->settings = $settings;
         $this->annotationReader = $annotationReader;
-        $this->settings = new MapperSettings();
     }
 
     /**

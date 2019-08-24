@@ -2,7 +2,7 @@
 
 namespace Mapper\Annotation;
 
-use Mapper\Transformer\StringTransformer;
+use function is_string;
 
 /**
  * @Annotation
@@ -10,9 +10,14 @@ use Mapper\Transformer\StringTransformer;
 class ObjectType implements ObjectTypeInterface
 {
     /**
-     * @var bool
+     * @var bool|null
      */
     public $nullable;
+
+    /**
+     * @var string
+     */
+    public $class;
 
     /**
      * {@inheritDoc}
@@ -23,23 +28,14 @@ class ObjectType implements ObjectTypeInterface
     }
 
     /**
-     * @var string
-     */
-    public $class;
-
-    /**
-     * @return string
-     */
-    public function getTransformer(): string
-    {
-        return StringTransformer::class;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getClassName(): string
     {
+        if (!is_string($this->class)) {
+            throw new \InvalidArgumentException();
+        }
+
         return $this->class;
     }
 }

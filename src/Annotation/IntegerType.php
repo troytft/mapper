@@ -5,7 +5,7 @@ namespace Mapper\Annotation;
 /**
  * @Annotation
  */
-class StringType implements ScalarTypeInterface
+class IntegerType implements ScalarTypeInterface
 {
     /**
      * @var bool|null

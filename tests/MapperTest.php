@@ -9,25 +9,20 @@ use PHPUnit\Framework\TestCase;
 class MapperTest extends TestCase
 {
     /**
-     * @var Mapper\Mapper
+     * @var AnnotationReader
      */
-    private $mapper;
+    private $annotationReader;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->initMapper();
+        $this->annotationReader = new AnnotationReader();
     }
 
-    private function initMapper(): void
-    {
-        $annotationReader = new AnnotationReader();
-        $this->mapper = new Mapper\Mapper($annotationReader);
-    }
 //    public function testSuccessString()
 //    {
-//        $model = new Model\User();
+//        $model = new Model\Movie();
 //        $data = [
 //            'name' => 'Name',
 //            'surname' => 'Surname',
@@ -46,9 +41,11 @@ class MapperTest extends TestCase
 //        $this->assertEquals($model->getSurname(), 'Surname');
 //    }
 
-    public function testWrongType()
+    public function testIsNullable()
     {
-        $model = new Model\User();
+        $model = new Model\Movie();
+
+
         $data = [
             'name' => 'surname',
             'surname' => 'Surname',
