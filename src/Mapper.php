@@ -1,24 +1,28 @@
 <?php
 
-namespace RequestModelBundle;
+namespace Mapper;
 
+use function array_diff;
+use function array_keys;
 use function get_class;
+use function is_array;
 use function is_bool;
 use function is_scalar;
-use RequestModelBundle\Annotation\ObjectType;
-use RequestModelBundle\Annotation\TypeInterface;
-use RequestModelBundle\Annotation\CollectionTypeInterface;
-use RequestModelBundle\Annotation\ObjectTypeInterface;
-use RequestModelBundle\Annotation\ScalarTypeInterface;
-use RequestModelBundle\Exception\CollectionRequiredException;
-use RequestModelBundle\Exception\ScalarRequiredException;
+use Mapper\Annotation\ObjectType;
+use Mapper\Annotation\TypeInterface;
+use Mapper\Annotation\CollectionTypeInterface;
+use Mapper\Annotation\ObjectTypeInterface;
+use Mapper\Annotation\ScalarTypeInterface;
+use Mapper\Exception\CollectionRequiredValidationException;
+use Mapper\Exception\ObjectRequiredValidationException;
+use Mapper\Exception\ScalarRequiredValidationException;
 use Doctrine\Common\Annotations\AnnotationReader;
 use function call_user_func;
 use function sprintf;
 use function ucfirst;
 use function var_dump;
 
-class DataMapper
+class Mapper
 {
     private const DEFAULT_IS_NULLABLE = false;
     private const ALLOW_UNDEFINED_KEYS_IN_DATA = true;
@@ -28,7 +32,6 @@ class DataMapper
      */
     private $annotationReader;
 
-
     /**
      * @param AnnotationReader $annotationReader
      */
@@ -37,33 +40,57 @@ class DataMapper
         $this->annotationReader = $annotationReader;
     }
 
-
-    public function map(RequestModelInterface $model, array $data)
+    public function map(ModelInterface $model, array $data)
     {
         $schema = $this->processObjectTypeScheme(new ObjectType(), $model);
         $this->getProcessedObjectValue($schema, $model, $data, []);
         var_dump($model);die();
     }
 
-    private function getProcessedObjectValue(array $schema, $model, $data, array $basePath)
+    private function getProcessedObjectValue(array $schema, $model, $rawValue, array $basePath)
     {
-        foreach ($data as $key => $rawValue) {
-            if (!isset($schema['properties'][$key])) {
+        if (!is_array($rawValue) || $this->isPlainArray($rawValue)) {
+            throw new ObjectRequiredValidationException($basePath);
+        }
+
+        foreach ($rawValue as $propertyName => $propertyValue) {
+            if (!isset($schema['properties'][$propertyName])) {
                 if (static::ALLOW_UNDEFINED_KEYS_IN_DATA) {
                     continue;
                 } else {
-                    throw new \InvalidArgumentException(sprintf('Undefined key "%s"', $key));
+                    throw new \InvalidArgumentException(sprintf('Undefined key "%s"', $propertyName));
                 }
             }
 
             $path = $basePath;
-            $path[] = $key;
+            $path[] = $propertyName;
 
-            $propertySchema = $schema['properties'][$key];
-            $setterName = 'set' . ucfirst($key);
+            $propertySchema = $schema['properties'][$propertyName];
+            $setterName = 'set' . ucfirst($propertyName);
 
-            $processedValue = $this->getProcessedValue($propertySchema, $rawValue, $path);
+            $processedValue = $this->getProcessedValue($propertySchema, $propertyValue, $path);
             call_user_func([$model, $setterName], $processedValue);
+        }
+
+        $notPresentedProperties = array_diff(array_keys($schema['properties']), array_keys($rawValue));
+        foreach ($notPresentedProperties as $propertyName) {
+            $propertySchema = $schema['properties'][$propertyName];
+            if ($propertySchema['isNullable']) {
+                continue;
+            }
+
+            $path = $basePath;
+            $path[] = $propertyName;
+
+            if ($propertySchema['type'] === 'scalar') {
+                throw new ScalarRequiredValidationException($path);
+            } elseif ($propertySchema['type'] === 'object') {
+                throw new ObjectRequiredValidationException($path);
+            } elseif ($propertySchema['type'] === 'collection') {
+                throw new CollectionRequiredValidationException($path);
+            } else {
+                throw new \InvalidArgumentException();
+            }
         }
 
         return $model;
@@ -71,6 +98,10 @@ class DataMapper
 
     private function getProcessedValue($propertySchema, $rawValue, array $basePath)
     {
+        if ($propertySchema['isNullable'] && $rawValue === null) {
+            return null;
+        }
+
         if ($propertySchema['type'] === 'scalar') {
             $value = $this->getProcessedScalarValue($propertySchema, $rawValue, $basePath);
         } elseif ($propertySchema['type'] === 'object') {
@@ -87,12 +118,8 @@ class DataMapper
 
     private function getProcessedScalarValue($propertySchema, $rawValue, $basePath)
     {
-        if ($propertySchema['isNullable'] && $rawValue === null) {
-            return null;
-        }
-
         if (!is_scalar($rawValue)) {
-            throw new ScalarRequiredException($basePath);
+            throw new ScalarRequiredValidationException($basePath);
         }
 
         return $rawValue;
@@ -101,7 +128,7 @@ class DataMapper
     private function getProcessedCollectionValue($propertySchema, $rawValue, array $basePath): array
     {
         if (!$this->isPlainArray($rawValue)) {
-            throw new CollectionRequiredException($basePath);
+            throw new CollectionRequiredValidationException($basePath);
         }
 
         $value = [];
@@ -123,7 +150,7 @@ class DataMapper
      *
      * @return array
      */
-    private function processObjectTypeScheme(ObjectTypeInterface $type, RequestModelInterface $model)
+    private function processObjectTypeScheme(ObjectTypeInterface $type, ModelInterface $model)
     {
         $schema = [
             'type' => 'object',

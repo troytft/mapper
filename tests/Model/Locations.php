@@ -2,10 +2,10 @@
 
 namespace Tests\Model;
 
-use RequestModelBundle\Annotation as Map;
-use RequestModelBundle\RequestModelInterface;
+use Mapper\Annotation as Map;
+use Mapper\ModelInterface;
 
-class Locations implements RequestModelInterface
+class Locations implements ModelInterface
 {
     /**
      * @var array

@@ -1,6 +1,6 @@
 <?php
 
-namespace RequestModelBundle\Annotation;
+namespace Mapper\Annotation;
 
 interface ScalarTypeInterface extends TypeInterface
 {

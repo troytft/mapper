@@ -1,10 +1,10 @@
 <?php
 
-namespace RequestModelBundle\Exception;
+namespace Mapper\Exception;
 
 use function join;
 
-abstract class AbstractMappingException extends \Exception
+abstract class AbstractMappingValidationException extends \Exception
 {
     /**
      * @var array
@@ -12,13 +12,14 @@ abstract class AbstractMappingException extends \Exception
     private $path;
 
     /**
+     * @param string $message
      * @param array $path
      */
-    public function __construct(array $path)
+    public function __construct(string $message, array $path)
     {
         $this->path = $path;
 
-        parent::__construct();
+        parent::__construct($message);
     }
 
     /**

@@ -1,8 +1,8 @@
 <?php
 
-namespace RequestModelBundle\Annotation;
+namespace Mapper\Annotation;
 
-use RequestModelBundle\Transformer\StringTransformer;
+use Mapper\Transformer\StringTransformer;
 
 /**
  * @Annotation

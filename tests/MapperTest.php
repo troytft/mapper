@@ -3,11 +3,10 @@
 namespace Tests;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use RequestModelBundle;
+use Mapper;
 use PHPUnit\Framework\TestCase;
-use function var_dump;
 
-class DataMapperTest extends TestCase
+class MapperTest extends TestCase
 {
 //    public function testSuccessString()
 //    {
@@ -51,20 +50,20 @@ class DataMapperTest extends TestCase
 
         try {
             $this->prepareDataMapper()->map($model, $data);
-        } catch (RequestModelBundle\Exception\AbstractMappingException $exception) {
+        } catch (Mapper\Exception\AbstractMappingValidationException $exception) {
             var_dump($exception->getPathAsString());
             die();
         }
     }
 
     /**
-     * @return RequestModelBundle\DataMapper
+     * @return Mapper\Mapper
      */
-    private function prepareDataMapper(): RequestModelBundle\DataMapper
+    private function prepareDataMapper(): Mapper\Mapper
     {
         $annotationReader = new AnnotationReader();
 
-        $dataMapper = new RequestModelBundle\DataMapper($annotationReader);
+        $dataMapper = new Mapper\Mapper($annotationReader);
 
 
         return $dataMapper;
