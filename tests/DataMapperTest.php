@@ -34,17 +34,27 @@ class DataMapperTest extends TestCase
     {
         $model = new Model\User();
         $data = [
-            'name' => 'Name',
+            'name' => 'surname',
             'surname' => 'Surname',
             'city' => [
-                'latitude' =>  50.333,
+                'latitude' => 50.33,
                 'longitude' => 30.222,
             ],
-            'workPlaces' => ['ONDOC', 'Evercodelab'],
+            'workPlaces' => [
+                [
+                    'latitude' => 50.33,
+                    'longitude' => null,
+                ]
+            ],
             'dd' => 'ss',
         ];
 
-        $this->prepareDataMapper()->map($model, $data);
+        try {
+            $this->prepareDataMapper()->map($model, $data);
+        } catch (RequestModelBundle\Exception\AbstractMappingException $exception) {
+            var_dump($exception->getPathAsString());
+            die();
+        }
     }
 
     /**

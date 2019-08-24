@@ -31,7 +31,7 @@ class User implements RequestModelInterface
     /**
      * @var array
      *
-     * @Mapper\CollectionType(type=@Mapper\StringType())
+     * @Mapper\CollectionType(type=@Mapper\ObjectType(class="Tests\Model\Location"))
      */
     private $workPlaces;
 

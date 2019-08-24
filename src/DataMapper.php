@@ -4,11 +4,14 @@ namespace RequestModelBundle;
 
 use function get_class;
 use function is_bool;
+use function is_scalar;
 use RequestModelBundle\Annotation\ObjectType;
 use RequestModelBundle\Annotation\TypeInterface;
 use RequestModelBundle\Annotation\CollectionTypeInterface;
 use RequestModelBundle\Annotation\ObjectTypeInterface;
 use RequestModelBundle\Annotation\ScalarTypeInterface;
+use RequestModelBundle\Exception\CollectionRequiredException;
+use RequestModelBundle\Exception\ScalarRequiredException;
 use Doctrine\Common\Annotations\AnnotationReader;
 use function call_user_func;
 use function sprintf;
@@ -38,11 +41,11 @@ class DataMapper
     public function map(RequestModelInterface $model, array $data)
     {
         $schema = $this->processObjectTypeScheme(new ObjectType(), $model);
-        $this->mapObject($schema, $model, $data);
+        $this->getProcessedObjectValue($schema, $model, $data, []);
         var_dump($model);die();
     }
 
-    private function mapObject(array $schema, $model, $data)
+    private function getProcessedObjectValue(array $schema, $model, $data, array $basePath)
     {
         foreach ($data as $key => $rawValue) {
             if (!isset($schema['properties'][$key])) {
@@ -53,25 +56,28 @@ class DataMapper
                 }
             }
 
+            $path = $basePath;
+            $path[] = $key;
+
             $propertySchema = $schema['properties'][$key];
             $setterName = 'set' . ucfirst($key);
 
-            $processedValue = $this->getProcessedValue($propertySchema, $rawValue);
+            $processedValue = $this->getProcessedValue($propertySchema, $rawValue, $path);
             call_user_func([$model, $setterName], $processedValue);
         }
 
         return $model;
     }
 
-    private function getProcessedValue($propertySchema, $rawValue)
+    private function getProcessedValue($propertySchema, $rawValue, array $basePath)
     {
         if ($propertySchema['type'] === 'scalar') {
-            $value = $rawValue;
+            $value = $this->getProcessedScalarValue($propertySchema, $rawValue, $basePath);
         } elseif ($propertySchema['type'] === 'object') {
             $propertyModel = new $propertySchema['class'];
-            $value = $this->mapObject($propertySchema, $propertyModel, $rawValue);
+            $value = $this->getProcessedObjectValue($propertySchema, $propertyModel, $rawValue, $basePath);
         } elseif ($propertySchema['type'] === 'collection') {
-            $value = $this->mapCollection($propertySchema, $rawValue);
+            $value = $this->getProcessedCollectionValue($propertySchema, $rawValue, $basePath);
         } else {
             throw new \InvalidArgumentException();
         }
@@ -79,12 +85,32 @@ class DataMapper
         return $value;
     }
 
-    private function mapCollection($propertySchema, $rawValue): array
+    private function getProcessedScalarValue($propertySchema, $rawValue, $basePath)
     {
+        if ($propertySchema['isNullable'] && $rawValue === null) {
+            return null;
+        }
+
+        if (!is_scalar($rawValue)) {
+            throw new ScalarRequiredException($basePath);
+        }
+
+        return $rawValue;
+    }
+
+    private function getProcessedCollectionValue($propertySchema, $rawValue, array $basePath): array
+    {
+        if (!$this->isPlainArray($rawValue)) {
+            throw new CollectionRequiredException($basePath);
+        }
+
         $value = [];
 
-        foreach ($rawValue as $item) {
-            $value[] = $this->getProcessedValue($propertySchema['items'], $item);
+        foreach ($rawValue as $i => $item) {
+            $path = $basePath;
+            $path[] = $i;
+
+            $value[] = $this->getProcessedValue($propertySchema['items'], $item, $path);
         }
 
         return $value;
@@ -161,5 +187,15 @@ class DataMapper
     private function resolveIsNullable(TypeInterface $type): bool
     {
         return is_bool($type->getIsNullable()) ? $type->getIsNullable() : static::DEFAULT_IS_NULLABLE;
+    }
+
+    /**
+     * @param array $array
+     *
+     * @return bool
+     */
+    public function isPlainArray(array $array): bool
+    {
+        return empty($array) || array_keys($array) === range(0, count($array) - 1);
     }
 }
