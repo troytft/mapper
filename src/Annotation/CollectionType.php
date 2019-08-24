@@ -13,7 +13,9 @@ class CollectionType implements CollectionTypeInterface
     public $nullable;
 
     /**
-     * @var TypeInterface
+     * Type hint forced to object, cause annotation reader doesn't support interfaces
+     *
+     * @var object
      */
     public $type;
 

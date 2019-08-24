@@ -15,16 +15,18 @@ class Movie implements ModelInterface
     private $name;
 
     /**
-     * @var Actor[]|null
+     * @var string[]|null
      *
-     * @Mapper\CollectionType(type=@Mapper\ObjectType(class="Tests\Model\Actor"))
+     * @Mapper\CollectionType(type=@Mapper\StringType())
      */
-    private $actors;
+    private $genres;
 
     /**
-     * @var Views|null
+     * @var Release[]|null
+     *
+     * @Mapper\CollectionType(type=@Mapper\ObjectType(class="Tests\Model\Release"))
      */
-    private $views;
+    private $releases;
 
     /**
      * @return string|null
@@ -47,41 +49,41 @@ class Movie implements ModelInterface
     }
 
     /**
-     * @return Actor[]|null
+     * @return string[]|null
      */
-    public function getActors(): ?array
+    public function getGenres(): ?array
     {
-        return $this->actors;
+        return $this->genres;
     }
 
     /**
-     * @param Actor[]|null $actors
+     * @param string[]|null $genres
      *
      * @return $this
      */
-    public function setActors(?array $actors)
+    public function setGenres(?array $genres)
     {
-        $this->actors = $actors;
+        $this->genres = $genres;
 
         return $this;
     }
 
     /**
-     * @return Views|null
+     * @return Release[]|null
      */
-    public function getViews(): ?Views
+    public function getReleases(): ?array
     {
-        return $this->views;
+        return $this->releases;
     }
 
     /**
-     * @param Views|null $views
+     * @param Release[]|null $releases
      *
      * @return $this
      */
-    public function setViews(?Views $views)
+    public function setReleases(?array $releases)
     {
-        $this->views = $views;
+        $this->releases = $releases;
 
         return $this;
     }

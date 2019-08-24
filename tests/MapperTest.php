@@ -5,6 +5,7 @@ namespace Tests;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Mapper;
 use PHPUnit\Framework\TestCase;
+use Tests\Model\Release;
 
 class MapperTest extends TestCase
 {
@@ -20,66 +21,35 @@ class MapperTest extends TestCase
         $this->annotationReader = new AnnotationReader();
     }
 
-//    public function testSuccessString()
-//    {
-//        $model = new Model\Movie();
-//        $data = [
-//            'name' => 'Name',
-//            'surname' => 'Surname',
-//        ];
-//
-//        $annotationReader = new AnnotationReader();
-//
-//        $dataMapper = new RequestModelBundle\DataMapper($annotationReader);
-//        $dataMapper
-//            ->addTransformer(new RequestModelBundle\Transformer\StringTransformer());
-//
-//        $resultContext = $dataMapper->map($model, $data);
-//
-//        $this->assertTrue($resultContext instanceof RequestModelBundle\ResultContext);
-//        $this->assertEquals($model->getName(), 'Name');
-//        $this->assertEquals($model->getSurname(), 'Surname');
-//    }
-
-    public function testIsNullable()
+    public function testFullFilled()
     {
         $model = new Model\Movie();
-
-
         $data = [
-            'name' => 'surname',
-            'surname' => 'Surname',
-            'city' => [
-                'latitude' => 50.33,
-                'longitude' => 30.222,
-            ],
-            'workPlaces' => [
+            'name' => 'Taxi 2',
+            'genres' => ['Action', 'Comedy', 'Crime',],
+            'releases' => [
                 [
-                    'latitude' => 50.33,
-                    'longitude' => null,
-                ]
+                    'country' => 'France',
+                    'date' => '25 March 2000'
+                ],
             ],
-            'dd' => 'ss',
         ];
 
-        try {
-            $this->prepareDataMapper()->map($model, $data);
-        } catch (Mapper\Exception\AbstractMappingValidationException $exception) {
-            var_dump($exception->getPathAsString());
-            die();
-        }
-    }
+        $mapperSettings = new Mapper\DTO\MapperSettings();
+        $mapperSettings
+            ->setDefaultIsNullable(true)
+            ->setIsUndefinedKeysInDataAllowed(false);
 
-    /**
-     * @return Mapper\Mapper
-     */
-    private function prepareDataMapper(): Mapper\Mapper
-    {
-        $annotationReader = new AnnotationReader();
+        $mapper = new Mapper\Mapper($mapperSettings, $this->annotationReader);
+        $mapper
+            ->map($model, $data);
 
-        $dataMapper = new Mapper\Mapper($annotationReader);
-
-
-        return $dataMapper;
+        $this->assertEquals($model->getName(), $data['name']);
+        $this->assertEquals($model->getGenres(), $data['genres']);
+        $this->assertIsArray($model->getReleases());
+        $this->assertArrayHasKey(0, $model->getReleases());
+        $this->assertInstanceOf(Release::class, $model->getReleases()[0]);
+        $this->assertEquals($model->getReleases()[0]->getCountry(), $data['releases'][0]['country']);
+        $this->assertEquals($model->getReleases()[0]->getDate(), $data['releases'][0]['date']);
     }
 }

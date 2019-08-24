@@ -14,6 +14,7 @@ use Mapper\Annotation\CollectionTypeInterface;
 use Mapper\Annotation\ObjectTypeInterface;
 use Mapper\Annotation\ScalarTypeInterface;
 use Mapper\DTO\MapperSettings;
+use Mapper\Exception\AbstractMappingValidationException;
 use Mapper\Exception\CollectionRequiredValidationException;
 use Mapper\Exception\ObjectRequiredValidationException;
 use Mapper\Exception\ScalarRequiredValidationException;
@@ -64,11 +65,16 @@ class Mapper
         return $this;
     }
 
+    /**
+     * @param ModelInterface $model
+     * @param array $data
+     *
+     * @throws AbstractMappingValidationException
+     */
     public function map(ModelInterface $model, array $data)
     {
         $schema = $this->processObjectTypeScheme(new ObjectType(), $model);
         $this->getProcessedObjectValue($schema, $model, $data, []);
-        var_dump($model);die();
     }
 
     private function getProcessedObjectValue(array $schema, $model, $rawValue, array $basePath)

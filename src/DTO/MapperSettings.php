@@ -7,12 +7,12 @@ class MapperSettings
     /**
      * @var bool
      */
-    private $defaultIsNullable = false;
+    private $defaultIsNullable;
 
     /**
      * @var bool
      */
-    private $isUndefinedKeysInDataAllowed = true;
+    private $isUndefinedKeysInDataAllowed;
 
     /**
      * @return bool
