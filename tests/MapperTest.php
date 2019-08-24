@@ -8,6 +8,23 @@ use PHPUnit\Framework\TestCase;
 
 class MapperTest extends TestCase
 {
+    /**
+     * @var Mapper\Mapper
+     */
+    private $mapper;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->initMapper();
+    }
+
+    private function initMapper(): void
+    {
+        $annotationReader = new AnnotationReader();
+        $this->mapper = new Mapper\Mapper($annotationReader);
+    }
 //    public function testSuccessString()
 //    {
 //        $model = new Model\User();

@@ -13,6 +13,7 @@ use Mapper\Annotation\TypeInterface;
 use Mapper\Annotation\CollectionTypeInterface;
 use Mapper\Annotation\ObjectTypeInterface;
 use Mapper\Annotation\ScalarTypeInterface;
+use Mapper\DTO\MapperSettings;
 use Mapper\Exception\CollectionRequiredValidationException;
 use Mapper\Exception\ObjectRequiredValidationException;
 use Mapper\Exception\ScalarRequiredValidationException;
@@ -24,13 +25,15 @@ use function var_dump;
 
 class Mapper
 {
-    private const DEFAULT_IS_NULLABLE = false;
-    private const ALLOW_UNDEFINED_KEYS_IN_DATA = true;
-
     /**
      * @var AnnotationReader
      */
     private $annotationReader;
+
+    /**
+     * @var MapperSettings
+     */
+    private $settings;
 
     /**
      * @param AnnotationReader $annotationReader
@@ -38,6 +41,27 @@ class Mapper
     public function __construct(AnnotationReader $annotationReader)
     {
         $this->annotationReader = $annotationReader;
+        $this->settings = new MapperSettings();
+    }
+
+    /**
+     * @return MapperSettings
+     */
+    public function getSettings(): MapperSettings
+    {
+        return $this->settings;
+    }
+
+    /**
+     * @param MapperSettings $settings
+     *
+     * @return $this
+     */
+    public function setSettings(MapperSettings $settings)
+    {
+        $this->settings = $settings;
+
+        return $this;
     }
 
     public function map(ModelInterface $model, array $data)
@@ -55,7 +79,7 @@ class Mapper
 
         foreach ($rawValue as $propertyName => $propertyValue) {
             if (!isset($schema['properties'][$propertyName])) {
-                if (static::ALLOW_UNDEFINED_KEYS_IN_DATA) {
+                if ($this->settings->getIsUndefinedKeysInDataAllowed()) {
                     continue;
                 } else {
                     throw new \InvalidArgumentException(sprintf('Undefined key "%s"', $propertyName));
@@ -213,7 +237,7 @@ class Mapper
      */
     private function resolveIsNullable(TypeInterface $type): bool
     {
-        return is_bool($type->getIsNullable()) ? $type->getIsNullable() : static::DEFAULT_IS_NULLABLE;
+        return is_bool($type->getIsNullable()) ? $type->getIsNullable() : $this->settings->getDefaultIsNullable();
     }
 
     /**
