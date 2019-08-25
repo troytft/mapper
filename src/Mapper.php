@@ -9,7 +9,6 @@ use function is_array;
 use function is_bool;
 use function is_scalar;
 use function call_user_func;
-use Mapper\DTO\Type\ScalarTypeInterface;
 use function sprintf;
 use function ucfirst;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -103,14 +102,24 @@ class Mapper
             $path = $basePath;
             $path[] = $propertyName;
 
-            if ($propertySchema['type'] === DTO\Type\ScalarTypeInterface::class) {
-                throw new Exception\MappingValidation\ScalarRequiredException($path);
-            } elseif ($propertySchema['type'] === DTO\Type\ObjectTypeInterface::class) {
-                throw new Exception\MappingValidation\ObjectRequiredException($path);
-            } elseif ($propertySchema['type'] === DTO\Type\CollectionTypeInterface::class) {
-                throw new Exception\MappingValidation\CollectionRequiredException($path);
-            } else {
-                throw new \InvalidArgumentException();
+            switch ($propertySchema['type']) {
+                case DTO\Type\ScalarTypeInterface::class:
+                    throw new Exception\MappingValidation\ScalarRequiredException($path);
+
+                    break;
+
+                case DTO\Type\ObjectTypeInterface::class:
+                    throw new Exception\MappingValidation\ObjectRequiredException($path);
+
+                    break;
+
+                case DTO\Type\CollectionTypeInterface::class:
+                    throw new Exception\MappingValidation\CollectionRequiredException($path);
+
+                    break;
+
+                default:
+                    throw new \InvalidArgumentException();
             }
         }
 
@@ -123,15 +132,26 @@ class Mapper
             return null;
         }
 
-        if ($propertySchema['type'] === DTO\Type\ScalarTypeInterface::class) {
-            $value = $this->getProcessedScalarValue($propertySchema, $rawValue, $basePath);
-        } elseif ($propertySchema['type'] === DTO\Type\ObjectTypeInterface::class) {
-            $propertyModel = new $propertySchema['class'];
-            $value = $this->getProcessedObjectValue($propertySchema, $propertyModel, $rawValue, $basePath);
-        } elseif ($propertySchema['type'] === DTO\Type\CollectionTypeInterface::class) {
-            $value = $this->getProcessedCollectionValue($propertySchema, $rawValue, $basePath);
-        } else {
-            throw new \InvalidArgumentException();
+        switch ($propertySchema['type']) {
+            case DTO\Type\ScalarTypeInterface::class:
+                $value = $this->getProcessedScalarValue($propertySchema, $rawValue, $basePath);
+
+                break;
+
+            case DTO\Type\ObjectTypeInterface::class:
+                $propertyModel = new $propertySchema['class'];
+                $value = $this->getProcessedObjectValue($propertySchema, $propertyModel, $rawValue, $basePath);
+
+                break;
+
+            case DTO\Type\CollectionTypeInterface::class:
+                $value = $this->getProcessedCollectionValue($propertySchema, $rawValue, $basePath);
+
+                break;
+
+            default:
+                throw new \InvalidArgumentException();
+
         }
 
         return $value;
@@ -213,15 +233,25 @@ class Mapper
 
     private function processTypeScheme(DTO\Type\TypeInterface $type): array
     {
-        if ($type instanceof DTO\Type\ObjectTypeInterface) {
-            $className = $type->getClassName();
-            $schema = $this->processObjectTypeScheme($type, new $className);
-        } elseif ($type instanceof DTO\Type\ScalarTypeInterface) {
-            $schema = $this->processScalarTypeScheme($type);
-        } elseif ($type instanceof DTO\Type\CollectionTypeInterface) {
-            $schema = $this->processCollectionTypeScheme($type);
-        } else {
-            throw new \InvalidArgumentException();
+        switch (true) {
+            case $type instanceof DTO\Type\ObjectTypeInterface:
+                $className = $type->getClassName();
+                $schema = $this->processObjectTypeScheme($type, new $className);
+
+                break;
+
+            case $type instanceof DTO\Type\ScalarTypeInterface:
+                $schema = $this->processScalarTypeScheme($type);
+
+                break;
+
+            case $type instanceof DTO\Type\CollectionTypeInterface:
+                $schema = $this->processCollectionTypeScheme($type);
+
+                break;
+
+            default:
+                throw new \InvalidArgumentException();
         }
 
         return $schema;
