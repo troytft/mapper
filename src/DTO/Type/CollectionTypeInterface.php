@@ -1,6 +1,6 @@
 <?php
 
-namespace Mapper\Annotation;
+namespace Mapper\DTO\Type;
 
 interface CollectionTypeInterface extends TypeInterface
 {

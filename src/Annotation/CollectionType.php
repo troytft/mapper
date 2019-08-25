@@ -2,6 +2,9 @@
 
 namespace Mapper\Annotation;
 
+use Mapper\DTO\Type\CollectionTypeInterface;
+use Mapper\DTO\Type\TypeInterface;
+
 /**
  * @Annotation
  */

@@ -2,6 +2,8 @@
 
 namespace Mapper\Annotation;
 
+use Mapper\DTO\Type\ScalarTypeInterface;
+
 /**
  * @Annotation
  */

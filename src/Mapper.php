@@ -9,10 +9,6 @@ use function is_array;
 use function is_bool;
 use function is_scalar;
 use Mapper\Annotation\ObjectType;
-use Mapper\Annotation\TypeInterface;
-use Mapper\Annotation\CollectionTypeInterface;
-use Mapper\Annotation\ObjectTypeInterface;
-use Mapper\Annotation\ScalarTypeInterface;
 use Mapper\DTO\MapperSettings;
 use Mapper\Exception\AbstractMappingValidationException;
 use Mapper\Exception\CollectionRequiredValidationException;
@@ -174,13 +170,13 @@ class Mapper
     }
 
     /**
-     * @param ObjectTypeInterface $type
+     * @param DTO\Type\ObjectTypeInterface $type
      * @param $model
      * @param $rawValue
      *
      * @return array
      */
-    private function processObjectTypeScheme(ObjectTypeInterface $type, ModelInterface $model)
+    private function processObjectTypeScheme(DTO\Type\ObjectTypeInterface $type, ModelInterface $model)
     {
         $schema = [
             'type' => 'object',
@@ -192,8 +188,8 @@ class Mapper
         $reflectionClass = new \ReflectionClass($model);
 
         foreach ($reflectionClass->getProperties() as $property) {
-            $annotation = $this->annotationReader->getPropertyAnnotation($property, TypeInterface::class);
-            if (!$annotation instanceof TypeInterface) {
+            $annotation = $this->annotationReader->getPropertyAnnotation($property, DTO\Type\TypeInterface::class);
+            if (!$annotation instanceof DTO\Type\TypeInterface) {
                 continue;
             }
 
@@ -203,7 +199,7 @@ class Mapper
         return $schema;
     }
 
-    private function processScalarTypeScheme(ScalarTypeInterface $type)
+    private function processScalarTypeScheme(DTO\Type\ScalarTypeInterface $type)
     {
         return [
             'type' => 'scalar',
@@ -211,7 +207,7 @@ class Mapper
         ];
     }
 
-    private function processCollectionTypeScheme(CollectionTypeInterface $type): array
+    private function processCollectionTypeScheme(DTO\Type\CollectionTypeInterface $type): array
     {
         return [
             'type' => 'collection',
@@ -220,14 +216,14 @@ class Mapper
         ];
     }
 
-    private function processTypeScheme(TypeInterface $type): array
+    private function processTypeScheme(DTO\Type\TypeInterface $type): array
     {
-        if ($type instanceof ObjectTypeInterface) {
+        if ($type instanceof DTO\Type\ObjectTypeInterface) {
             $className = $type->getClassName();
             $schema = $this->processObjectTypeScheme($type, new $className);
-        } elseif ($type instanceof ScalarTypeInterface) {
+        } elseif ($type instanceof DTO\Type\ScalarTypeInterface) {
             $schema = $this->processScalarTypeScheme($type);
-        } elseif ($type instanceof CollectionTypeInterface) {
+        } elseif ($type instanceof DTO\Type\CollectionTypeInterface) {
             $schema = $this->processCollectionTypeScheme($type);
         } else {
             throw new \InvalidArgumentException();
@@ -237,11 +233,11 @@ class Mapper
     }
 
     /**
-     * @param TypeInterface $type
+     * @param DTO\Type\TypeInterface $type
      *
      * @return bool
      */
-    private function resolveIsNullable(TypeInterface $type): bool
+    private function resolveIsNullable(DTO\Type\TypeInterface $type): bool
     {
         return is_bool($type->getIsNullable()) ? $type->getIsNullable() : $this->settings->getIsPropertiesNullableByDefault();
     }
