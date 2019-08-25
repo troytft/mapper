@@ -1,8 +1,8 @@
 <?php
 
-namespace Mapper\Exception;
+namespace Mapper\Exception\MappingValidation;
 
-class ObjectRequiredValidationException extends AbstractMappingValidationException
+class ObjectRequiredException extends AbstractMappingValidationException
 {
     public function __construct(array $path)
     {

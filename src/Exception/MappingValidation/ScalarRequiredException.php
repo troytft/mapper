@@ -1,8 +1,8 @@
 <?php
 
-namespace Mapper\Exception;
+namespace Mapper\Exception\MappingValidation;
 
-class ScalarRequiredValidationException extends AbstractMappingValidationException
+class ScalarRequiredException extends AbstractMappingValidationException
 {
     public function __construct(array $path)
     {

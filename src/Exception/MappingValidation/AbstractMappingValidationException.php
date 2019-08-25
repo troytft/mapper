@@ -1,6 +1,6 @@
 <?php
 
-namespace Mapper\Exception;
+namespace Mapper\Exception\MappingValidation;
 
 use function join;
 

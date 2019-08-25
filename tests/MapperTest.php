@@ -2,12 +2,9 @@
 
 namespace Tests;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use Mapper;
 use PHPUnit\Framework\TestCase;
-use Tests\Model\Movie;
-use Tests\Model\Release;
-use function var_dump;
+use Doctrine\Common\Annotations\AnnotationReader;
 
 class MapperTest extends TestCase
 {
@@ -52,7 +49,7 @@ class MapperTest extends TestCase
         $this->assertSame($model->getGenres(), $data['genres']);
         $this->assertIsArray($model->getReleases());
         $this->assertArrayHasKey(0, $model->getReleases());
-        $this->assertInstanceOf(Release::class, $model->getReleases()[0]);
+        $this->assertInstanceOf(Model\Release::class, $model->getReleases()[0]);
         $this->assertSame($model->getReleases()[0]->getCountry(), $data['releases'][0]['country']);
         $this->assertSame($model->getReleases()[0]->getDate(), $data['releases'][0]['date']);
     }
@@ -77,7 +74,7 @@ class MapperTest extends TestCase
         try {
             $mapper->map($model, $data);
             $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
-        } catch (Mapper\Exception\CollectionRequiredValidationException $exception) {
+        } catch (Mapper\Exception\MappingValidation\CollectionRequiredException $exception) {
             $this->assertSame('genres', $exception->getPathAsString());
         }
 
@@ -94,7 +91,7 @@ class MapperTest extends TestCase
         try {
             $mapper->map($model, $data);
             $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
-        } catch (Mapper\Exception\ObjectRequiredValidationException $exception) {
+        } catch (Mapper\Exception\MappingValidation\ObjectRequiredException $exception) {
             $this->assertSame('releases.0', $exception->getPathAsString());
         }
 
@@ -114,7 +111,7 @@ class MapperTest extends TestCase
         try {
             $mapper->map($model, $data);
             $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
-        } catch (Mapper\Exception\ScalarRequiredValidationException $exception) {
+        } catch (Mapper\Exception\MappingValidation\ScalarRequiredException $exception) {
             $this->assertSame('releases.0.country', $exception->getPathAsString());
         }
     }
@@ -144,7 +141,7 @@ class MapperTest extends TestCase
         try {
             $mapper->map($model, $data);
             $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
-        } catch (Mapper\Exception\ScalarRequiredValidationException $exception) {
+        } catch (Mapper\Exception\MappingValidation\ScalarRequiredException $exception) {
             $this->assertSame('name', $exception->getPathAsString());
         }
     }

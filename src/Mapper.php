@@ -8,21 +8,15 @@ use function get_class;
 use function is_array;
 use function is_bool;
 use function is_scalar;
-use Mapper\Annotation\ObjectType;
-use Mapper\DTO\MapperSettings;
-use Mapper\Exception\AbstractMappingValidationException;
-use Mapper\Exception\CollectionRequiredValidationException;
-use Mapper\Exception\ObjectRequiredValidationException;
-use Mapper\Exception\ScalarRequiredValidationException;
-use Doctrine\Common\Annotations\AnnotationReader;
 use function call_user_func;
 use function sprintf;
 use function ucfirst;
+use Doctrine\Common\Annotations\AnnotationReader;
 
 class Mapper
 {
     /**
-     * @var MapperSettings
+     * @var DTO\MapperSettings
      */
     private $settings;
 
@@ -32,29 +26,29 @@ class Mapper
     private $annotationReader;
 
     /**
-     * @param MapperSettings $settings
+     * @param DTO\MapperSettings $settings
      * @param AnnotationReader $annotationReader
      */
-    public function __construct(MapperSettings $settings, AnnotationReader $annotationReader)
+    public function __construct(DTO\MapperSettings $settings, AnnotationReader $annotationReader)
     {
         $this->settings = $settings;
         $this->annotationReader = $annotationReader;
     }
 
     /**
-     * @return MapperSettings
+     * @return DTO\MapperSettings
      */
-    public function getSettings(): MapperSettings
+    public function getSettings(): DTO\MapperSettings
     {
         return $this->settings;
     }
 
     /**
-     * @param MapperSettings $settings
+     * @param DTO\MapperSettings $settings
      *
      * @return $this
      */
-    public function setSettings(MapperSettings $settings)
+    public function setSettings(DTO\MapperSettings $settings)
     {
         $this->settings = $settings;
 
@@ -65,18 +59,18 @@ class Mapper
      * @param ModelInterface $model
      * @param array $data
      *
-     * @throws AbstractMappingValidationException
+     * @throws Exception\MappingValidation\AbstractMappingValidationException
      */
     public function map(ModelInterface $model, array $data)
     {
-        $schema = $this->processObjectTypeScheme(new ObjectType(), $model);
+        $schema = $this->processObjectTypeScheme(new Annotation\ObjectType(), $model);
         $this->getProcessedObjectValue($schema, $model, $data, []);
     }
 
     private function getProcessedObjectValue(array $schema, $model, $rawValue, array $basePath)
     {
         if (!is_array($rawValue) || $this->isPlainArray($rawValue)) {
-            throw new ObjectRequiredValidationException($basePath);
+            throw new Exception\MappingValidation\ObjectRequiredException($basePath);
         }
 
         foreach ($rawValue as $propertyName => $propertyValue) {
@@ -109,11 +103,11 @@ class Mapper
             $path[] = $propertyName;
 
             if ($propertySchema['type'] === 'scalar') {
-                throw new ScalarRequiredValidationException($path);
+                throw new Exception\MappingValidation\ScalarRequiredException($path);
             } elseif ($propertySchema['type'] === 'object') {
-                throw new ObjectRequiredValidationException($path);
+                throw new Exception\MappingValidation\ObjectRequiredException($path);
             } elseif ($propertySchema['type'] === 'collection') {
-                throw new CollectionRequiredValidationException($path);
+                throw new Exception\MappingValidation\CollectionRequiredException($path);
             } else {
                 throw new \InvalidArgumentException();
             }
@@ -145,7 +139,7 @@ class Mapper
     private function getProcessedScalarValue($propertySchema, $rawValue, $basePath)
     {
         if (!is_scalar($rawValue)) {
-            throw new ScalarRequiredValidationException($basePath);
+            throw new Exception\MappingValidation\ScalarRequiredException($basePath);
         }
 
         return $rawValue;
@@ -154,7 +148,7 @@ class Mapper
     private function getProcessedCollectionValue($propertySchema, $rawValue, array $basePath): array
     {
         if (!is_array($rawValue) || !$this->isPlainArray($rawValue)) {
-            throw new CollectionRequiredValidationException($basePath);
+            throw new Exception\MappingValidation\CollectionRequiredException($basePath);
         }
 
         $value = [];

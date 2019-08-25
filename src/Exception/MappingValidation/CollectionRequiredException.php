@@ -1,8 +1,8 @@
 <?php
 
-namespace Mapper\Exception;
+namespace Mapper\Exception\MappingValidation;
 
-class CollectionRequiredValidationException extends AbstractMappingValidationException
+class CollectionRequiredException extends AbstractMappingValidationException
 {
     /**
      * @param array $path
