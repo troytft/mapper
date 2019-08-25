@@ -77,56 +77,40 @@ class Mapper
         }
 
         foreach ($rawValue as $propertyName => $propertyValue) {
-            $path = $basePath;
-            $path[] = $propertyName;
-
             if (!isset($schema->getProperties()[$propertyName])) {
                 if ($this->settings->getIsAllowedUndefinedKeysInData()) {
                     continue;
                 } else {
-                    throw new Exception\MappingValidation\UndefinedKeyException($path);
+                    throw new Exception\MappingValidation\UndefinedKeyException($this->resolvePath($basePath, $propertyName));
                 }
             }
 
             $propertySchema = $schema->getProperties()[$propertyName];
-            $setterName = 'set' . ucfirst($propertyName);
-
-            $mappedValue = $this->mapType($propertySchema, $propertyValue, $path);
-            call_user_func([$model, $setterName], $mappedValue);
+            $this->setPropertyToModel($model, $propertyName, $propertySchema, $propertyValue, $basePath);
         }
 
-        $notPresentedProperties = array_diff(array_keys($schema->getProperties()), array_keys($rawValue));
-        foreach ($notPresentedProperties as $propertyName) {
+        $propertiesNotPresentedInBody = array_diff(array_keys($schema->getProperties()), array_keys($rawValue));
+
+        foreach ($propertiesNotPresentedInBody as $propertyName) {
             $propertySchema = $schema->getProperties()[$propertyName];
-            if ($propertySchema->getIsNullable()) {
-                continue;
-            }
-
-            $path = $basePath;
-            $path[] = $propertyName;
-
-            switch (true) {
-                case $propertySchema instanceof DTO\Schema\ScalarTypeInterface:
-                    throw new Exception\MappingValidation\ScalarRequiredException($path);
-
-                    break;
-
-                case $propertySchema instanceof DTO\Schema\ObjectTypeInterface:
-                    throw new Exception\MappingValidation\ObjectRequiredException($path);
-
-                    break;
-
-                case $propertySchema instanceof DTO\Schema\CollectionTypeInterface:
-                    throw new Exception\MappingValidation\CollectionRequiredException($path);
-
-                    break;
-
-                default:
-                    throw new \InvalidArgumentException();
-            }
+            $this->setPropertyToModel($model, $propertyName, $propertySchema, null, $basePath);
         }
 
         return $model;
+    }
+
+    /**
+     * @param ModelInterface $model
+     * @param string $propertyName
+     * @param DTO\Schema\TypeInterface $schema
+     * @param $rawValue
+     */
+    private function setPropertyToModel(ModelInterface $model, string $propertyName, DTO\Schema\TypeInterface $schema, $rawValue, array $basePath)
+    {
+        $value = $this->mapType($schema, $rawValue, $this->resolvePath($basePath, $propertyName));
+
+        $setterName = 'set' . ucfirst($propertyName);
+        call_user_func([$model, $setterName], $value);
     }
 
     /**
@@ -199,10 +183,7 @@ class Mapper
         $value = [];
 
         foreach ($rawValue as $i => $item) {
-            $path = $basePath;
-            $path[] = $i;
-
-            $value[] = $this->mapType($schema->getItems(), $item, $path);
+            $value[] = $this->mapType($schema->getItems(), $item, $this->resolvePath($basePath, $i));
         }
 
         return $value;
@@ -216,5 +197,19 @@ class Mapper
     private function isPlainArray(array $array): bool
     {
         return empty($array) || array_keys($array) === range(0, count($array) - 1);
+    }
+
+    /**
+     * @param array $basePath
+     * @param $newNode
+     *
+     * @return array
+     */
+    private function resolvePath(array $basePath, $newNode): array
+    {
+        $path = $basePath;
+        $path[] = $newNode;
+
+        return $path;
     }
 }
