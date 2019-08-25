@@ -5,6 +5,7 @@ namespace Mapper;
 use function get_class;
 use function is_bool;
 use Doctrine\Common\Annotations\AnnotationReader;
+use function var_dump;
 
 class SchemaGenerator
 {
@@ -17,6 +18,11 @@ class SchemaGenerator
      * @var AnnotationReader
      */
     private $annotationReader;
+
+    /**
+     * @var DTO\Schema\TypeInterface[]
+     */
+    private $modelSchemasCache;
 
     /**
      * @param DTO\Settings $settings
@@ -34,6 +40,8 @@ class SchemaGenerator
      */
     public function generate(ModelInterface $model): DTO\Schema\ObjectType
     {
+        $this->modelSchemasCache = [];
+
         return $this->processObjectType(new Annotation\ObjectType(), $model);
     }
 
@@ -46,8 +54,13 @@ class SchemaGenerator
      */
     private function processObjectType(DTO\Mapping\ObjectTypeInterface $type, ModelInterface $model): DTO\Schema\ObjectType
     {
-        $properties = [];
+        $class = get_class($model);
 
+        if (isset($this->modelSchemasCache[$class])) {
+            return $this->modelSchemasCache[$class];
+        }
+
+        $properties = [];
         $reflectionClass = new \ReflectionClass($model);
 
         foreach ($reflectionClass->getProperties() as $property) {
@@ -61,9 +74,11 @@ class SchemaGenerator
 
         $schema = new DTO\Schema\ObjectType();
         $schema
-            ->setClass(get_class($model))
+            ->setClass($class)
             ->setIsNullable($this->resolveIsNullable($type))
             ->setProperties($properties);
+
+        $this->modelSchemasCache[$class] = $schema;
 
         return $schema;
     }
