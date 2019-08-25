@@ -23,7 +23,7 @@ class MapperTest extends TestCase
         $this->annotationReader = new AnnotationReader();
     }
 
-    public function testFullFilledModel()
+    public function testSuccessFilledModel()
     {
         $model = new Model\Movie();
         $data = [
@@ -55,7 +55,7 @@ class MapperTest extends TestCase
         $this->assertEquals($model->getReleases()[0]->getDate(), $data['releases'][0]['date']);
     }
 
-    public function testNotNullablePropertiesWithNullValueAndErrorPaths()
+    public function testErrorPath()
     {
         $mapperSettings = new Mapper\DTO\MapperSettings();
         $mapperSettings
@@ -64,7 +64,39 @@ class MapperTest extends TestCase
 
         $mapper = new Mapper\Mapper($mapperSettings, $this->annotationReader);
 
-        // Scalar type
+        // object root property
+        $model = new Model\Movie();
+        $data = [
+            'name' => '',
+            'genres' => null,
+            'releases' => [],
+        ];
+
+        try {
+            $mapper->map($model, $data);
+            $this->fail('Exception was not raised');
+        } catch (Mapper\Exception\CollectionRequiredValidationException $exception) {
+            $this->assertEquals('genres', $exception->getPathAsString());
+        }
+
+        // collection item
+        $model = new Model\Movie();
+        $data = [
+            'name' => '',
+            'genres' => [],
+            'releases' => [
+                null,
+            ]
+        ];
+
+        try {
+            $mapper->map($model, $data);
+            $this->fail('Exception was not raised');
+        } catch (Mapper\Exception\ObjectRequiredValidationException $exception) {
+            $this->assertEquals('releases.0', $exception->getPathAsString());
+        }
+
+        // object property inside collection
         $model = new Model\Movie();
         $data = [
             'name' => '',
@@ -82,38 +114,6 @@ class MapperTest extends TestCase
             $this->fail('Exception was not raised');
         } catch (Mapper\Exception\ScalarRequiredValidationException $exception) {
             $this->assertEquals('releases.0.country', $exception->getPathAsString());
-        }
-
-        // Object type
-        $model = new Model\Movie();
-        $data = [
-            'name' => '',
-            'genres' => [],
-            'releases' => [
-                null,
-            ]
-        ];
-
-        try {
-            $mapper->map($model, $data);
-            $this->fail('Exception was not raised');
-        } catch (Mapper\Exception\ObjectRequiredValidationException $exception) {
-            $this->assertEquals('releases.0', $exception->getPathAsString());
-        }
-
-        // Collection type
-        $model = new Model\Movie();
-        $data = [
-            'name' => '',
-            'genres' => null,
-            'releases' => [],
-        ];
-
-        try {
-            $mapper->map($model, $data);
-            $this->fail('Exception was not raised');
-        } catch (Mapper\Exception\CollectionRequiredValidationException $exception) {
-            $this->assertEquals('genres', $exception->getPathAsString());
         }
     }
 }
