@@ -3,8 +3,9 @@
 namespace Mapper\Exception\MappingValidation;
 
 use function join;
+use Mapper\Exception\ExceptionInterface;
 
-abstract class AbstractMappingValidationException extends \Exception
+abstract class AbstractMappingValidationException extends \Exception implements ExceptionInterface
 {
     /**
      * @var array

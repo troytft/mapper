@@ -7,6 +7,8 @@ use function array_keys;
 use function is_array;
 use function is_scalar;
 use function call_user_func;
+use Mapper\Exception\SetterDoesNotExistException;
+use function method_exists;
 use function ucfirst;
 
 class Mapper
@@ -93,6 +95,10 @@ class Mapper
 
         foreach ($propertiesNotPresentedInBody as $propertyName) {
             $propertySchema = $schema->getProperties()[$propertyName];
+            if ($propertySchema->getIsNullable()) {
+                continue;
+            }
+
             $this->setPropertyToModel($model, $propertyName, $propertySchema, null, $basePath);
         }
 
@@ -104,12 +110,18 @@ class Mapper
      * @param string $propertyName
      * @param DTO\Schema\TypeInterface $schema
      * @param $rawValue
+     *
+     * @throws Exception\SetterDoesNotExistException
      */
     private function setPropertyToModel(ModelInterface $model, string $propertyName, DTO\Schema\TypeInterface $schema, $rawValue, array $basePath)
     {
         $value = $this->mapType($schema, $rawValue, $this->resolvePath($basePath, $propertyName));
 
         $setterName = 'set' . ucfirst($propertyName);
+        if (!method_exists($model, $setterName)) {
+            throw new Exception\SetterDoesNotExistException($setterName);
+        }
+
         call_user_func([$model, $setterName], $value);
     }
 
