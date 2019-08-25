@@ -243,7 +243,7 @@ class Mapper
      */
     private function resolveIsNullable(TypeInterface $type): bool
     {
-        return is_bool($type->getIsNullable()) ? $type->getIsNullable() : $this->settings->getDefaultIsNullable();
+        return is_bool($type->getIsNullable()) ? $type->getIsNullable() : $this->settings->getIsPropertiesNullableByDefault();
     }
 
     /**

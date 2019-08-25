@@ -11,6 +11,8 @@ use function var_dump;
 
 class MapperTest extends TestCase
 {
+    private const EXCEPTION_WOS_NOT_RAISED_MESSAGE = 'Exception was not raised';
+
     /**
      * @var AnnotationReader
      */
@@ -39,7 +41,7 @@ class MapperTest extends TestCase
 
         $mapperSettings = new Mapper\DTO\MapperSettings();
         $mapperSettings
-            ->setDefaultIsNullable(true)
+            ->setIsPropertiesNullableByDefault(true)
             ->setIsUndefinedKeysInDataAllowed(false);
 
         $mapper = new Mapper\Mapper($mapperSettings, $this->annotationReader);
@@ -59,7 +61,7 @@ class MapperTest extends TestCase
     {
         $mapperSettings = new Mapper\DTO\MapperSettings();
         $mapperSettings
-            ->setDefaultIsNullable(false)
+            ->setIsPropertiesNullableByDefault(false)
             ->setIsUndefinedKeysInDataAllowed(false);
 
         $mapper = new Mapper\Mapper($mapperSettings, $this->annotationReader);
@@ -74,7 +76,7 @@ class MapperTest extends TestCase
 
         try {
             $mapper->map($model, $data);
-            $this->fail('Exception was not raised');
+            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
         } catch (Mapper\Exception\CollectionRequiredValidationException $exception) {
             $this->assertEquals('genres', $exception->getPathAsString());
         }
@@ -91,7 +93,7 @@ class MapperTest extends TestCase
 
         try {
             $mapper->map($model, $data);
-            $this->fail('Exception was not raised');
+            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
         } catch (Mapper\Exception\ObjectRequiredValidationException $exception) {
             $this->assertEquals('releases.0', $exception->getPathAsString());
         }
@@ -111,9 +113,39 @@ class MapperTest extends TestCase
 
         try {
             $mapper->map($model, $data);
-            $this->fail('Exception was not raised');
+            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
         } catch (Mapper\Exception\ScalarRequiredValidationException $exception) {
             $this->assertEquals('releases.0.country', $exception->getPathAsString());
+        }
+    }
+
+    public function testNotNullablePropertyNotPresentedInData()
+    {
+        $mapperSettings = new Mapper\DTO\MapperSettings();
+        $mapperSettings
+            ->setIsPropertiesNullableByDefault(true)
+            ->setIsUndefinedKeysInDataAllowed(false);
+
+        $mapper = new Mapper\Mapper($mapperSettings, $this->annotationReader);
+
+        // nullable
+        $model = new Model\Movie();
+        $data = [
+            'genres' => [],
+            'releases' => [],
+        ];
+
+        $mapper->map($model, $data);
+        $this->assertEquals(null, $model->getName());
+
+        // not nullable
+        $mapperSettings->setIsPropertiesNullableByDefault(false);
+
+        try {
+            $mapper->map($model, $data);
+            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+        } catch (Mapper\Exception\ScalarRequiredValidationException $exception) {
+            $this->assertEquals('name', $exception->getPathAsString());
         }
     }
 }

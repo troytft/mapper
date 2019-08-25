@@ -7,7 +7,7 @@ class MapperSettings
     /**
      * @var bool
      */
-    private $defaultIsNullable;
+    private $isPropertiesNullableByDefault;
 
     /**
      * @var bool
@@ -17,19 +17,19 @@ class MapperSettings
     /**
      * @return bool
      */
-    public function getDefaultIsNullable(): bool
+    public function getIsPropertiesNullableByDefault(): bool
     {
-        return $this->defaultIsNullable;
+        return $this->isPropertiesNullableByDefault;
     }
 
     /**
-     * @param bool $defaultIsNullable
+     * @param bool $isPropertiesNullableByDefault
      *
      * @return $this
      */
-    public function setDefaultIsNullable(bool $defaultIsNullable)
+    public function setIsPropertiesNullableByDefault(bool $isPropertiesNullableByDefault)
     {
-        $this->defaultIsNullable = $defaultIsNullable;
+        $this->isPropertiesNullableByDefault = $isPropertiesNullableByDefault;
 
         return $this;
     }
