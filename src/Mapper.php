@@ -157,7 +157,7 @@ class Mapper
 
     private function getProcessedCollectionValue($propertySchema, $rawValue, array $basePath): array
     {
-        if (!$this->isPlainArray($rawValue)) {
+        if (!is_array($rawValue) || !$this->isPlainArray($rawValue)) {
             throw new CollectionRequiredValidationException($basePath);
         }
 
