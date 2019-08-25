@@ -12,7 +12,7 @@ use function ucfirst;
 class Mapper
 {
     /**
-     * @var DTO\MapperSettings
+     * @var DTO\Settings
      */
     private $settings;
 
@@ -22,28 +22,28 @@ class Mapper
     private $schemaGenerator;
 
     /**
-     * @param DTO\MapperSettings $settings
+     * @param DTO\Settings $settings
      */
-    public function __construct(DTO\MapperSettings $settings)
+    public function __construct(DTO\Settings $settings)
     {
         $this->settings = $settings;
         $this->schemaGenerator = new SchemaGenerator($settings);
     }
 
     /**
-     * @return DTO\MapperSettings
+     * @return DTO\Settings
      */
-    public function getSettings(): DTO\MapperSettings
+    public function getSettings(): DTO\Settings
     {
         return $this->settings;
     }
 
     /**
-     * @param DTO\MapperSettings $settings
+     * @param DTO\Settings $settings
      *
      * @return $this
      */
-    public function setSettings(DTO\MapperSettings $settings)
+    public function setSettings(DTO\Settings $settings)
     {
         $this->settings = $settings;
 

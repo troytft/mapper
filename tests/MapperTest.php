@@ -23,7 +23,7 @@ class MapperTest extends TestCase
             ],
         ];
 
-        $mapperSettings = new Mapper\DTO\MapperSettings();
+        $mapperSettings = new Mapper\DTO\Settings();
         $mapperSettings
             ->setIsPropertiesNullableByDefault(true)
             ->setIsAllowedUndefinedKeysInData(false);
@@ -43,7 +43,7 @@ class MapperTest extends TestCase
 
     public function testErrorPath()
     {
-        $mapperSettings = new Mapper\DTO\MapperSettings();
+        $mapperSettings = new Mapper\DTO\Settings();
         $mapperSettings
             ->setIsPropertiesNullableByDefault(false)
             ->setIsAllowedUndefinedKeysInData(false);
@@ -105,7 +105,7 @@ class MapperTest extends TestCase
 
     public function testNotNullablePropertyNotPresentedInData()
     {
-        $mapperSettings = new Mapper\DTO\MapperSettings();
+        $mapperSettings = new Mapper\DTO\Settings();
         $mapperSettings
             ->setIsPropertiesNullableByDefault(true)
             ->setIsAllowedUndefinedKeysInData(false);
@@ -135,7 +135,7 @@ class MapperTest extends TestCase
 
     public function testUndefinedKey()
     {
-        $mapperSettings = new Mapper\DTO\MapperSettings();
+        $mapperSettings = new Mapper\DTO\Settings();
         $mapperSettings
             ->setIsPropertiesNullableByDefault(true)
             ->setIsAllowedUndefinedKeysInData(true);
@@ -153,7 +153,7 @@ class MapperTest extends TestCase
 
         // allowed
         $mapper->map($model, $data);
-        
+
         // not allowed
         $mapperSettings->setIsAllowedUndefinedKeysInData(false);
 

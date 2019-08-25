@@ -9,7 +9,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 class SchemaGenerator
 {
     /**
-     * @var DTO\MapperSettings
+     * @var DTO\Settings
      */
     private $settings;
 
@@ -19,9 +19,9 @@ class SchemaGenerator
     private $annotationReader;
 
     /**
-     * @param DTO\MapperSettings $settings
+     * @param DTO\Settings $settings
      */
-    public function __construct(DTO\MapperSettings $settings)
+    public function __construct(DTO\Settings $settings)
     {
         $this->settings = $settings;
         $this->annotationReader = new AnnotationReader();

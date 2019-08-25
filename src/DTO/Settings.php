@@ -2,7 +2,7 @@
 
 namespace Mapper\DTO;
 
-class MapperSettings
+class Settings
 {
     /**
      * @var bool
