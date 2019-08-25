@@ -63,13 +63,14 @@ class Mapper
     }
 
     /**
-     * @param array $schema
+     * @param DTO\Schema\ObjectTypeInterface $schema
      * @param ModelInterface $model
      * @param $rawValue
      * @param array $basePath
+     *
      * @return ModelInterface
      */
-    private function mapObject(array $schema, ModelInterface $model, $rawValue, array $basePath)
+    private function mapObject(DTO\Schema\ObjectTypeInterface $schema, ModelInterface $model, $rawValue, array $basePath): ModelInterface
     {
         if (!is_array($rawValue) || $this->isPlainArray($rawValue)) {
             throw new Exception\MappingValidation\ObjectRequiredException($basePath);
@@ -79,7 +80,7 @@ class Mapper
             $path = $basePath;
             $path[] = $propertyName;
 
-            if (!isset($schema['properties'][$propertyName])) {
+            if (!isset($schema->getProperties()[$propertyName])) {
                 if ($this->settings->getIsAllowedUndefinedKeysInData()) {
                     continue;
                 } else {
@@ -87,35 +88,35 @@ class Mapper
                 }
             }
 
-            $propertySchema = $schema['properties'][$propertyName];
+            $propertySchema = $schema->getProperties()[$propertyName];
             $setterName = 'set' . ucfirst($propertyName);
 
             $mappedValue = $this->mapType($propertySchema, $propertyValue, $path);
             call_user_func([$model, $setterName], $mappedValue);
         }
 
-        $notPresentedProperties = array_diff(array_keys($schema['properties']), array_keys($rawValue));
+        $notPresentedProperties = array_diff(array_keys($schema->getProperties()), array_keys($rawValue));
         foreach ($notPresentedProperties as $propertyName) {
-            $propertySchema = $schema['properties'][$propertyName];
-            if ($propertySchema['isNullable']) {
+            $propertySchema = $schema->getProperties()[$propertyName];
+            if ($propertySchema->getIsNullable()) {
                 continue;
             }
 
             $path = $basePath;
             $path[] = $propertyName;
 
-            switch ($propertySchema['type']) {
-                case DTO\Type\ScalarTypeInterface::class:
+            switch (true) {
+                case $propertySchema instanceof DTO\Schema\ScalarTypeInterface:
                     throw new Exception\MappingValidation\ScalarRequiredException($path);
 
                     break;
 
-                case DTO\Type\ObjectTypeInterface::class:
+                case $propertySchema instanceof DTO\Schema\ObjectTypeInterface:
                     throw new Exception\MappingValidation\ObjectRequiredException($path);
 
                     break;
 
-                case DTO\Type\CollectionTypeInterface::class:
+                case $propertySchema instanceof DTO\Schema\CollectionTypeInterface:
                     throw new Exception\MappingValidation\CollectionRequiredException($path);
 
                     break;
@@ -129,31 +130,31 @@ class Mapper
     }
 
     /**
-     * @param array $propertySchema
+     * @param DTO\Schema\TypeInterface $schema
      * @param mixed|null $rawValue
      * @param array $basePath
      * @return mixed|null
      */
-    private function mapType(array $propertySchema, $rawValue, array $basePath)
+    private function mapType(DTO\Schema\TypeInterface $schema, $rawValue, array $basePath)
     {
-        if ($propertySchema['isNullable'] && $rawValue === null) {
+        if ($schema->getIsNullable() && $rawValue === null) {
             return null;
         }
 
-        switch ($propertySchema['type']) {
-            case DTO\Type\ScalarTypeInterface::class:
-                $value = $this->mapScalar($propertySchema, $rawValue, $basePath);
+        switch (true) {
+            case $schema instanceof DTO\Schema\ScalarTypeInterface:
+                $value = $this->mapScalarType($schema, $rawValue, $basePath);
 
                 break;
 
-            case DTO\Type\ObjectTypeInterface::class:
-                $propertyModel = new $propertySchema['class'];
-                $value = $this->mapObject($propertySchema, $propertyModel, $rawValue, $basePath);
+            case $schema instanceof DTO\Schema\ObjectTypeInterface:
+                $class = $schema->getClass();
+                $value = $this->mapObject($schema, new $class, $rawValue, $basePath);
 
                 break;
 
-            case DTO\Type\CollectionTypeInterface::class:
-                $value = $this->mapCollection($propertySchema, $rawValue, $basePath);
+            case $schema instanceof DTO\Schema\CollectionTypeInterface:
+                $value = $this->mapCollectionType($schema, $rawValue, $basePath);
 
                 break;
 
@@ -166,13 +167,13 @@ class Mapper
     }
 
     /**
-     * @param array $propertySchema
+     * @param DTO\Schema\ScalarTypeInterface $schema
      * @param mixed $rawValue
      * @param array $basePath
      *
      * @return mixed
      */
-    private function mapScalar(array $propertySchema, $rawValue, array $basePath)
+    private function mapScalarType(DTO\Schema\ScalarTypeInterface $schema, $rawValue, array $basePath)
     {
         if (!is_scalar($rawValue)) {
             throw new Exception\MappingValidation\ScalarRequiredException($basePath);
@@ -182,14 +183,14 @@ class Mapper
     }
 
     /**
-     * @param array $propertySchema
+     * @param DTO\Schema\CollectionTypeInterface $schema
      * @param mixed $rawValue
      * @param array $basePath
      *
      * @return array
      * @throws Exception\MappingValidation\CollectionRequiredException
      */
-    private function mapCollection(array $propertySchema, $rawValue, array $basePath): array
+    private function mapCollectionType(DTO\Schema\CollectionTypeInterface $schema, $rawValue, array $basePath): array
     {
         if (!is_array($rawValue) || !$this->isPlainArray($rawValue)) {
             throw new Exception\MappingValidation\CollectionRequiredException($basePath);
@@ -201,7 +202,7 @@ class Mapper
             $path = $basePath;
             $path[] = $i;
 
-            $value[] = $this->mapType($propertySchema['items'], $item, $path);
+            $value[] = $this->mapType($schema->getItems(), $item, $path);
         }
 
         return $value;

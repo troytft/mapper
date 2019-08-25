@@ -30,91 +30,94 @@ class SchemaGenerator
     /**
      * @param ModelInterface $model
      *
-     * @return array
+     * @return DTO\Schema\ObjectType
      */
-    public function generate(ModelInterface $model): array
+    public function generate(ModelInterface $model): DTO\Schema\ObjectType
     {
-        return $this->processObject(new Annotation\ObjectType(), $model);
+        return $this->processObjectType(new Annotation\ObjectType(), $model);
     }
 
     /**
-     * @param DTO\Type\ObjectTypeInterface $type
+     * @param DTO\Mapping\ObjectTypeInterface $type
      * @param $model
      * @param $rawValue
      *
-     * @return array
+     * @return DTO\Schema\ObjectType
      */
-    private function processObject(DTO\Type\ObjectTypeInterface $type, ModelInterface $model)
+    private function processObjectType(DTO\Mapping\ObjectTypeInterface $type, ModelInterface $model): DTO\Schema\ObjectType
     {
-        $schema = [
-            'type' => DTO\Type\ObjectTypeInterface::class,
-            'class' => get_class($model),
-            'isNullable' => $this->resolveIsNullable($type),
-            'properties' => [],
-        ];
+        $properties = [];
 
         $reflectionClass = new \ReflectionClass($model);
 
         foreach ($reflectionClass->getProperties() as $property) {
-            $annotation = $this->annotationReader->getPropertyAnnotation($property, DTO\Type\TypeInterface::class);
-            if (!$annotation instanceof DTO\Type\TypeInterface) {
+            $annotation = $this->annotationReader->getPropertyAnnotation($property, DTO\Mapping\TypeInterface::class);
+            if (!$annotation instanceof DTO\Mapping\TypeInterface) {
                 continue;
             }
 
-            $schema['properties'][$property->getName()] = $this->processType($annotation);
+            $properties[$property->getName()] = $this->processType($annotation);
         }
+
+        $schema = new DTO\Schema\ObjectType();
+        $schema
+            ->setClass(get_class($model))
+            ->setIsNullable($this->resolveIsNullable($type))
+            ->setProperties($properties);
 
         return $schema;
     }
 
     /**
-     * @param DTO\Type\ScalarTypeInterface $type
+     * @param DTO\Mapping\ScalarTypeInterface $type
      *
-     * @return array
+     * @return DTO\Schema\ScalarType
      */
-    private function processScalar(DTO\Type\ScalarTypeInterface $type)
+    private function processScalarType(DTO\Mapping\ScalarTypeInterface $type): DTO\Schema\ScalarType
     {
-        return [
-            'type' => DTO\Type\ScalarTypeInterface::class,
-            'isNullable' => $this->resolveIsNullable($type),
-        ];
+        $schema = new DTO\Schema\ScalarType();
+        $schema
+            ->setIsNullable($this->resolveIsNullable($type));
+
+        return $schema;
     }
 
     /**
-     * @param DTO\Type\CollectionTypeInterface $type
+     * @param DTO\Mapping\CollectionTypeInterface $type
      *
-     * @return array
+     * @return DTO\Schema\CollectionType
      */
-    private function processCollection(DTO\Type\CollectionTypeInterface $type): array
+    private function processCollectionType(DTO\Mapping\CollectionTypeInterface $type): DTO\Schema\CollectionType
     {
-        return [
-            'type' => DTO\Type\CollectionTypeInterface::class,
-            'isNullable' => $this->resolveIsNullable($type),
-            'items' => $this->processType($type->getType())
-        ];
+        $schema = new DTO\Schema\CollectionType();
+        $schema
+            ->setItems($this->processType($type->getType()))
+            ->setIsNullable($this->resolveIsNullable($type));
+
+        return $schema;
     }
 
     /**
-     * @param DTO\Type\TypeInterface $type
+     * @param DTO\Mapping\TypeInterface $type
      *
-     * @return array
+     * @return DTO\Schema\TypeInterface
      */
-    private function processType(DTO\Type\TypeInterface $type): array
+    private function processType(DTO\Mapping\TypeInterface $type): DTO\Schema\TypeInterface
     {
         switch (true) {
-            case $type instanceof DTO\Type\ObjectTypeInterface:
+            case $type instanceof DTO\Mapping\ObjectTypeInterface:
                 $className = $type->getClassName();
-                $schema = $this->processObject($type, new $className);
+                $schema = $this->processObjectType($type, new $className);
 
                 break;
 
-            case $type instanceof DTO\Type\ScalarTypeInterface:
-                $schema = $this->processScalar($type);
+            case $type instanceof DTO\Mapping\ScalarTypeInterface:
+                $schema = $this->processScalarType($type);
 
                 break;
 
-            case $type instanceof DTO\Type\CollectionTypeInterface:
-                $schema = $this->processCollection($type);
+            case $type instanceof DTO\Mapping\CollectionTypeInterface:
+                $schema = $this->processCollectionType($type);
 
                 break;
 
@@ -126,11 +129,11 @@ class SchemaGenerator
     }
 
     /**
-     * @param DTO\Type\TypeInterface $type
+     * @param DTO\Mapping\TypeInterface $type
      *
      * @return bool
      */
-    private function resolveIsNullable(DTO\Type\TypeInterface $type): bool
+    private function resolveIsNullable(DTO\Mapping\TypeInterface $type): bool
     {
         return is_bool($type->getIsNullable()) ? $type->getIsNullable() : $this->settings->getIsPropertiesNullableByDefault();
     }

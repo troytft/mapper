@@ -1,6 +1,6 @@
 <?php
 
-namespace Mapper\DTO\Type;
+namespace Mapper\DTO\Mapping;
 
 interface TypeInterface
 {
