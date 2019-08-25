@@ -55,7 +55,7 @@ class Mapper
      * @param ModelInterface $model
      * @param array $data
      *
-     * @throws Exception\MappingValidation\AbstractMappingValidationException
+     * @throws Exception\ExceptionInterface
      */
     public function map(ModelInterface $model, array $data)
     {
