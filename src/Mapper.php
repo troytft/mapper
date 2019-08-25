@@ -4,15 +4,10 @@ namespace Mapper;
 
 use function array_diff;
 use function array_keys;
-use function get_class;
 use function is_array;
-use function is_bool;
 use function is_scalar;
 use function call_user_func;
-use function sprintf;
 use function ucfirst;
-use Doctrine\Common\Annotations\AnnotationReader;
-use function var_dump;
 
 class Mapper
 {
@@ -22,18 +17,17 @@ class Mapper
     private $settings;
 
     /**
-     * @var AnnotationReader
+     * @var SchemaGenerator
      */
-    private $annotationReader;
+    private $schemaGenerator;
 
     /**
      * @param DTO\MapperSettings $settings
-     * @param AnnotationReader $annotationReader
      */
-    public function __construct(DTO\MapperSettings $settings, AnnotationReader $annotationReader)
+    public function __construct(DTO\MapperSettings $settings)
     {
         $this->settings = $settings;
-        $this->annotationReader = $annotationReader;
+        $this->schemaGenerator = new SchemaGenerator($settings);
     }
 
     /**
@@ -64,7 +58,7 @@ class Mapper
      */
     public function map(ModelInterface $model, array $data)
     {
-        $schema = $this->processObjectTypeScheme(new Annotation\ObjectType(), $model);
+        $schema = $this->schemaGenerator->generate($model);
         $this->getProcessedObjectValue($schema, $model, $data, []);
     }
 
@@ -183,89 +177,6 @@ class Mapper
         }
 
         return $value;
-    }
-
-    /**
-     * @param DTO\Type\ObjectTypeInterface $type
-     * @param $model
-     * @param $rawValue
-     *
-     * @return array
-     */
-    private function processObjectTypeScheme(DTO\Type\ObjectTypeInterface $type, ModelInterface $model)
-    {
-        $schema = [
-            'type' => DTO\Type\ObjectTypeInterface::class,
-            'class' => get_class($model),
-            'isNullable' => $this->resolveIsNullable($type),
-            'properties' => [],
-        ];
-
-        $reflectionClass = new \ReflectionClass($model);
-
-        foreach ($reflectionClass->getProperties() as $property) {
-            $annotation = $this->annotationReader->getPropertyAnnotation($property, DTO\Type\TypeInterface::class);
-            if (!$annotation instanceof DTO\Type\TypeInterface) {
-                continue;
-            }
-
-            $schema['properties'][$property->getName()] = $this->processTypeScheme($annotation);
-        }
-
-        return $schema;
-    }
-
-    private function processScalarTypeScheme(DTO\Type\ScalarTypeInterface $type)
-    {
-        return [
-            'type' => DTO\Type\ScalarTypeInterface::class,
-            'isNullable' => $this->resolveIsNullable($type),
-        ];
-    }
-
-    private function processCollectionTypeScheme(DTO\Type\CollectionTypeInterface $type): array
-    {
-        return [
-            'type' => DTO\Type\CollectionTypeInterface::class,
-            'isNullable' => $this->resolveIsNullable($type),
-            'items' => $this->processTypeScheme($type->getType())
-        ];
-    }
-
-    private function processTypeScheme(DTO\Type\TypeInterface $type): array
-    {
-        switch (true) {
-            case $type instanceof DTO\Type\ObjectTypeInterface:
-                $className = $type->getClassName();
-                $schema = $this->processObjectTypeScheme($type, new $className);
-
-                break;
-
-            case $type instanceof DTO\Type\ScalarTypeInterface:
-                $schema = $this->processScalarTypeScheme($type);
-
-                break;
-
-            case $type instanceof DTO\Type\CollectionTypeInterface:
-                $schema = $this->processCollectionTypeScheme($type);
-
-                break;
-
-            default:
-                throw new \InvalidArgumentException();
-        }
-
-        return $schema;
-    }
-
-    /**
-     * @param DTO\Type\TypeInterface $type
-     *
-     * @return bool
-     */
-    private function resolveIsNullable(DTO\Type\TypeInterface $type): bool
-    {
-        return is_bool($type->getIsNullable()) ? $type->getIsNullable() : $this->settings->getIsPropertiesNullableByDefault();
     }
 
     /**

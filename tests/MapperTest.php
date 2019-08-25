@@ -4,25 +4,10 @@ namespace Tests;
 
 use Mapper;
 use PHPUnit\Framework\TestCase;
-use Doctrine\Common\Annotations\AnnotationReader;
-use Tests\Model\Movie;
-use function var_dump;
 
 class MapperTest extends TestCase
 {
     private const EXCEPTION_WOS_NOT_RAISED_MESSAGE = 'Exception was not raised';
-
-    /**
-     * @var AnnotationReader
-     */
-    private $annotationReader;
-
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->annotationReader = new AnnotationReader();
-    }
 
     public function testSuccessFilledModel()
     {
@@ -43,7 +28,7 @@ class MapperTest extends TestCase
             ->setIsPropertiesNullableByDefault(true)
             ->setIsAllowedUndefinedKeysInData(false);
 
-        $mapper = new Mapper\Mapper($mapperSettings, $this->annotationReader);
+        $mapper = new Mapper\Mapper($mapperSettings);
         $mapper
             ->map($model, $data);
 
@@ -63,7 +48,7 @@ class MapperTest extends TestCase
             ->setIsPropertiesNullableByDefault(false)
             ->setIsAllowedUndefinedKeysInData(false);
 
-        $mapper = new Mapper\Mapper($mapperSettings, $this->annotationReader);
+        $mapper = new Mapper\Mapper($mapperSettings);
 
         // object root property
         $model = new Model\Movie();
@@ -125,7 +110,7 @@ class MapperTest extends TestCase
             ->setIsPropertiesNullableByDefault(true)
             ->setIsAllowedUndefinedKeysInData(false);
 
-        $mapper = new Mapper\Mapper($mapperSettings, $this->annotationReader);
+        $mapper = new Mapper\Mapper($mapperSettings);
 
         // nullable
         $model = new Model\Movie();
@@ -155,7 +140,7 @@ class MapperTest extends TestCase
             ->setIsPropertiesNullableByDefault(true)
             ->setIsAllowedUndefinedKeysInData(true);
 
-        $mapper = new Mapper\Mapper($mapperSettings, $this->annotationReader);
+        $mapper = new Mapper\Mapper($mapperSettings);
 
         $model = new Model\Movie();
         $data = [
@@ -168,8 +153,7 @@ class MapperTest extends TestCase
 
         // allowed
         $mapper->map($model, $data);
-
-
+        
         // not allowed
         $mapperSettings->setIsAllowedUndefinedKeysInData(false);
 
