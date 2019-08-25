@@ -2,13 +2,19 @@
 
 namespace Mapper\Exception\MappingValidation;
 
-class CollectionRequiredException extends AbstractMappingValidationException
+use Mapper\Exception\PathTrait;
+
+class CollectionRequiredException extends \Exception implements MappingValidationExceptionInterface
 {
+    use PathTrait;
+
     /**
      * @param array $path
      */
     public function __construct(array $path)
     {
-        parent::__construct('Value should be collection', $path);
+        $this->path = $path;
+
+        parent::__construct('Value should be collection');
     }
 }

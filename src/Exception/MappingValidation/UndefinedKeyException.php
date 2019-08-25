@@ -2,10 +2,19 @@
 
 namespace Mapper\Exception\MappingValidation;
 
-class UndefinedKeyException extends AbstractMappingValidationException
+use Mapper\Exception\PathTrait;
+
+class UndefinedKeyException extends \Exception implements MappingValidationExceptionInterface
 {
+    use PathTrait;
+
+    /**
+     * @param array $path
+     */
     public function __construct(array $path)
     {
-        parent::__construct('Undefined key', $path);
+        $this->path = $path;
+
+        parent::__construct('Undefined key');
     }
 }

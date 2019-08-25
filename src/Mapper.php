@@ -7,7 +7,6 @@ use function array_keys;
 use function is_array;
 use function is_scalar;
 use function call_user_func;
-use Mapper\Exception\SetterDoesNotExistException;
 use function method_exists;
 use function ucfirst;
 
