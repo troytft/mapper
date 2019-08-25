@@ -59,10 +59,17 @@ class Mapper
     public function map(ModelInterface $model, array $data)
     {
         $schema = $this->schemaGenerator->generate($model);
-        $this->getProcessedObjectValue($schema, $model, $data, []);
+        $this->mapObject($schema, $model, $data, []);
     }
 
-    private function getProcessedObjectValue(array $schema, $model, $rawValue, array $basePath)
+    /**
+     * @param array $schema
+     * @param ModelInterface $model
+     * @param $rawValue
+     * @param array $basePath
+     * @return ModelInterface
+     */
+    private function mapObject(array $schema, ModelInterface $model, $rawValue, array $basePath)
     {
         if (!is_array($rawValue) || $this->isPlainArray($rawValue)) {
             throw new Exception\MappingValidation\ObjectRequiredException($basePath);
@@ -83,8 +90,8 @@ class Mapper
             $propertySchema = $schema['properties'][$propertyName];
             $setterName = 'set' . ucfirst($propertyName);
 
-            $processedValue = $this->getProcessedValue($propertySchema, $propertyValue, $path);
-            call_user_func([$model, $setterName], $processedValue);
+            $mappedValue = $this->mapType($propertySchema, $propertyValue, $path);
+            call_user_func([$model, $setterName], $mappedValue);
         }
 
         $notPresentedProperties = array_diff(array_keys($schema['properties']), array_keys($rawValue));
@@ -121,7 +128,13 @@ class Mapper
         return $model;
     }
 
-    private function getProcessedValue($propertySchema, $rawValue, array $basePath)
+    /**
+     * @param array $propertySchema
+     * @param mixed|null $rawValue
+     * @param array $basePath
+     * @return mixed|null
+     */
+    private function mapType(array $propertySchema, $rawValue, array $basePath)
     {
         if ($propertySchema['isNullable'] && $rawValue === null) {
             return null;
@@ -129,18 +142,18 @@ class Mapper
 
         switch ($propertySchema['type']) {
             case DTO\Type\ScalarTypeInterface::class:
-                $value = $this->getProcessedScalarValue($propertySchema, $rawValue, $basePath);
+                $value = $this->mapScalar($propertySchema, $rawValue, $basePath);
 
                 break;
 
             case DTO\Type\ObjectTypeInterface::class:
                 $propertyModel = new $propertySchema['class'];
-                $value = $this->getProcessedObjectValue($propertySchema, $propertyModel, $rawValue, $basePath);
+                $value = $this->mapObject($propertySchema, $propertyModel, $rawValue, $basePath);
 
                 break;
 
             case DTO\Type\CollectionTypeInterface::class:
-                $value = $this->getProcessedCollectionValue($propertySchema, $rawValue, $basePath);
+                $value = $this->mapCollection($propertySchema, $rawValue, $basePath);
 
                 break;
 
@@ -152,7 +165,14 @@ class Mapper
         return $value;
     }
 
-    private function getProcessedScalarValue($propertySchema, $rawValue, $basePath)
+    /**
+     * @param array $propertySchema
+     * @param mixed $rawValue
+     * @param array $basePath
+     *
+     * @return mixed
+     */
+    private function mapScalar(array $propertySchema, $rawValue, array $basePath)
     {
         if (!is_scalar($rawValue)) {
             throw new Exception\MappingValidation\ScalarRequiredException($basePath);
@@ -161,7 +181,15 @@ class Mapper
         return $rawValue;
     }
 
-    private function getProcessedCollectionValue($propertySchema, $rawValue, array $basePath): array
+    /**
+     * @param array $propertySchema
+     * @param mixed $rawValue
+     * @param array $basePath
+     *
+     * @return array
+     * @throws Exception\MappingValidation\CollectionRequiredException
+     */
+    private function mapCollection(array $propertySchema, $rawValue, array $basePath): array
     {
         if (!is_array($rawValue) || !$this->isPlainArray($rawValue)) {
             throw new Exception\MappingValidation\CollectionRequiredException($basePath);
@@ -173,7 +201,7 @@ class Mapper
             $path = $basePath;
             $path[] = $i;
 
-            $value[] = $this->getProcessedValue($propertySchema['items'], $item, $path);
+            $value[] = $this->mapType($propertySchema['items'], $item, $path);
         }
 
         return $value;
@@ -184,7 +212,7 @@ class Mapper
      *
      * @return bool
      */
-    public function isPlainArray(array $array): bool
+    private function isPlainArray(array $array): bool
     {
         return empty($array) || array_keys($array) === range(0, count($array) - 1);
     }
