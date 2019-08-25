@@ -7,7 +7,7 @@ use Mapper\DTO\Mapping\ScalarTypeInterface;
 /**
  * @Annotation
  */
-class StringType implements ScalarTypeInterface
+class FloatType implements ScalarTypeInterface
 {
     use NullableTrait;
 }

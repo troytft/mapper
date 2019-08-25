@@ -9,16 +9,5 @@ use Mapper\DTO\Mapping\ScalarTypeInterface;
  */
 class IntegerType implements ScalarTypeInterface
 {
-    /**
-     * @var bool|null
-     */
-    public $nullable;
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getIsNullable(): ?bool
-    {
-        return $this->nullable;
-    }
+    use NullableTrait;
 }

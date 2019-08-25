@@ -10,23 +10,12 @@ use Mapper\DTO\Mapping\ObjectTypeInterface;
  */
 class ObjectType implements ObjectTypeInterface
 {
-    /**
-     * @var bool|null
-     */
-    public $nullable;
+    use NullableTrait;
 
     /**
      * @var string
      */
     public $class;
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getIsNullable(): ?bool
-    {
-        return $this->nullable;
-    }
 
     /**
      * {@inheritDoc}

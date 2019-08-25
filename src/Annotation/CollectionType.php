@@ -10,10 +10,7 @@ use Mapper\DTO\Mapping\TypeInterface;
  */
 class CollectionType implements CollectionTypeInterface
 {
-    /**
-     * @var bool|null
-     */
-    public $nullable;
+    use NullableTrait;
 
     /**
      * Type hint forced to object, cause annotation reader doesn't support interfaces
@@ -21,14 +18,6 @@ class CollectionType implements CollectionTypeInterface
      * @var object
      */
     public $type;
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getIsNullable(): ?bool
-    {
-        return $this->nullable;
-    }
 
     /**
      * @return TypeInterface
