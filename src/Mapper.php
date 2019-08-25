@@ -12,6 +12,7 @@ use function call_user_func;
 use function sprintf;
 use function ucfirst;
 use Doctrine\Common\Annotations\AnnotationReader;
+use function var_dump;
 
 class Mapper
 {
@@ -74,16 +75,16 @@ class Mapper
         }
 
         foreach ($rawValue as $propertyName => $propertyValue) {
-            if (!isset($schema['properties'][$propertyName])) {
-                if ($this->settings->getIsUndefinedKeysInDataAllowed()) {
-                    continue;
-                } else {
-                    throw new \InvalidArgumentException(sprintf('Undefined key "%s"', $propertyName));
-                }
-            }
-
             $path = $basePath;
             $path[] = $propertyName;
+
+            if (!isset($schema['properties'][$propertyName])) {
+                if ($this->settings->getIsAllowedUndefinedKeysInData()) {
+                    continue;
+                } else {
+                    throw new Exception\MappingValidation\UndefinedKeyException($path);
+                }
+            }
 
             $propertySchema = $schema['properties'][$propertyName];
             $setterName = 'set' . ucfirst($propertyName);

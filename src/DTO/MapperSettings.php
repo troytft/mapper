@@ -12,7 +12,7 @@ class MapperSettings
     /**
      * @var bool
      */
-    private $isUndefinedKeysInDataAllowed;
+    private $isAllowedUndefinedKeysInData;
 
     /**
      * @return bool
@@ -37,19 +37,19 @@ class MapperSettings
     /**
      * @return bool
      */
-    public function getIsUndefinedKeysInDataAllowed(): bool
+    public function getIsAllowedUndefinedKeysInData(): bool
     {
-        return $this->isUndefinedKeysInDataAllowed;
+        return $this->isAllowedUndefinedKeysInData;
     }
 
     /**
-     * @param bool $isUndefinedKeysInDataAllowed
+     * @param bool $isAllowedUndefinedKeysInData
      *
      * @return $this
      */
-    public function setIsUndefinedKeysInDataAllowed(bool $isUndefinedKeysInDataAllowed)
+    public function setIsAllowedUndefinedKeysInData(bool $isAllowedUndefinedKeysInData)
     {
-        $this->isUndefinedKeysInDataAllowed = $isUndefinedKeysInDataAllowed;
+        $this->isAllowedUndefinedKeysInData = $isAllowedUndefinedKeysInData;
 
         return $this;
     }

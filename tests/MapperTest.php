@@ -5,6 +5,8 @@ namespace Tests;
 use Mapper;
 use PHPUnit\Framework\TestCase;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Tests\Model\Movie;
+use function var_dump;
 
 class MapperTest extends TestCase
 {
@@ -39,7 +41,7 @@ class MapperTest extends TestCase
         $mapperSettings = new Mapper\DTO\MapperSettings();
         $mapperSettings
             ->setIsPropertiesNullableByDefault(true)
-            ->setIsUndefinedKeysInDataAllowed(false);
+            ->setIsAllowedUndefinedKeysInData(false);
 
         $mapper = new Mapper\Mapper($mapperSettings, $this->annotationReader);
         $mapper
@@ -59,7 +61,7 @@ class MapperTest extends TestCase
         $mapperSettings = new Mapper\DTO\MapperSettings();
         $mapperSettings
             ->setIsPropertiesNullableByDefault(false)
-            ->setIsUndefinedKeysInDataAllowed(false);
+            ->setIsAllowedUndefinedKeysInData(false);
 
         $mapper = new Mapper\Mapper($mapperSettings, $this->annotationReader);
 
@@ -121,7 +123,7 @@ class MapperTest extends TestCase
         $mapperSettings = new Mapper\DTO\MapperSettings();
         $mapperSettings
             ->setIsPropertiesNullableByDefault(true)
-            ->setIsUndefinedKeysInDataAllowed(false);
+            ->setIsAllowedUndefinedKeysInData(false);
 
         $mapper = new Mapper\Mapper($mapperSettings, $this->annotationReader);
 
@@ -143,6 +145,39 @@ class MapperTest extends TestCase
             $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
         } catch (Mapper\Exception\MappingValidation\ScalarRequiredException $exception) {
             $this->assertSame('name', $exception->getPathAsString());
+        }
+    }
+
+    public function testUndefinedKey()
+    {
+        $mapperSettings = new Mapper\DTO\MapperSettings();
+        $mapperSettings
+            ->setIsPropertiesNullableByDefault(true)
+            ->setIsAllowedUndefinedKeysInData(true);
+
+        $mapper = new Mapper\Mapper($mapperSettings, $this->annotationReader);
+
+        $model = new Model\Movie();
+        $data = [
+            'releases' => [
+                [
+                    'name' => 'Release 1',
+                ]
+            ]
+        ];
+
+        // allowed
+        $mapper->map($model, $data);
+
+
+        // not allowed
+        $mapperSettings->setIsAllowedUndefinedKeysInData(false);
+
+        try {
+            $mapper->map($model, $data);
+            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+        } catch (Mapper\Exception\MappingValidation\UndefinedKeyException $exception) {
+            $this->assertSame('releases.0.name', $exception->getPathAsString());
         }
     }
 }
