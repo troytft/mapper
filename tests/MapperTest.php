@@ -48,13 +48,13 @@ class MapperTest extends TestCase
         $mapper
             ->map($model, $data);
 
-        $this->assertEquals($model->getName(), $data['name']);
-        $this->assertEquals($model->getGenres(), $data['genres']);
+        $this->assertSame($model->getName(), $data['name']);
+        $this->assertSame($model->getGenres(), $data['genres']);
         $this->assertIsArray($model->getReleases());
         $this->assertArrayHasKey(0, $model->getReleases());
         $this->assertInstanceOf(Release::class, $model->getReleases()[0]);
-        $this->assertEquals($model->getReleases()[0]->getCountry(), $data['releases'][0]['country']);
-        $this->assertEquals($model->getReleases()[0]->getDate(), $data['releases'][0]['date']);
+        $this->assertSame($model->getReleases()[0]->getCountry(), $data['releases'][0]['country']);
+        $this->assertSame($model->getReleases()[0]->getDate(), $data['releases'][0]['date']);
     }
 
     public function testErrorPath()
@@ -78,7 +78,7 @@ class MapperTest extends TestCase
             $mapper->map($model, $data);
             $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
         } catch (Mapper\Exception\CollectionRequiredValidationException $exception) {
-            $this->assertEquals('genres', $exception->getPathAsString());
+            $this->assertSame('genres', $exception->getPathAsString());
         }
 
         // collection item
@@ -95,7 +95,7 @@ class MapperTest extends TestCase
             $mapper->map($model, $data);
             $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
         } catch (Mapper\Exception\ObjectRequiredValidationException $exception) {
-            $this->assertEquals('releases.0', $exception->getPathAsString());
+            $this->assertSame('releases.0', $exception->getPathAsString());
         }
 
         // object property inside collection
@@ -115,7 +115,7 @@ class MapperTest extends TestCase
             $mapper->map($model, $data);
             $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
         } catch (Mapper\Exception\ScalarRequiredValidationException $exception) {
-            $this->assertEquals('releases.0.country', $exception->getPathAsString());
+            $this->assertSame('releases.0.country', $exception->getPathAsString());
         }
     }
 
@@ -136,7 +136,7 @@ class MapperTest extends TestCase
         ];
 
         $mapper->map($model, $data);
-        $this->assertEquals(null, $model->getName());
+        $this->assertSame(null, $model->getName());
 
         // not nullable
         $mapperSettings->setIsPropertiesNullableByDefault(false);
@@ -145,7 +145,7 @@ class MapperTest extends TestCase
             $mapper->map($model, $data);
             $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
         } catch (Mapper\Exception\ScalarRequiredValidationException $exception) {
-            $this->assertEquals('name', $exception->getPathAsString());
+            $this->assertSame('name', $exception->getPathAsString());
         }
     }
 }
