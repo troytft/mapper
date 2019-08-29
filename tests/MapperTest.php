@@ -34,11 +34,7 @@ class MapperTest extends TestCase
 
         $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
 
-        try {
-            $mapper->map($model, $data);
-        } catch (Mapper\Exception\UndefinedTransformerException $transformerException) {
-            var_dump($transformerException->getPath());die();
-        }
+        $mapper->map($model, $data);
 
         $this->assertSame($model->getName(), $data['name']);
         $this->assertSame($model->getGenres(), $data['genres']);
