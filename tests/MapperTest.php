@@ -4,7 +4,7 @@ namespace Tests;
 
 use Mapper;
 use PHPUnit\Framework\TestCase;
-use function var_dump;
+use Tests\Model\Movie;
 
 class MapperTest extends TestCase
 {
@@ -169,6 +169,94 @@ class MapperTest extends TestCase
             $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
         } catch (Mapper\Exception\MappingValidation\UndefinedKeyException $exception) {
             $this->assertSame('releases.0.name', $exception->getPathAsString());
+        }
+    }
+
+    public function stringTransformer()
+    {
+        $mapperSettings = new Mapper\DTO\Settings();
+        $mapperSettings
+            ->setIsPropertiesNullableByDefault(false)
+            ->setIsAllowedUndefinedKeysInData(false);
+
+        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
+
+        $model = new Model\Movie();
+        $data = [
+            'name' => 10,
+        ];
+
+        try {
+            $mapper->map($model, $data);
+            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+        } catch (Mapper\Exception\Transformer\WrappedTransformerException $exception) {
+            $this->assertSame('name', $exception->getPathAsString());
+        }
+    }
+
+    public function floatTransformer()
+    {
+        $mapperSettings = new Mapper\DTO\Settings();
+        $mapperSettings
+            ->setIsPropertiesNullableByDefault(false)
+            ->setIsAllowedUndefinedKeysInData(false);
+
+        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
+
+        $model = new Model\Movie();
+        $data = [
+            'rating' => 'ss',
+        ];
+
+        try {
+            $mapper->map($model, $data);
+            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+        } catch (Mapper\Exception\Transformer\WrappedTransformerException $exception) {
+            $this->assertSame('rating', $exception->getPathAsString());
+        }
+    }
+
+    public function integerTransformer()
+    {
+        $mapperSettings = new Mapper\DTO\Settings();
+        $mapperSettings
+            ->setIsPropertiesNullableByDefault(false)
+            ->setIsAllowedUndefinedKeysInData(false);
+
+        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
+
+        $model = new Model\Movie();
+        $data = [
+            'lengthMinutes' => 'ss',
+        ];
+
+        try {
+            $mapper->map($model, $data);
+            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+        } catch (Mapper\Exception\Transformer\WrappedTransformerException $exception) {
+            $this->assertSame('lengthMinutes', $exception->getPathAsString());
+        }
+    }
+
+    public function booleanTransformer()
+    {
+        $mapperSettings = new Mapper\DTO\Settings();
+        $mapperSettings
+            ->setIsPropertiesNullableByDefault(false)
+            ->setIsAllowedUndefinedKeysInData(false);
+
+        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
+
+        $model = new Model\Movie();
+        $data = [
+            'isOnlineWatchAvailable' => 'ss',
+        ];
+
+        try {
+            $mapper->map($model, $data);
+            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+        } catch (Mapper\Exception\Transformer\WrappedTransformerException $exception) {
+            $this->assertSame('isOnlineWatchAvailable', $exception->getPathAsString());
         }
     }
 
