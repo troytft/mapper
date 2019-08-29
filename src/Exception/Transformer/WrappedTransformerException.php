@@ -11,9 +11,9 @@ class WrappedTransformerException extends \Exception implements ExceptionInterfa
 
     /**
      * @param TransformerExceptionInterface $transformerException
-     * @param string $path
+     * @param array $path
      */
-    public function __construct(TransformerExceptionInterface $transformerException, string $path)
+    public function __construct(TransformerExceptionInterface $transformerException, array $path)
     {
         $this->path = $path;
 

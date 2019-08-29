@@ -4,6 +4,7 @@ namespace Tests;
 
 use Mapper;
 use PHPUnit\Framework\TestCase;
+use function var_dump;
 
 class MapperTest extends TestCase
 {
@@ -14,6 +15,9 @@ class MapperTest extends TestCase
         $model = new Model\Movie();
         $data = [
             'name' => 'Taxi 2',
+            'rating' => 6.5,
+            'lengthMinutes' => 88,
+            'isOnlineWatchAvailable' => true,
             'genres' => ['Action', 'Comedy', 'Crime',],
             'releases' => [
                 [
@@ -28,9 +32,13 @@ class MapperTest extends TestCase
             ->setIsPropertiesNullableByDefault(true)
             ->setIsAllowedUndefinedKeysInData(false);
 
-        $mapper = new Mapper\Mapper($mapperSettings);
-        $mapper
-            ->map($model, $data);
+        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
+
+        try {
+            $mapper->map($model, $data);
+        } catch (Mapper\Exception\UndefinedTransformerException $transformerException) {
+            var_dump($transformerException->getPath());die();
+        }
 
         $this->assertSame($model->getName(), $data['name']);
         $this->assertSame($model->getGenres(), $data['genres']);
@@ -39,6 +47,9 @@ class MapperTest extends TestCase
         $this->assertInstanceOf(Model\Release::class, $model->getReleases()[0]);
         $this->assertSame($model->getReleases()[0]->getCountry(), $data['releases'][0]['country']);
         $this->assertSame($model->getReleases()[0]->getDate(), $data['releases'][0]['date']);
+        $this->assertSame($model->getRating(), $data['rating']);
+        $this->assertSame($model->getLengthMinutes(), $data['lengthMinutes']);
+        $this->assertSame($model->getIsOnlineWatchAvailable(), $data['isOnlineWatchAvailable']);
     }
 
     public function testErrorPath()
@@ -48,7 +59,7 @@ class MapperTest extends TestCase
             ->setIsPropertiesNullableByDefault(false)
             ->setIsAllowedUndefinedKeysInData(false);
 
-        $mapper = new Mapper\Mapper($mapperSettings);
+        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
 
         // object root property
         $model = new Model\Movie();
@@ -110,7 +121,7 @@ class MapperTest extends TestCase
             ->setIsPropertiesNullableByDefault(true)
             ->setIsAllowedUndefinedKeysInData(false);
 
-        $mapper = new Mapper\Mapper($mapperSettings);
+        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
 
         // nullable
         $model = new Model\Movie();
@@ -140,7 +151,7 @@ class MapperTest extends TestCase
             ->setIsPropertiesNullableByDefault(true)
             ->setIsAllowedUndefinedKeysInData(true);
 
-        $mapper = new Mapper\Mapper($mapperSettings);
+        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
 
         $model = new Model\Movie();
         $data = [
@@ -163,5 +174,18 @@ class MapperTest extends TestCase
         } catch (Mapper\Exception\MappingValidation\UndefinedKeyException $exception) {
             $this->assertSame('releases.0.name', $exception->getPathAsString());
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function getDefaultTransformers(): array
+    {
+        return [
+            new Mapper\Transformer\StringTransformer(),
+            new Mapper\Transformer\FloatTransformer(),
+            new Mapper\Transformer\IntegerTransformer(),
+            new Mapper\Transformer\BooleanTransformer(),
+        ];
     }
 }

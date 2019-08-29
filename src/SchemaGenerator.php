@@ -47,8 +47,7 @@ class SchemaGenerator
 
     /**
      * @param DTO\Mapping\ObjectTypeInterface $type
-     * @param $model
-     * @param $rawValue
+     * @param ModelInterface $model
      *
      * @return DTO\Schema\ObjectType
      */
@@ -92,7 +91,8 @@ class SchemaGenerator
     {
         $schema = new DTO\Schema\ScalarType();
         $schema
-            ->setIsNullable($this->resolveIsNullable($type));
+            ->setIsNullable($this->resolveIsNullable($type))
+            ->setTransformer($type->getTransformer());
 
         return $schema;
     }

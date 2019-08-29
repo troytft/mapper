@@ -15,6 +15,27 @@ class Movie implements ModelInterface
     private $name;
 
     /**
+     * @var float|null
+     *
+     * @Mapper\FloatType()
+     */
+    private $rating;
+
+    /**
+     * @var int|null
+     *
+     * @Mapper\IntegerType()
+     */
+    private $lengthMinutes;
+
+    /**
+     * @var bool|null
+     *
+     * @Mapper\BooleanType()
+     */
+    private $isOnlineWatchAvailable;
+
+    /**
      * @var string[]|null
      *
      * @Mapper\CollectionType(type=@Mapper\StringType())
@@ -84,6 +105,66 @@ class Movie implements ModelInterface
     public function setReleases(?array $releases)
     {
         $this->releases = $releases;
+
+        return $this;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getRating(): ?float
+    {
+        return $this->rating;
+    }
+
+    /**
+     * @param float|null $rating
+     *
+     * @return $this
+     */
+    public function setRating(?float $rating)
+    {
+        $this->rating = $rating;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getLengthMinutes(): ?int
+    {
+        return $this->lengthMinutes;
+    }
+
+    /**
+     * @param int|null $lengthMinutes
+     *
+     * @return $this
+     */
+    public function setLengthMinutes(?int $lengthMinutes)
+    {
+        $this->lengthMinutes = $lengthMinutes;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getIsOnlineWatchAvailable(): ?bool
+    {
+        return $this->isOnlineWatchAvailable;
+    }
+
+    /**
+     * @param bool|null $isOnlineWatchAvailable
+     *
+     * @return $this
+     */
+    public function setIsOnlineWatchAvailable(?bool $isOnlineWatchAvailable)
+    {
+        $this->isOnlineWatchAvailable = $isOnlineWatchAvailable;
 
         return $this;
     }

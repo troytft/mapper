@@ -4,11 +4,18 @@ namespace Mapper;
 
 use function array_diff;
 use function array_keys;
+use function get_class;
 use function is_array;
 use function is_scalar;
 use function call_user_func;
+use Mapper\DTO\Settings;
+use Mapper\Exception\Transformer\TransformerException;
+use Mapper\Exception\Transformer\WrappedTransformerException;
+use Mapper\Transformer\TransformerInterface;
 use function method_exists;
+use function sprintf;
 use function ucfirst;
+use function var_dump;
 
 class Mapper
 {
@@ -23,11 +30,18 @@ class Mapper
     private $schemaGenerator;
 
     /**
-     * @param DTO\Settings $settings
+     * @var TransformerInterface[]
      */
-    public function __construct(DTO\Settings $settings)
+    private $transformersByClass = [];
+
+    /**
+     * @param DTO\Settings $settings
+     * @param Transformer\TransformerInterface[] $transformers
+     */
+    public function __construct(DTO\Settings $settings, array $transformers = [])
     {
         $this->settings = $settings;
+        $this->setTransformersByClass($transformers);
         $this->schemaGenerator = new SchemaGenerator($settings);
     }
 
@@ -174,7 +188,17 @@ class Mapper
             throw new Exception\MappingValidation\ScalarRequiredException($basePath);
         }
 
-        return $rawValue;
+        if (!isset($this->transformersByClass[$schema->getTransformer()])) {
+            throw new Exception\UndefinedTransformerException(sprintf('Can not find transformer with name "%s"', $schema->getTransformer()));
+        }
+
+        try {
+            $value = $this->transformersByClass[$schema->getTransformer()]->transform($rawValue, []);
+        } catch (TransformerException $transformerException) {
+            throw new WrappedTransformerException($transformerException, $basePath);
+        }
+
+        return $value;
     }
 
     /**
@@ -222,5 +246,40 @@ class Mapper
         $path[] = $newNode;
 
         return $path;
+    }
+
+
+    /**
+     * @return TransformerInterface[]
+     */
+    public function getTransformersByClass(): array
+    {
+        return $this->transformersByClass;
+    }
+
+    /**
+     * @param TransformerInterface[] $transformersByClass
+     *
+     * @return $this
+     */
+    public function setTransformersByClass(array $transformersByClass)
+    {
+        foreach ($transformersByClass as $transformer) {
+            $this->addTransformer($transformer);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param TransformerInterface $transformer
+     *
+     * @return $this
+     */
+    public function addTransformer(TransformerInterface $transformer)
+    {
+        $this->transformersByClass[get_class($transformer)] = $transformer;
+
+        return $this;
     }
 }
