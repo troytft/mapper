@@ -7,5 +7,5 @@ interface TypeInterface
     /**
      * @return bool
      */
-    public function getIsNullable(): bool;
+    public function getNullable(): bool;
 }

@@ -7,7 +7,7 @@ class ScalarType implements ScalarTypeInterface
     /**
      * @var bool
      */
-    private $isNullable;
+    private $nullable;
 
     /**
      * @var string|null
@@ -17,19 +17,19 @@ class ScalarType implements ScalarTypeInterface
     /**
      * @return bool
      */
-    public function getIsNullable(): bool
+    public function getNullable(): bool
     {
-        return $this->isNullable;
+        return $this->nullable;
     }
 
     /**
-     * @param bool $isNullable
+     * @param bool $nullable
      *
      * @return $this
      */
-    public function setIsNullable(bool $isNullable)
+    public function setNullable(bool $nullable)
     {
-        $this->isNullable = $isNullable;
+        $this->nullable = $nullable;
 
         return $this;
     }

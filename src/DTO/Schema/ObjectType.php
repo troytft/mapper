@@ -17,7 +17,7 @@ class ObjectType implements ObjectTypeInterface
     /**
      * @var bool
      */
-    private $isNullable;
+    private $nullable;
 
     /**
      * @return string
@@ -62,19 +62,19 @@ class ObjectType implements ObjectTypeInterface
     /**
      * @return bool
      */
-    public function getIsNullable(): bool
+    public function getNullable(): bool
     {
-        return $this->isNullable;
+        return $this->nullable;
     }
 
     /**
-     * @param bool $isNullable
+     * @param bool $nullable
      *
      * @return $this
      */
-    public function setIsNullable(bool $isNullable)
+    public function setNullable(bool $nullable)
     {
-        $this->isNullable = $isNullable;
+        $this->nullable = $nullable;
 
         return $this;
     }

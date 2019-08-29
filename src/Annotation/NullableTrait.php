@@ -12,7 +12,7 @@ trait NullableTrait
     /**
      * {@inheritDoc}
      */
-    public function getIsNullable(): ?bool
+    public function getNullable(): ?bool
     {
         return $this->nullable;
     }

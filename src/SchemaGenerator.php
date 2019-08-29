@@ -74,7 +74,7 @@ class SchemaGenerator
         $schema = new DTO\Schema\ObjectType();
         $schema
             ->setClass($class)
-            ->setIsNullable($this->resolveIsNullable($type))
+            ->setNullable($this->resolveNullable($type))
             ->setProperties($properties);
 
         $this->modelSchemasCache[$class] = $schema;
@@ -91,7 +91,7 @@ class SchemaGenerator
     {
         $schema = new DTO\Schema\ScalarType();
         $schema
-            ->setIsNullable($this->resolveIsNullable($type))
+            ->setNullable($this->resolveNullable($type))
             ->setTransformer($type->getTransformer());
 
         return $schema;
@@ -107,7 +107,7 @@ class SchemaGenerator
         $schema = new DTO\Schema\CollectionType();
         $schema
             ->setItems($this->processType($type->getType()))
-            ->setIsNullable($this->resolveIsNullable($type));
+            ->setNullable($this->resolveNullable($type));
 
         return $schema;
     }
@@ -148,8 +148,8 @@ class SchemaGenerator
      *
      * @return bool
      */
-    private function resolveIsNullable(DTO\Mapping\TypeInterface $type): bool
+    private function resolveNullable(DTO\Mapping\TypeInterface $type): bool
     {
-        return is_bool($type->getIsNullable()) ? $type->getIsNullable() : $this->settings->getIsPropertiesNullableByDefault();
+        return is_bool($type->getNullable()) ? $type->getNullable() : $this->settings->getIsPropertiesNullableByDefault();
     }
 }

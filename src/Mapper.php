@@ -8,14 +8,12 @@ use function get_class;
 use function is_array;
 use function is_scalar;
 use function call_user_func;
-use Mapper\DTO\Settings;
 use Mapper\Exception\Transformer\TransformerException;
 use Mapper\Exception\Transformer\WrappedTransformerException;
 use Mapper\Transformer\TransformerInterface;
 use function method_exists;
 use function sprintf;
 use function ucfirst;
-use function var_dump;
 
 class Mapper
 {
@@ -108,7 +106,7 @@ class Mapper
 
         foreach ($propertiesNotPresentedInBody as $propertyName) {
             $propertySchema = $schema->getProperties()[$propertyName];
-            if ($propertySchema->getIsNullable()) {
+            if ($propertySchema->getNullable()) {
                 continue;
             }
 
@@ -146,7 +144,7 @@ class Mapper
      */
     private function mapType(DTO\Schema\TypeInterface $schema, $rawValue, array $basePath)
     {
-        if ($schema->getIsNullable() && $rawValue === null) {
+        if ($schema->getNullable() && $rawValue === null) {
             return null;
         }
 
