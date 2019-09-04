@@ -4,7 +4,7 @@
 ```php
 <?php
 
-namespace Tests\Model;
+namespace Model;
 
 use Mapper\Annotation as Mapper;
 use Mapper\ModelInterface;
@@ -53,12 +53,19 @@ $mapperSettings
     ->setIsPropertiesNullableByDefault(false)
     ->setIsAllowedUndefinedKeysInData(false);
 
-$mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
+$transformers = [
+    new Mapper\Transformer\StringTransformer(),
+    new Mapper\Transformer\FloatTransformer(),
+    new Mapper\Transformer\IntegerTransformer(),
+    new Mapper\Transformer\BooleanTransformer(),
+];
+
+$mapper = new Mapper\Mapper($mapperSettings, $transformers);
 
 $model = new Model\Movie();
 $data = [
     'name' => 'Taxi 2',
-	  'rating' => 6.5
+	'rating' => 6.5
 ];
 
 $mapper->map($model, $data);
