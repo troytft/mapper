@@ -156,7 +156,7 @@ class Mapper
 
             case $schema instanceof DTO\Schema\ObjectTypeInterface:
                 $class = $schema->getClass();
-                $value = $this->mapObject($schema, new $class, $rawValue, $basePath);
+                $value = $this->mapObject($schema, new $class(), $rawValue, $basePath);
 
                 break;
 

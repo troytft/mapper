@@ -2,8 +2,6 @@
 
 namespace Mapper\DTO;
 
-use Mapper\Transformer\TransformerInterface;
-
 class Settings
 {
     /**

@@ -4,7 +4,6 @@ namespace Tests;
 
 use Mapper;
 use PHPUnit\Framework\TestCase;
-use Tests\Model\Movie;
 
 class MapperTest extends TestCase
 {

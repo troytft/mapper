@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset>
+    <arg name="colors"/>
+    <arg name="report-width" value="120"/>
+
+    <arg name="extensions" value="php"/>
+    <arg name="encoding" value="utf-8"/>
+    <arg name="tab-width" value="0"/>
+
+    <file>src</file>
+    <file>tests</file>
+
+    <rule ref="PSR1" />
+
+    <rule ref="PSR2">
+        <exclude name="PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace"/>
+        <exclude name="PSR2.Methods.FunctionCallSignature.SpaceBeforeCloseBracket"/>
+        <exclude name="Squiz.WhiteSpace.ControlStructureSpacing"/>
+    </rule>
+
+    <rule ref="PSR12" />
+
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="400"/>
+            <property name="absoluteLineLimit" value="400"/>
+        </properties>
+    </rule>
+
+    <rule ref="Squiz.Classes.ClassFileName"/>
+    <rule ref="Squiz.Operators.ValidLogicalOperators"/>
+    <rule ref="Squiz.PHP.GlobalKeyword"/>
+    <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
+    <rule ref="Squiz.Scope.StaticThisUsage"/>
+
+    <rule ref="Generic.PHP.ForbiddenFunctions">
+        <properties>
+            <property name="forbiddenFunctions" type="array" extend="true">
+                <element key="var_dump" value="null"/>
+                <element key="eval" value="null"/>
+                <element key="sizeof" value="count"/>
+            </property>
+        </properties>
+    </rule>
+
+    <rule ref="vendor/slevomat/coding-standard/SlevomatCodingStandard/Sniffs/Namespaces/UnusedUsesSniff.php">
+        <properties>
+            <property name="searchAnnotations" value="true"/>
+        </properties>
+    </rule>
+</ruleset>

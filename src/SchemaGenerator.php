@@ -5,7 +5,6 @@ namespace Mapper;
 use function get_class;
 use function is_bool;
 use Doctrine\Common\Annotations\AnnotationReader;
-use function var_dump;
 
 class SchemaGenerator
 {
@@ -122,7 +121,7 @@ class SchemaGenerator
         switch (true) {
             case $type instanceof DTO\Mapping\ObjectTypeInterface:
                 $className = $type->getClassName();
-                $schema = $this->processObjectType($type, new $className);
+                $schema = $this->processObjectType($type, new $className());
 
                 break;
 

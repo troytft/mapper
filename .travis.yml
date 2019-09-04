@@ -5,3 +5,4 @@ install:
     - composer install -n
 script:
     - vendor/bin/phpunit
+    - vendor/bin/phpcs
