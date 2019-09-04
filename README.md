@@ -1,5 +1,7 @@
 # Mapper
 
+[![Build Status](https://travis-ci.org/troytft/mapper.svg?branch=master)](https://travis-ci.org/troytft/mapper)
+
 Маппинг данных на модели. 
 
 * Поддерживаются разные типы данных, в том числе объекты и коллекции, можно строить модели любого уровня вложенности
