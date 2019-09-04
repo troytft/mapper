@@ -103,12 +103,15 @@ $mapper->map($model, $data);
 
 * `Mapper\Exception\SetterDoesNotExistException` – в случае если не найден сеттер
 * `Mapper\Exception\UndefinedTransformerException` – в случае если не найден трансформер
-* `Mapper\Exception\Mapping\MappingValidationExceptionInterface` – в случае если в качестве значения свойства передан неверный тип данных, из исключения можно получить путь к свойству
+* `Mapper\Exception\MappingValidation\CollectionRequiredException` – значение должно быть коллекцией, из исключения можно получить путь к свойству
+* `Mapper\Exception\MappingValidation\ScalarRequiredException` – значение должно быть скаляром, из исключения можно получить путь к свойству
+* `Mapper\Exception\MappingValidation\ObjectRequiredException` – значение должно быть объектом, из исключения можно получить путь к свойству
+* `Mapper\Exception\MappingValidation\UndefinedKeyException` – данные содержать ключ, для которого не найдено свойство в модели, из исключения можно получить путь к свойству
 * `Mapper\Exception\Transformer\WrappedTransformerException` – в случае если трансформер выбросил исключение, из исключения можно получить путь к свойству, а так же оригинальный эксепшен доступный через `getPrevious()`:
-    * `Mapper\Exception\Transformer\StringRequiredException`
-    * `Mapper\Exception\Transformer\IntegerRequiredException`
-    * `Mapper\Exception\Transformer\BooleanRequiredException`
-    * `Mapper\Exception\Transformer\FloatRequiredException`
+    * `Mapper\Exception\Transformer\StringRequiredException` – значение должно быть строкой
+    * `Mapper\Exception\Transformer\IntegerRequiredException` – значение должно быть целым числом
+    * `Mapper\Exception\Transformer\BooleanRequiredException` – значение должно быть булем
+    * `Mapper\Exception\Transformer\FloatRequiredException` – значение должно быть десятичной дробью
 
 # Settings
 * `setIsPropertiesNullableByDefault` – значение по-умолчанию для параметра `nullable`
