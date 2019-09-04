@@ -8,7 +8,7 @@ use function get_class;
 use function is_array;
 use function is_scalar;
 use function call_user_func;
-use Mapper\Exception\Transformer\TransformerException;
+use Mapper\Exception\Transformer\TransformerExceptionInterface;
 use Mapper\Exception\Transformer\WrappedTransformerException;
 use Mapper\Transformer\TransformerInterface;
 use function method_exists;
@@ -192,7 +192,7 @@ class Mapper
 
         try {
             $value = $this->transformersByClass[$schema->getTransformer()]->transform($rawValue, []);
-        } catch (TransformerException $transformerException) {
+        } catch (TransformerExceptionInterface $transformerException) {
             throw new WrappedTransformerException($transformerException, $basePath);
         }
 
