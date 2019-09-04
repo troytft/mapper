@@ -15,6 +15,6 @@ class CollectionRequiredException extends \Exception implements MappingValidatio
     {
         $this->path = $path;
 
-        parent::__construct('Value should be collection');
+        parent::__construct();
     }
 }

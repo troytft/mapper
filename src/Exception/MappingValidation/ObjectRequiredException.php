@@ -15,6 +15,6 @@ class ObjectRequiredException extends \Exception implements MappingValidationExc
     {
         $this->path = $path;
 
-        parent::__construct('Value should be object');
+        parent::__construct();
     }
 }

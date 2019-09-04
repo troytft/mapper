@@ -15,6 +15,6 @@ class UndefinedKeyException extends \Exception implements MappingValidationExcep
     {
         $this->path = $path;
 
-        parent::__construct('Undefined key');
+        parent::__construct();
     }
 }

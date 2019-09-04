@@ -15,6 +15,6 @@ class ScalarRequiredException extends \Exception implements MappingValidationExc
     {
         $this->path = $path;
 
-        parent::__construct('Value should be scalar');
+        parent::__construct();
     }
 }
