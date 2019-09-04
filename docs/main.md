@@ -1,3 +1,9 @@
+# Installation
+
+```bash
+composer require troytft/mapper
+```
+
 # Usage
 Создайте модель, наследующую интерфейс `Mapper\ModelInterface`.
 
