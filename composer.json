@@ -1,6 +1,6 @@
 {
     "name": "troytft/mapper",
-    "description": "Map data to models with annotations and transformers",
+    "description": "Map data to models with annotations",
     "type": "library",
     "autoload": {
         "psr-4": {
