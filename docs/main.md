@@ -103,8 +103,12 @@ $mapper->map($model, $data);
 
 * `Mapper\Exception\SetterDoesNotExistException` – в случае если не найден сеттер
 * `Mapper\Exception\UndefinedTransformerException` – в случае если не найден трансформер
-* `Mapper\Exception\Mapping\MappingValidationExceptionInterface` – в случае если в качестве значения свойства передан неверный тип данных, из исключения можно так же получить путь к свойству
-* `Mapper\Exception\Transformer\WrappedTransformerException` – в случае если трансформер выбросил исключение
+* `Mapper\Exception\Mapping\MappingValidationExceptionInterface` – в случае если в качестве значения свойства передан неверный тип данных, из исключения можно получить путь к свойству
+* `Mapper\Exception\Transformer\WrappedTransformerException` – в случае если трансформер выбросил исключение, из исключения можно получить путь к свойству, а так же оригинальный эксепшен доступный через `getPrevious()`:
+    * `Mapper\Exception\Transformer\StringRequiredException`
+    * `Mapper\Exception\Transformer\IntegerRequiredException`
+    * `Mapper\Exception\Transformer\BooleanRequiredException`
+    * `Mapper\Exception\Transformer\FloatRequiredException`
 
 # Settings
 * `setIsPropertiesNullableByDefault` – значение по-умолчанию для параметра `nullable`

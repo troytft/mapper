@@ -3,20 +3,21 @@
 namespace Mapper\Transformer;
 
 use function is_float;
-use Mapper\Exception\Transformer\TransformerException;
+use Mapper\Exception\Transformer\FloatRequiredException;
 
 class FloatTransformer implements TransformerInterface
 {
     /**
      * @param $value
      * @param array $options
+     *
      * @return float
-     * @throws TransformerException
+     * @throws FloatRequiredException
      */
     public function transform($value, array $options)
     {
         if (!is_float($value)) {
-            throw new TransformerException('Value must be float.');
+            throw new FloatRequiredException();
         }
 
         return $value;
