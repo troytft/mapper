@@ -21,7 +21,7 @@ class MapperTest extends TestCase
             'releases' => [
                 [
                     'country' => 'France',
-                    'date' => '25 March 2000'
+                    'date' => '2000-03-25'
                 ],
             ],
         ];
@@ -41,7 +41,7 @@ class MapperTest extends TestCase
         $this->assertArrayHasKey(0, $model->getReleases());
         $this->assertInstanceOf(Model\Release::class, $model->getReleases()[0]);
         $this->assertSame($model->getReleases()[0]->getCountry(), $data['releases'][0]['country']);
-        $this->assertSame($model->getReleases()[0]->getDate(), $data['releases'][0]['date']);
+        $this->assertSame($model->getReleases()[0]->getDate()->format('Y-m-d'), $data['releases'][0]['date']);
         $this->assertSame($model->getRating(), $data['rating']);
         $this->assertSame($model->getLengthMinutes(), $data['lengthMinutes']);
         $this->assertSame($model->getIsOnlineWatchAvailable(), $data['isOnlineWatchAvailable']);
@@ -171,7 +171,7 @@ class MapperTest extends TestCase
         }
     }
 
-    public function stringTransformer()
+    public function testStringTransformerInvalidDataType()
     {
         $mapperSettings = new Mapper\DTO\Settings();
         $mapperSettings
@@ -193,7 +193,7 @@ class MapperTest extends TestCase
         }
     }
 
-    public function floatTransformer()
+    public function testFloatTransformerInvalidDataType()
     {
         $mapperSettings = new Mapper\DTO\Settings();
         $mapperSettings
@@ -215,7 +215,7 @@ class MapperTest extends TestCase
         }
     }
 
-    public function integerTransformer()
+    public function testIntegerTransformerInvalidDataType()
     {
         $mapperSettings = new Mapper\DTO\Settings();
         $mapperSettings
@@ -237,7 +237,74 @@ class MapperTest extends TestCase
         }
     }
 
-    public function booleanTransformer()
+    public function testBooleanTransformerInvalidDataType()
+    {
+        $mapperSettings = new Mapper\DTO\Settings();
+        $mapperSettings
+            ->setIsPropertiesNullableByDefault(false)
+            ->setIsAllowedUndefinedKeysInData(false);
+
+        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
+
+        $model = new Model\Movie();
+        $data = [
+            'isOnlineWatchAvailable' => 'ss',
+        ];
+
+        try {
+            $mapper->map($model, $data);
+            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+        } catch (Mapper\Exception\Transformer\WrappedTransformerException $exception) {
+            $this->assertSame('isOnlineWatchAvailable', $exception->getPathAsString());
+        }
+    }
+
+    public function testDateTimeTransformerInvalidDataType()
+    {
+        $mapperSettings = new Mapper\DTO\Settings();
+        $mapperSettings
+            ->setIsPropertiesNullableByDefault(false)
+            ->setIsAllowedUndefinedKeysInData(false);
+
+        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
+
+        $model = new Model\Movie();
+        $data = [
+            'isOnlineWatchAvailable' => 'ss',
+        ];
+
+        try {
+            $mapper->map($model, $data);
+            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+        } catch (Mapper\Exception\Transformer\WrappedTransformerException $exception) {
+            $this->assertSame('isOnlineWatchAvailable', $exception->getPathAsString());
+        }
+    }
+
+    public function testDateTransformerInvalidDataType()
+    {
+        $mapperSettings = new Mapper\DTO\Settings();
+        $mapperSettings
+            ->setIsPropertiesNullableByDefault(true)
+            ->setIsAllowedUndefinedKeysInData(false);
+
+        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
+
+        $model = new Model\Release();
+        $data = [
+            'date' => 'invalid date',
+        ];
+
+        try {
+            $mapper->map($model, $data);
+            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+        } catch (Mapper\Exception\Transformer\WrappedTransformerException $exception) {
+            $this->assertSame('date', $exception->getPathAsString());
+            $this->assertInstanceOf(Mapper\Exception\Transformer\DateWithFormatRequiredException::class, $exception->getPrevious());
+        }
+    }
+
+    public function testTimestampTransformerInvalidDataType()
     {
         $mapperSettings = new Mapper\DTO\Settings();
         $mapperSettings
@@ -269,6 +336,9 @@ class MapperTest extends TestCase
             new Mapper\Transformer\FloatTransformer(),
             new Mapper\Transformer\IntegerTransformer(),
             new Mapper\Transformer\BooleanTransformer(),
+            new Mapper\Transformer\DateTimeTransformer(),
+            new Mapper\Transformer\DateTransformer(),
+            new Mapper\Transformer\TimestampTransformer(),
         ];
     }
 }

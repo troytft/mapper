@@ -15,9 +15,9 @@ class Release implements ModelInterface
     private $country;
 
     /**
-     * @var string|null
+     * @var \DateTime|null
      *
-     * @Mapper\StringType()
+     * @Mapper\DateType()
      */
     private $date;
 
@@ -42,19 +42,19 @@ class Release implements ModelInterface
     }
 
     /**
-     * @return string|null
+     * @return \DateTime|null
      */
-    public function getDate(): ?string
+    public function getDate(): ?\DateTime
     {
         return $this->date;
     }
 
     /**
-     * @param string|null $date
+     * @param \DateTime|null $date
      *
      * @return $this
      */
-    public function setDate(?string $date)
+    public function setDate(?\DateTime $date)
     {
         $this->date = $date;
 

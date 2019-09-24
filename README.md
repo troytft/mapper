@@ -6,6 +6,10 @@
 
 * Поддерживаются разные типы данных, в том числе объекты и коллекции, можно строить модели любого уровня вложенности
 * Поддерживается трансформация сырых скалярных данных в любой другой тип, перед установкой значения в свойство. 
+* Есть готовые трансформеры для работы с датой:
+    * TimestampType – converts timestamp to \DateTime
+    * DateType – converts string with format "YYYY-MM-DD" to \DateTime
+    * DateTimeType – converts string with format "YYYY-MM-DDThh:mm:ss±hh:mm" to \DateTime
 
 [`Полная докуменнтация`](docs/main.md)
 
@@ -47,7 +51,7 @@ $data = [
     'releases' => [
         [
             'country' => 'France',
-            'date' => '25 March 2000'
+            'date' => '2000-03-25'
         ],
     ]
 ];
