@@ -4,9 +4,6 @@ namespace Tests;
 
 use Mapper;
 use PHPUnit\Framework\TestCase;
-use Tests\Model\Movie;
-use function get_class;
-use function var_dump;
 
 class MapperTest extends TestCase
 {

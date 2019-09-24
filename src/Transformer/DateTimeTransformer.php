@@ -25,14 +25,14 @@ class DateTimeTransformer implements TransformerInterface
      */
     public function transform($value, array $options)
     {
-        $result = \DateTime::createFromFormat($this->getTransformFormat(), $value);
+        $result = \DateTime::createFromFormat($this->format, $value);
         if ($result === false) {
             throw new DateTimeWithFormatRequiredException($this->format);
         }
 
         if ($this->isForceToLocalTimezone) {
-            $localTimezone = (new \DateTime)->getTimezone();
-            $result->setTimezone($localTimezone);
+            $dateTime = new \DateTime();
+            $result->setTimezone($dateTime->getTimezone());
         }
 
         return $result;
