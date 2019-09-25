@@ -2,16 +2,15 @@
 
 [![Build Status](https://travis-ci.org/troytft/mapper.svg?branch=master)](https://travis-ci.org/troytft/mapper)
 
-Маппинг данных на модели. 
+Mapper is a PHP library for mapping data to objects. 
 
-* Поддерживаются разные типы данных, в том числе объекты и коллекции, можно строить модели любого уровня вложенности
-* Поддерживается трансформация сырых скалярных данных в любой другой тип, перед установкой значения в свойство. 
-* Есть готовые трансформеры для работы с датой:
-    * TimestampType – converts timestamp to \DateTime
-    * DateType – converts string with format "YYYY-MM-DD" to \DateTime
-    * DateTimeType – converts string with format "YYYY-MM-DDThh:mm:ss±hh:mm" to \DateTime
+Features:
+* Supports scalar types: integer, float, boolean, string
+* Supports any nesting level using object and collection types
+* Supports work with dates
+* Allows write your own types
 
-[`Полная докуменнтация`](docs/main.md)
+[`Full doumentation`](docs/main.md)
 
 ### Installation
 
