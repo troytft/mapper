@@ -5,6 +5,7 @@ namespace Mapper;
 use Mapper\DTO\Settings;
 use function array_diff;
 use function array_keys;
+use function count;
 use function get_class;
 use function is_array;
 use function is_scalar;
@@ -94,7 +95,7 @@ class Mapper
      */
     private function mapObject(DTO\Schema\ObjectTypeInterface $schema, ModelInterface $model, $rawValue, array $basePath): ModelInterface
     {
-        if (!is_array($rawValue) || $this->isPlainArray($rawValue)) {
+        if (!is_array($rawValue) || (count($rawValue) > 0 && $this->isPlainArray($rawValue))) {
             throw new Exception\MappingValidation\ObjectRequiredException($basePath);
         }
 
@@ -115,7 +116,7 @@ class Mapper
 
         foreach ($propertiesNotPresentedInBody as $propertyName) {
             $propertySchema = $schema->getProperties()[$propertyName];
-            if ($propertySchema->getNullable()) {
+            if ($propertySchema->getNullable() || !$this->settings->getIsClearMissing()) {
                 continue;
             }
 

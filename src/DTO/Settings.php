@@ -14,6 +14,11 @@ class Settings
      */
     private $isAllowedUndefinedKeysInData = false;
 
+    /**
+     * @var bool
+     */
+    private $isClearMissing = false;
+
     public function getIsPropertiesNullableByDefault(): bool
     {
         return $this->isPropertiesNullableByDefault;
@@ -34,6 +39,18 @@ class Settings
     public function setIsAllowedUndefinedKeysInData(bool $isAllowedUndefinedKeysInData)
     {
         $this->isAllowedUndefinedKeysInData = $isAllowedUndefinedKeysInData;
+
+        return $this;
+    }
+
+    public function getIsClearMissing(): bool
+    {
+        return $this->isClearMissing;
+    }
+
+    public function setIsClearMissing(bool $isClearMissing)
+    {
+        $this->isClearMissing = $isClearMissing;
 
         return $this;
     }
