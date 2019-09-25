@@ -50,6 +50,9 @@ $data = [
 $mapper->map($model, $data);
 ```
 
+### Requirements
+* PHP 7.2 or higher
+
 ### Installation
 ```bash
 composer require troytft/mapper
