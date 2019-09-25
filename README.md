@@ -9,6 +9,7 @@ Mapper is a PHP library for mapping data to objects.
 * Supports any nesting level using object and collection types
 * Supports work with dates
 * Allows write your own types
+* Allows define nullability of property
 
 ### Usage
 ```php
