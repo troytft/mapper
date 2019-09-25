@@ -1,7 +1,9 @@
 {
     "name": "troytft/mapper",
-    "description": "Map data to models with annotations",
+    "description": "Mapper is a PHP library for mapping data to objects, type of property can be configured by annotation",
+    "keywords": ["mapper"],
     "type": "library",
+    "license": "Apache-2.0",
     "autoload": {
         "psr-4": {
             "Mapper\\": "src/"
