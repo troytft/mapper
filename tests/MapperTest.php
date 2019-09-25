@@ -31,7 +31,7 @@ class MapperTest extends TestCase
             ->setIsPropertiesNullableByDefault(true)
             ->setIsAllowedUndefinedKeysInData(false);
 
-        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
+        $mapper = new Mapper\Mapper($mapperSettings);
 
         $mapper->map($model, $data);
 
@@ -49,12 +49,7 @@ class MapperTest extends TestCase
 
     public function testErrorPath()
     {
-        $mapperSettings = new Mapper\DTO\Settings();
-        $mapperSettings
-            ->setIsPropertiesNullableByDefault(false)
-            ->setIsAllowedUndefinedKeysInData(false);
-
-        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
+        $mapper = new Mapper\Mapper();
 
         // object root property
         $model = new Model\Movie();
@@ -116,7 +111,7 @@ class MapperTest extends TestCase
             ->setIsPropertiesNullableByDefault(true)
             ->setIsAllowedUndefinedKeysInData(false);
 
-        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
+        $mapper = new Mapper\Mapper($mapperSettings);
 
         // nullable
         $model = new Model\Movie();
@@ -146,7 +141,7 @@ class MapperTest extends TestCase
             ->setIsPropertiesNullableByDefault(true)
             ->setIsAllowedUndefinedKeysInData(true);
 
-        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
+        $mapper = new Mapper\Mapper($mapperSettings);
 
         $model = new Model\Movie();
         $data = [
@@ -173,12 +168,7 @@ class MapperTest extends TestCase
 
     public function testStringTransformerInvalidDataType()
     {
-        $mapperSettings = new Mapper\DTO\Settings();
-        $mapperSettings
-            ->setIsPropertiesNullableByDefault(false)
-            ->setIsAllowedUndefinedKeysInData(false);
-
-        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
+        $mapper = new Mapper\Mapper();
 
         $model = new Model\Movie();
         $data = [
@@ -195,12 +185,7 @@ class MapperTest extends TestCase
 
     public function testFloatTransformerInvalidDataType()
     {
-        $mapperSettings = new Mapper\DTO\Settings();
-        $mapperSettings
-            ->setIsPropertiesNullableByDefault(false)
-            ->setIsAllowedUndefinedKeysInData(false);
-
-        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
+        $mapper = new Mapper\Mapper();
 
         $model = new Model\Movie();
         $data = [
@@ -217,12 +202,7 @@ class MapperTest extends TestCase
 
     public function testIntegerTransformerInvalidDataType()
     {
-        $mapperSettings = new Mapper\DTO\Settings();
-        $mapperSettings
-            ->setIsPropertiesNullableByDefault(false)
-            ->setIsAllowedUndefinedKeysInData(false);
-
-        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
+        $mapper = new Mapper\Mapper();
 
         $model = new Model\Movie();
         $data = [
@@ -239,12 +219,7 @@ class MapperTest extends TestCase
 
     public function testBooleanTransformerInvalidDataType()
     {
-        $mapperSettings = new Mapper\DTO\Settings();
-        $mapperSettings
-            ->setIsPropertiesNullableByDefault(false)
-            ->setIsAllowedUndefinedKeysInData(false);
-
-        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
+        $mapper = new Mapper\Mapper();
 
         $model = new Model\Movie();
         $data = [
@@ -261,12 +236,7 @@ class MapperTest extends TestCase
 
     public function testDateTimeTransformerInvalidDataType()
     {
-        $mapperSettings = new Mapper\DTO\Settings();
-        $mapperSettings
-            ->setIsPropertiesNullableByDefault(false)
-            ->setIsAllowedUndefinedKeysInData(false);
-
-        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
+        $mapper = new Mapper\Mapper();
 
         $model = new Model\Movie();
         $data = [
@@ -288,7 +258,7 @@ class MapperTest extends TestCase
             ->setIsPropertiesNullableByDefault(true)
             ->setIsAllowedUndefinedKeysInData(false);
 
-        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
+        $mapper = new Mapper\Mapper($mapperSettings);
 
         $model = new Model\Release();
         $data = [
@@ -306,12 +276,7 @@ class MapperTest extends TestCase
 
     public function testTimestampTransformerInvalidDataType()
     {
-        $mapperSettings = new Mapper\DTO\Settings();
-        $mapperSettings
-            ->setIsPropertiesNullableByDefault(false)
-            ->setIsAllowedUndefinedKeysInData(false);
-
-        $mapper = new Mapper\Mapper($mapperSettings, $this->getDefaultTransformers());
+        $mapper = new Mapper\Mapper();
 
         $model = new Model\Movie();
         $data = [
@@ -324,21 +289,5 @@ class MapperTest extends TestCase
         } catch (Mapper\Exception\Transformer\WrappedTransformerException $exception) {
             $this->assertSame('isOnlineWatchAvailable', $exception->getPathAsString());
         }
-    }
-
-    /**
-     * @return array
-     */
-    private function getDefaultTransformers(): array
-    {
-        return [
-            new Mapper\Transformer\StringTransformer(),
-            new Mapper\Transformer\FloatTransformer(),
-            new Mapper\Transformer\IntegerTransformer(),
-            new Mapper\Transformer\BooleanTransformer(),
-            new Mapper\Transformer\DateTimeTransformer(),
-            new Mapper\Transformer\DateTransformer(),
-            new Mapper\Transformer\TimestampTransformer(),
-        ];
     }
 }
