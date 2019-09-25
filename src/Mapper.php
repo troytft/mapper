@@ -16,7 +16,6 @@ use Mapper\Transformer\TransformerInterface;
 use function method_exists;
 use function sprintf;
 use function ucfirst;
-use function var_dump;
 
 class Mapper
 {
