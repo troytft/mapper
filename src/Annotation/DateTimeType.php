@@ -12,16 +12,13 @@ class DateTimeType implements ScalarTypeInterface
 {
     use NullableTrait;
 
-    /**
-     * @var string
-     */
-    public $transformer = DateTimeTransformer::class;
-
-    /**
-     * @return string
-     */
     public function getTransformer(): string
     {
-        return $this->transformer;
+        return DateTimeTransformer::class;
+    }
+
+    public function getTransformerOptions(): array
+    {
+        return [];
     }
 }

@@ -12,16 +12,13 @@ class FloatType implements ScalarTypeInterface
 {
     use NullableTrait;
 
-    /**
-     * @var string
-     */
-    public $transformer = FloatTransformer::class;
-
-    /**
-     * @return string
-     */
     public function getTransformer(): string
     {
-        return $this->transformer;
+        return FloatTransformer::class;
+    }
+
+    public function getTransformerOptions(): array
+    {
+        return [];
     }
 }

@@ -191,7 +191,7 @@ class Mapper
         }
 
         try {
-            $value = $this->transformersByClass[$schema->getTransformer()]->transform($rawValue, []);
+            $value = $this->transformersByClass[$schema->getTransformer()]->transform($rawValue, $schema->getTransformerOptions());
         } catch (TransformerExceptionInterface $transformerException) {
             throw new WrappedTransformerException($transformerException, $basePath);
         }
