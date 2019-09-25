@@ -7,26 +7,18 @@ class Settings
     /**
      * @var bool
      */
-    private $isPropertiesNullableByDefault;
+    private $isPropertiesNullableByDefault = false;
 
     /**
      * @var bool
      */
-    private $isAllowedUndefinedKeysInData;
+    private $isAllowedUndefinedKeysInData = false;
 
-    /**
-     * @return bool
-     */
     public function getIsPropertiesNullableByDefault(): bool
     {
         return $this->isPropertiesNullableByDefault;
     }
 
-    /**
-     * @param bool $isPropertiesNullableByDefault
-     *
-     * @return $this
-     */
     public function setIsPropertiesNullableByDefault(bool $isPropertiesNullableByDefault)
     {
         $this->isPropertiesNullableByDefault = $isPropertiesNullableByDefault;
@@ -34,19 +26,11 @@ class Settings
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function getIsAllowedUndefinedKeysInData(): bool
     {
         return $this->isAllowedUndefinedKeysInData;
     }
 
-    /**
-     * @param bool $isAllowedUndefinedKeysInData
-     *
-     * @return $this
-     */
     public function setIsAllowedUndefinedKeysInData(bool $isAllowedUndefinedKeysInData)
     {
         $this->isAllowedUndefinedKeysInData = $isAllowedUndefinedKeysInData;

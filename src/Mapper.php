@@ -2,6 +2,7 @@
 
 namespace Mapper;
 
+use Mapper\DTO\Settings;
 use function array_diff;
 use function array_keys;
 use function get_class;
@@ -36,11 +37,19 @@ class Mapper
      * @param DTO\Settings $settings
      * @param Transformer\TransformerInterface[] $transformers
      */
-    public function __construct(DTO\Settings $settings, array $transformers = [])
+    public function __construct(?DTO\Settings $settings = null)
     {
-        $this->settings = $settings;
-        $this->setTransformersByClass($transformers);
-        $this->schemaGenerator = new SchemaGenerator($settings);
+        $this->settings = $settings ?: new Settings();
+        $this->schemaGenerator = new SchemaGenerator($this->settings);
+
+        $this
+            ->addTransformer(new Transformer\StringTransformer())
+            ->addTransformer(new Transformer\FloatTransformer())
+            ->addTransformer(new Transformer\IntegerTransformer())
+            ->addTransformer(new Transformer\BooleanTransformer())
+            ->addTransformer(new Transformer\DateTimeTransformer())
+            ->addTransformer(new Transformer\DateTransformer())
+            ->addTransformer(new Transformer\TimestampTransformer());
     }
 
     /**
@@ -244,29 +253,6 @@ class Mapper
         $path[] = $newNode;
 
         return $path;
-    }
-
-
-    /**
-     * @return TransformerInterface[]
-     */
-    public function getTransformersByClass(): array
-    {
-        return $this->transformersByClass;
-    }
-
-    /**
-     * @param TransformerInterface[] $transformersByClass
-     *
-     * @return $this
-     */
-    public function setTransformersByClass(array $transformersByClass)
-    {
-        foreach ($transformersByClass as $transformer) {
-            $this->addTransformer($transformer);
-        }
-
-        return $this;
     }
 
     /**
