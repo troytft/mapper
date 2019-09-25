@@ -59,4 +59,4 @@ composer require troytft/mapper
 ```
 
 ### Documentation
-[Full documentation can be found at `docs/main.md`](docs/main.md)
+Full documentation can be found at [`docs/main.md`](docs/main.md)
