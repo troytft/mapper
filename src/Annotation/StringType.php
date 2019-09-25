@@ -12,16 +12,13 @@ class StringType implements ScalarTypeInterface
 {
     use NullableTrait;
 
-    /**
-     * @var string
-     */
-    public $transformer = StringTransformer::class;
-
-    /**
-     * @return string
-     */
     public function getTransformer(): string
     {
-        return $this->transformer;
+        return StringTransformer::class;
+    }
+
+    public function getTransformerOptions(): array
+    {
+        return [];
     }
 }

@@ -91,7 +91,8 @@ class SchemaGenerator
         $schema = new DTO\Schema\ScalarType();
         $schema
             ->setNullable($this->resolveNullable($type))
-            ->setTransformer($type->getTransformer());
+            ->setTransformer($type->getTransformer())
+            ->setTransformerOptions($type->getTransformerOptions());
 
         return $schema;
     }

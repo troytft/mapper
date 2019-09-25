@@ -12,16 +12,13 @@ class IntegerType implements ScalarTypeInterface
 {
     use NullableTrait;
 
-    /**
-     * @var string
-     */
-    public $transformer = IntegerTransformer::class;
-
-    /**
-     * @return string
-     */
     public function getTransformer(): string
     {
-        return $this->transformer;
+        return IntegerTransformer::class;
+    }
+
+    public function getTransformerOptions(): array
+    {
+        return [];
     }
 }

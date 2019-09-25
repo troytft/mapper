@@ -10,23 +10,20 @@ class ScalarType implements ScalarTypeInterface
     private $nullable;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $transformer;
 
     /**
-     * @return bool
+     * @var array
      */
+    private $transformerOptions;
+
     public function getNullable(): bool
     {
         return $this->nullable;
     }
 
-    /**
-     * @param bool $nullable
-     *
-     * @return $this
-     */
     public function setNullable(bool $nullable)
     {
         $this->nullable = $nullable;
@@ -34,22 +31,26 @@ class ScalarType implements ScalarTypeInterface
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getTransformer(): ?string
+    public function getTransformer(): string
     {
         return $this->transformer;
     }
 
-    /**
-     * @param string|null $transformer
-     *
-     * @return $this
-     */
-    public function setTransformer(?string $transformer)
+    public function setTransformer(string $transformer)
     {
         $this->transformer = $transformer;
+
+        return $this;
+    }
+
+    public function getTransformerOptions(): array
+    {
+        return $this->transformerOptions;
+    }
+
+    public function setTransformerOptions(array $transformerOptions)
+    {
+        $this->transformerOptions = $transformerOptions;
 
         return $this;
     }
