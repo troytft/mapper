@@ -18,19 +18,11 @@ class Movie implements ModelInterface
      */
     private $name;
 
-    /**
-     * @return string|null
-     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @param string|null $name
-     *
-     * @return $this
-     */
     public function setName(?string $name)
     {
         $this->name = $name;
@@ -51,16 +43,10 @@ class Movie implements ModelInterface
 $mapperSettings = new Mapper\DTO\Settings();
 $mapperSettings
     ->setIsPropertiesNullableByDefault(false)
-    ->setIsAllowedUndefinedKeysInData(false);
+    ->setIsAllowedUndefinedKeysInData(false)
+    ->setIsCLearMissing(false);
 
-$transformers = [
-    new Mapper\Transformer\StringTransformer(),
-    new Mapper\Transformer\FloatTransformer(),
-    new Mapper\Transformer\IntegerTransformer(),
-    new Mapper\Transformer\BooleanTransformer(),
-];
-
-$mapper = new Mapper\Mapper($mapperSettings, $transformers);
+$mapper = new Mapper\Mapper($mapperSettings);
 
 $model = new Model\Movie();
 $data = [
