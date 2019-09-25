@@ -4,19 +4,11 @@
 
 Mapper is a PHP library for mapping data to objects. 
 
-Features:
+### Features
 * Supports scalar types: integer, float, boolean, string
 * Supports any nesting level using object and collection types
 * Supports work with dates
 * Allows write your own types
-
-[`Full doumentation`](docs/main.md)
-
-### Installation
-
-```bash
-composer require troytft/mapper
-```
 
 ### Usage
 ```php
@@ -57,3 +49,11 @@ $data = [
 
 $mapper->map($model, $data);
 ```
+
+### Installation
+```bash
+composer require troytft/mapper
+```
+
+### Documentation
+[Full documentation can be found at `docs/main.md`](docs/main.md)
