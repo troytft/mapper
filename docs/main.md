@@ -1,6 +1,6 @@
 # Documentation
 * [`Usage`](usage.md)
-* [`Settings`](settings.md)
 * [`Types`](types.md)
-* [`Transformers`](transformers.md)
+* [`Settings`](settings.md)
 * [`Exceptions`](exceptions.md)
+* [`Transformers`](transformers.md)
