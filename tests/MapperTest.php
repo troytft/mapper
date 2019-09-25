@@ -4,6 +4,8 @@ namespace Tests;
 
 use Mapper;
 use PHPUnit\Framework\TestCase;
+use function get_class;
+use function var_dump;
 
 class MapperTest extends TestCase
 {
@@ -45,6 +47,34 @@ class MapperTest extends TestCase
         $this->assertSame($model->getRating(), $data['rating']);
         $this->assertSame($model->getLengthMinutes(), $data['lengthMinutes']);
         $this->assertSame($model->getIsOnlineWatchAvailable(), $data['isOnlineWatchAvailable']);
+    }
+
+    public function testClearMissingEnabled()
+    {
+        $settings = new Mapper\DTO\Settings();
+        $settings
+            ->setIsClearMissing(true);
+
+        $mapper = new Mapper\Mapper($settings);
+
+        try {
+            $mapper->map(new Model\Movie(), []);
+            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+        } catch (Mapper\Exception\MappingValidation\ScalarRequiredException $exception) {
+            $this->assertSame('name', $exception->getPathAsString());
+        }
+    }
+
+    public function testClearMissingDisabled()
+    {
+        $movie = new Model\Movie();
+        $movie
+            ->setName('Taxi 2');
+
+        $mapper = new Mapper\Mapper();
+        $mapper->map($movie, []);
+
+        $this->assertSame('Taxi 2', $movie->getName());
     }
 
     public function testErrorPath()
@@ -116,8 +146,9 @@ class MapperTest extends TestCase
         // nullable
         $model = new Model\Movie();
         $data = [
-            'genres' => [],
-            'releases' => [],
+            'name' => null,
+            'genres' => null,
+            'releases' => null,
         ];
 
         $mapper->map($model, $data);
