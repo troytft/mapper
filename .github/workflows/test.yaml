@@ -12,4 +12,4 @@ jobs:
                 - .:/
         steps:
             - name: Install composer
-              run: composer install -n
+              run: ls
