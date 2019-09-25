@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+
+vendor/bin/phpunit
+vendor/bin/phpcs
+vendor/bin/phpstan analyse src tests --level=1 --no-progress
