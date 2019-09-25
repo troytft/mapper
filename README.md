@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/troytft/mapper.svg?branch=master)](https://travis-ci.org/troytft/mapper)
 
-Mapper is a PHP library for mapping data to objects. 
+Mapper is a PHP library for mapping data to objects
 
 ### Features
 * Supports scalar types: integer, float, boolean, string
