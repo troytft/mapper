@@ -1,6 +1,6 @@
 # Usage
 
-Создайте модель, наследующую интерфейс `Mapper\ModelInterface`.
+Create a model implementing `Mapper\ModelInterface`.
 
 ```php
 <?php
@@ -15,28 +15,39 @@ class Movie implements ModelInterface
     /**
      * @var string|null
      *
-     * @Mapper\StringType()
+     * @Mapper\StringType(nullable=true)
      */
     private $name;
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
+    /**
+     * @var bool
+     *
+     * @Mapper\BooleanType()
+     */
+    private $isOnlineWatchAvailable;
 
-    public function setName(?string $name)
-    {
-        $this->name = $name;
+    /**
+     * @var string[]
+     *
+     * @Mapper\CollectionType(type=@Mapper\StringType())
+     */
+    private $genres;
 
-        return $this;
-    }
+    /**
+     * @var Release[]
+     *
+     * @Mapper\CollectionType(type=@Mapper\ObjectType(class="Tests\Model\Release"))
+     */
+    private $releases;
+
+    ... getters and setters
 }
 
 ```
 
-В док блоке у свойств класса можно указать аннатоцию с одним из типов.
+Put annotation with type into docblock.
 
-Далее наобходимо использовать маппер и передать в него модель и массив с данными:
+Use mapper instance by calling map() with model instance and array with data.
 
 ```php
 <?php
@@ -45,18 +56,26 @@ $mapperSettings = new Mapper\DTO\Settings();
 $mapperSettings
     ->setIsPropertiesNullableByDefault(false)
     ->setIsAllowedUndefinedKeysInData(false)
-    ->setIsCLearMissing(false);
+    ->setIsClearMissing(false);
 
 $mapper = new Mapper\Mapper($mapperSettings);
 
 $model = new Model\Movie();
 $data = [
-    'name' => 'Taxi 2',
-	'rating' => 6.5
-];
+        'name' => 'Taxi 2',
+        'isOnlineWatchAvailable' => true,
+        'genres' => ['Action', 'Comedy', 'Crime',],
+        'releases' => [
+            [
+                'country' => 'France',
+                'date' => '2000-03-25'
+            ]
+        ]
+    ];
 
 $mapper->map($model, $data);
-
 ```
 
-После выполнения – данные будут применены на модель, в случае ошибки будет выбрашено одно из исключений.
+Now $models contains data from $data. 
+
+Function ->map() can throw exceptions, in case data is invalid. List of exceptions can be found at [`exceptions.md`](exceptions.md)
