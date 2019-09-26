@@ -1,46 +1,65 @@
 # Exceptions
 
-Все исключения наследуют интерфейс `Mapper\ExceptionInterface`
+All exceptions implement  `Mapper\ExceptionInterface`
 
 ### Mapper\Exception\SetterDoesNotExistException 
-В случае если не найден сеттер
+In case setter doesn't exist
 
 ### Mapper\Exception\UndefinedTransformerException
-В случае если не найден трансформер
+In case transformer is undefined
 
 ### Mapper\Exception\MappingValidation\CollectionRequiredException
-Значение должно быть коллекцией, из исключения можно получить путь к свойству через `getPath()` или `getPathAsString()`
+In case value for property isn't collection
+
+Getters:
+* **getPath()** – path to property as array
+* **getPathAsString()** – path to property as string
 
 ### Mapper\Exception\MappingValidation\ScalarRequiredException
-Значение должно быть скаляром, из исключения можно получить путь к свойству через `getPath()` или `getPathAsString()`
+In case value for property isn't scalar
+
+Getters:
+* **getPath()** – path to property as array
+* **getPathAsString()** – path to property as string
 
 ### Mapper\Exception\MappingValidation\ObjectRequiredException
-Значение должно быть объектом, из исключения можно получить путь к свойству через `getPath()` или `getPathAsString()`
+In case value for property isn't object
+
+Getters:
+* **getPath()** – path to property as array
+* **getPathAsString()** – path to property as string
 
 ### Mapper\Exception\MappingValidation\UndefinedKeyException
-Данные содержать ключ, для которого не найдено свойство в модели, из исключения можно получить путь к свойству через `getPath()` или `getPathAsString()`
+In case data contains key not defined in model
+
+Getters:
+* **getPath()** – path to property as array
+* **getPathAsString()** – path to property as string
 
 ### Mapper\Exception\Transformer\WrappedTransformerException
-В случае если трансформер выбросил исключение, из исключения можно получить путь к свойству через `getPath()` или `getPathAsString()`, а так же оригинальный эксепшен доступный через `getPrevious()`
+Mapper wraps transformer exceptions with  `Mapper\Exception\Transformer\WrappedTransformerException`
 
-Оригинальный эксепшен имплементирует интерфейс `Mapper\Exception\Transformer\TransformerExceptionInterface`
+Getters:
+* **getPath()** – path to property as array
+* **getPathAsString()** – path to property as string
+* **getPrevious()** – original exception, exceptions implements `Mapper\Exception\Transformer\TransformerExceptionInterface`
 
-Возможные варианты:
+Transformer Exceptions:
 
 ##### Mapper\Exception\Transformer\StringRequiredException
-Значение должно быть строкой
+Value should be string
 
 ##### Mapper\Exception\Transformer\IntegerRequiredException
-Значение должно быть целым числом
+Value should be integer
 
 ##### Mapper\Exception\Transformer\BooleanRequiredException
-Значение должно быть булем
+Value should be boolean
 
 ##### Mapper\Exception\Transformer\FloatRequiredException
-Значение должно быть десятичной дробью
+Value should be float
 
 ##### Mapper\Exception\Transformer\InvalidDateFormatException
-Значение не соответствует формату и не является датой
+Value should be date with format
 
 ##### Mapper\Exception\Transformer\InvalidDateTimeFormatException
-Значение не соответствует формату и не является датой
+Value should be datetime with format
