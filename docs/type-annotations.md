@@ -43,12 +43,15 @@ Accepts string with format, converts to \DateTime
 
 Options:
  * **nullable** – is null allowed, if option not specified value will be fetched from settings
+ * **format** – string format for date and time, default: Y-m-d\TH:i:sP
+ * **forceLocalTimezone** – is force \DateTime to local timezone, default: true
     
 ### Mapper\Annotation\DateType
 Accepts string with format, converts to \DateTime
 
 Options:
  * **nullable** – is null allowed, if option not specified value will be fetched from settings
+ * **format** – string format for date, default: Y-m-d
     
 ### Mapper\Annotation\TimestampType
 Accepts integer, converts to \DateTime
