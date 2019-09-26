@@ -3,6 +3,7 @@
 namespace Mapper\Transformer;
 
 use Mapper\Exception\Transformer\InvalidDateTimeFormatException;
+use function var_dump;
 
 class DateTimeTransformer implements TransformerInterface
 {
@@ -10,11 +11,6 @@ class DateTimeTransformer implements TransformerInterface
     public const FORCE_LOCAL_TIMEZONE_OPTION_NAME = 'forceLocalTimezone';
     public const DEFAULT_FORMAT = 'Y-m-d\TH:i:sP';
     public const DEFAULT_FORCE_LOCAL_TIMEZONE = true;
-
-    /**
-     * @var bool
-     */
-    private $isForceToLocalTimezone = true;
 
     /**
      * @param $value
@@ -32,7 +28,7 @@ class DateTimeTransformer implements TransformerInterface
 
         $isForceLocalTimezone = static::DEFAULT_FORCE_LOCAL_TIMEZONE;
         if (isset($options[static::FORCE_LOCAL_TIMEZONE_OPTION_NAME])) {
-            $isForceLocalTimezone = $options[static::FORCE_LOCAL_TIMEZONE_OPTION_NAME;
+            $isForceLocalTimezone = $options[static::FORCE_LOCAL_TIMEZONE_OPTION_NAME];
         }
 
         $result = \DateTime::createFromFormat($format, $value);
