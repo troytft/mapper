@@ -21,8 +21,26 @@
 Данные содержать ключ, для которого не найдено свойство в модели, из исключения можно получить путь к свойству через `getPath()` или `getPathAsString()`
 
 ### Mapper\Exception\Transformer\WrappedTransformerException
-В случае если трансформер выбросил исключение, из исключения можно получить путь к свойству через `getPath()` или `getPathAsString()`, а так же оригинальный эксепшен доступный через `getPrevious()`:
-    * `Mapper\Exception\Transformer\StringRequiredException` – значение должно быть строкой
-    * `Mapper\Exception\Transformer\IntegerRequiredException` – значение должно быть целым числом
-    * `Mapper\Exception\Transformer\BooleanRequiredException` – значение должно быть булем
-    * `Mapper\Exception\Transformer\FloatRequiredException` – значение должно быть десятичной дробью
+В случае если трансформер выбросил исключение, из исключения можно получить путь к свойству через `getPath()` или `getPathAsString()`, а так же оригинальный эксепшен доступный через `getPrevious()`
+
+Оригинальный эксепшен имплементирует интерфейс `Mapper\Exception\Transformer\TransformerExceptionInterface`
+
+Возможные варианты:
+
+##### Mapper\Exception\Transformer\StringRequiredException
+Значение должно быть строкой
+
+##### Mapper\Exception\Transformer\IntegerRequiredException
+Значение должно быть целым числом
+
+##### Mapper\Exception\Transformer\BooleanRequiredException
+Значение должно быть булем
+
+##### Mapper\Exception\Transformer\FloatRequiredException
+Значение должно быть десятичной дробью
+
+##### Mapper\Exception\Transformer\InvalidDateFormatException
+Значение не соответствует формату и не является датой
+
+##### Mapper\Exception\Transformer\InvalidDateTimeFormatException
+Значение не соответствует формату и не является датой

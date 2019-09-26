@@ -2,7 +2,7 @@
 
 namespace Mapper\Exception\Transformer;
 
-class DateTimeWithFormatRequiredException extends \Exception implements TransformerExceptionInterface
+class InvalidDateTimeFormatException extends \Exception implements TransformerExceptionInterface
 {
     /**
      * @var string

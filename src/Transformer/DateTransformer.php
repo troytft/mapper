@@ -2,7 +2,7 @@
 
 namespace Mapper\Transformer;
 
-use Mapper\Exception\Transformer\DateWithFormatRequiredException;
+use Mapper\Exception\Transformer\InvalidDateFormatException;
 
 class DateTransformer implements TransformerInterface
 {
@@ -16,13 +16,13 @@ class DateTransformer implements TransformerInterface
      * @param array $options
      *
      * @return \DateTime
-     * @throws DateWithFormatRequiredException
+     * @throws InvalidDateFormatException
      */
     public function transform($value, array $options)
     {
         $result = \DateTime::createFromFormat($this->format, $value);
         if ($result === false) {
-            throw new DateWithFormatRequiredException($this->format);
+            throw new InvalidDateFormatException($this->format);
         }
 
         $result->setTime(0, 0);
