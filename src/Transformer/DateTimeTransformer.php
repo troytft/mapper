@@ -3,7 +3,6 @@
 namespace Mapper\Transformer;
 
 use Mapper\Exception\Transformer\InvalidDateTimeFormatException;
-use function var_dump;
 
 class DateTimeTransformer implements TransformerInterface
 {
