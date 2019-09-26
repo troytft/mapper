@@ -299,7 +299,7 @@ class MapperTest extends TestCase
             $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
         } catch (Mapper\Exception\Transformer\WrappedTransformerException $exception) {
             $this->assertSame('date', $exception->getPathAsString());
-            $this->assertInstanceOf(Mapper\Exception\Transformer\DateWithFormatRequiredException::class, $exception->getPrevious());
+            $this->assertInstanceOf(Mapper\Exception\Transformer\InvalidDateFormatException::class, $exception->getPrevious());
         }
     }
 
