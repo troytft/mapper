@@ -14,16 +14,16 @@ $mapper->map($model, $data);
 ```
 
 ### setIsPropertiesNullableByDefault
-Sets value by default for option `nullable`. If parameter enabled, than value for property should be presented in data and not be null.
+Sets value by default for option `nullable`. If parameter enabled, then value for property should be presented in data and not be null.
 
 default: `false`
 
 ### setIsAllowedUndefinedKeysInData
-If parameter disable and undefined key exists in data, than Mapper throws `Mapper\Exception\MappingValidation\UndefinedKeyException`
+If parameter disabled and undefined key exists in data, then Mapper throws `Mapper\Exception\MappingValidation\UndefinedKeyException`
 
 default: `false`
 
 ### setIsClearMissing
-If parameter enabled, than Mapper force `null` value for properties not presented in data
+If parameter enabled, then Mapper force `null` value for properties not presented in data
 
 default: `false`
