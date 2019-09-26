@@ -4,4 +4,6 @@ php:
 install:
     - composer install -n
 script:
-    - bin/test
+    - vendor/bin/phpunit
+    - vendor/bin/phpcs
+    - vendor/bin/phpstan analyse src tests --level=1 --no-progress
