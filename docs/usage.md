@@ -1,4 +1,5 @@
 # Usage
+
 Создайте модель, наследующую интерфейс `Mapper\ModelInterface`.
 
 ```php

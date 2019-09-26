@@ -1,4 +1,5 @@
 # Documentation
+
 * [`Usage`](usage.md)
 * [`Types`](types.md)
 * [`Settings`](settings.md)
