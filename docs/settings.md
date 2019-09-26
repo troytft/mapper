@@ -1,6 +1,6 @@
 # Settings
 
-Настройки задаются с помощью объекта Settings
+Settings you can set by class `Mapper\DTO\Settings`
 
 ```php
 $settings = new Mapper\DTO\Settings();
@@ -14,16 +14,16 @@ $mapper->map($model, $data);
 ```
 
 ### setIsPropertiesNullableByDefault
-Значение по-умолчанию для параметра `nullable`. Если параметр включен – то значение для property должно быть обязательно указано и не быть null.
+Sets value by default for option `nullable`. If parameter enabled, than value for property should be presented in data and not be null.
 
 default: `false`
 
 ### setIsAllowedUndefinedKeysInData
-Разрешены ли в массиве с данными ключи, для которых нет свойств в модели
+If parameter disable and undefined key exists in data, than Mapper throws `Mapper\Exception\MappingValidation\UndefinedKeyException`
 
 default: `false`
 
 ### setIsClearMissing
-Рстановить `null` для тех полей, которые не были представленны в данных
+If parameter enabled, than Mapper force `null` value for properties not presented in data
 
 default: `false`
