@@ -1,6 +1,6 @@
 # Documentation
 
 * [`Usage`](usage.md)
-* [`Types`](types.md)
+* [`Type Annotations`](type-annotations.md)
 * [`Settings`](settings.md)
 * [`Exceptions`](exceptions.md)
