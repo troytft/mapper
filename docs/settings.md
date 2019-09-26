@@ -13,7 +13,7 @@ $mapper->map($model, $data);
 ```
 
 ### setIsPropertiesNullableByDefault
-Значение по-умолчанию для параметра `nullable`
+Значение по-умолчанию для параметра `nullable`. Если параметр включен – то значение для property должно быть обязательно указано и не быть null.
 
 default: `false`
 
