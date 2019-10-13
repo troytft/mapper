@@ -267,4 +267,9 @@ class Mapper
 
         return $this;
     }
+
+    public function getSchemaGenerator(): SchemaGenerator
+    {
+        return $this->schemaGenerator;
+    }
 }
