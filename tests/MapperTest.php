@@ -7,8 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class MapperTest extends TestCase
 {
-    private const EXCEPTION_WOS_NOT_RAISED_MESSAGE = 'Exception was not raised';
-
     public function testSuccessFilledModel()
     {
         $model = new Model\Movie();
@@ -57,7 +55,7 @@ class MapperTest extends TestCase
 
         try {
             $mapper->map(new Model\Movie(), []);
-            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+            $this->fail();
         } catch (Mapper\Exception\MappingValidation\ScalarRequiredException $exception) {
             $this->assertSame('name', $exception->getPathAsString());
         }
@@ -89,7 +87,7 @@ class MapperTest extends TestCase
 
         try {
             $mapper->map($model, $data);
-            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+            $this->fail();
         } catch (Mapper\Exception\MappingValidation\CollectionRequiredException $exception) {
             $this->assertSame('genres', $exception->getPathAsString());
         }
@@ -106,7 +104,7 @@ class MapperTest extends TestCase
 
         try {
             $mapper->map($model, $data);
-            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+            $this->fail();
         } catch (Mapper\Exception\MappingValidation\ObjectRequiredException $exception) {
             $this->assertSame('releases.0', $exception->getPathAsString());
         }
@@ -126,7 +124,7 @@ class MapperTest extends TestCase
 
         try {
             $mapper->map($model, $data);
-            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+            $this->fail();
         } catch (Mapper\Exception\MappingValidation\ScalarRequiredException $exception) {
             $this->assertSame('releases.0.country', $exception->getPathAsString());
         }
@@ -157,7 +155,7 @@ class MapperTest extends TestCase
 
         try {
             $mapper->map($model, $data);
-            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+            $this->fail();
         } catch (Mapper\Exception\MappingValidation\ScalarRequiredException $exception) {
             $this->assertSame('name', $exception->getPathAsString());
         }
@@ -189,7 +187,7 @@ class MapperTest extends TestCase
 
         try {
             $mapper->map($model, $data);
-            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+            $this->fail();
         } catch (Mapper\Exception\MappingValidation\UndefinedKeyException $exception) {
             $this->assertSame('releases.0.name', $exception->getPathAsString());
         }
@@ -206,7 +204,7 @@ class MapperTest extends TestCase
 
         try {
             $mapper->map($model, $data);
-            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+            $this->fail();
         } catch (Mapper\Exception\Transformer\WrappedTransformerException $exception) {
             $this->assertSame('name', $exception->getPathAsString());
         }
@@ -223,7 +221,7 @@ class MapperTest extends TestCase
 
         try {
             $mapper->map($model, $data);
-            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+            $this->fail();
         } catch (Mapper\Exception\Transformer\WrappedTransformerException $exception) {
             $this->assertSame('rating', $exception->getPathAsString());
         }
@@ -240,7 +238,7 @@ class MapperTest extends TestCase
 
         try {
             $mapper->map($model, $data);
-            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+            $this->fail();
         } catch (Mapper\Exception\Transformer\WrappedTransformerException $exception) {
             $this->assertSame('lengthMinutes', $exception->getPathAsString());
         }
@@ -257,7 +255,7 @@ class MapperTest extends TestCase
 
         try {
             $mapper->map($model, $data);
-            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+            $this->fail();
         } catch (Mapper\Exception\Transformer\WrappedTransformerException $exception) {
             $this->assertSame('isOnlineWatchAvailable', $exception->getPathAsString());
         }
@@ -274,7 +272,7 @@ class MapperTest extends TestCase
 
         try {
             $mapper->map($model, $data);
-            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+            $this->fail();
         } catch (Mapper\Exception\Transformer\WrappedTransformerException $exception) {
             $this->assertSame('isOnlineWatchAvailable', $exception->getPathAsString());
         }
@@ -296,7 +294,7 @@ class MapperTest extends TestCase
 
         try {
             $mapper->map($model, $data);
-            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+            $this->fail();
         } catch (Mapper\Exception\Transformer\WrappedTransformerException $exception) {
             $this->assertSame('date', $exception->getPathAsString());
             $this->assertInstanceOf(Mapper\Exception\Transformer\InvalidDateFormatException::class, $exception->getPrevious());
@@ -314,7 +312,7 @@ class MapperTest extends TestCase
 
         try {
             $mapper->map($model, $data);
-            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+            $this->fail();
         } catch (Mapper\Exception\Transformer\WrappedTransformerException $exception) {
             $this->assertSame('isOnlineWatchAvailable', $exception->getPathAsString());
         }

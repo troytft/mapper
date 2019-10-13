@@ -7,8 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class TransformersTest extends TestCase
 {
-    private const EXCEPTION_WOS_NOT_RAISED_MESSAGE = 'Exception was not raised';
-
     public function testDateTimeFormatOption()
     {
         $transformer = new Mapper\Transformer\DateTimeTransformer();
@@ -19,7 +17,7 @@ class TransformersTest extends TestCase
         // invalid date format
         try {
             $transformer->transform('2021-10-01T16:00:00+00:00', $options);
-            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+            $this->fail();
         } catch (Mapper\Exception\Transformer\InvalidDateTimeFormatException $exception) {
             $this->assertSame('Y-m-d-H:i:sP', $exception->getFormat());
         }
@@ -39,7 +37,7 @@ class TransformersTest extends TestCase
         // invalid date format
         try {
             $transformer->transform('2021-10-010', $options);
-            $this->fail(static::EXCEPTION_WOS_NOT_RAISED_MESSAGE);
+            $this->fail();
         } catch (Mapper\Exception\Transformer\InvalidDateFormatException $exception) {
             $this->assertSame('Y/m/d', $exception->getFormat());
         }
