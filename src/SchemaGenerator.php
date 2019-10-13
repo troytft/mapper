@@ -39,8 +39,6 @@ class SchemaGenerator
      */
     public function generate(ModelInterface $model): DTO\Schema\ObjectType
     {
-        $this->modelSchemasCache = [];
-
         return $this->processObjectType(new Annotation\ObjectType(), $model);
     }
 
