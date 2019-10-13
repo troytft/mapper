@@ -11,18 +11,12 @@ trait PathTrait
      */
     protected $path;
 
-    /**
-     * @return array
-     */
     public function getPath(): array
     {
         return $this->path;
     }
 
-    /**
-     * @return string
-     */
-    public function getPathAsString()
+    public function getPathAsString(): string
     {
         return join('.', $this->path);
     }
