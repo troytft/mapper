@@ -130,7 +130,7 @@ class MapperTest extends TestCase
         }
     }
 
-    public function testNotNullablePropertyNotPresentedInData()
+    public function testNullablePropertyNotPresentedInData()
     {
         $mapperSettings = new Mapper\DTO\Settings();
         $mapperSettings
@@ -149,10 +149,27 @@ class MapperTest extends TestCase
 
         $mapper->map($model, $data);
         $this->assertSame(null, $model->getName());
+    }
+
+    public function testNotNullablePropertyNotPresentedInData()
+    {
+        $mapperSettings = new Mapper\DTO\Settings();
+        $mapperSettings
+            ->setIsPropertiesNullableByDefault(true)
+            ->setIsAllowedUndefinedKeysInData(false);
+
+        $mapper = new Mapper\Mapper($mapperSettings);
+
+        // nullable
+        $model = new Model\Movie();
+        $data = [
+            'name' => null,
+            'genres' => null,
+            'releases' => null,
+        ];
 
         // not nullable
         $mapperSettings->setIsPropertiesNullableByDefault(false);
-
         try {
             $mapper->map($model, $data);
             $this->fail();

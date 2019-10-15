@@ -150,4 +150,9 @@ class SchemaGenerator
     {
         return is_bool($type->getNullable()) ? $type->getNullable() : $this->settings->getIsPropertiesNullableByDefault();
     }
+
+    public function isModelHasProperty(ModelInterface $model, string $name): bool
+    {
+        return isset($this->generate($model)->getProperties()[$name]);
+    }
 }
