@@ -11,9 +11,6 @@ class SetterDoesNotExistException extends \Exception implements ExceptionInterfa
      */
     private $setterName;
 
-    /**
-     * @param string $setterName
-     */
     public function __construct(string $setterName)
     {
         $this->setterName = $setterName;
@@ -21,9 +18,6 @@ class SetterDoesNotExistException extends \Exception implements ExceptionInterfa
         parent::__construct(sprintf('Setter with name "%s" does not exist.', $this->setterName));
     }
 
-    /**
-     * @return string
-     */
     public function getSetterName(): string
     {
         return $this->setterName;

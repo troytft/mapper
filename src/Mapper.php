@@ -33,10 +33,6 @@ class Mapper
      */
     private $transformersByClass = [];
 
-    /**
-     * @param DTO\Settings $settings
-     * @param Transformer\TransformerInterface[] $transformers
-     */
     public function __construct(?DTO\Settings $settings = null)
     {
         $this->settings = $settings ?: new Settings();
@@ -52,19 +48,11 @@ class Mapper
             ->addTransformer(new Transformer\TimestampTransformer());
     }
 
-    /**
-     * @return DTO\Settings
-     */
     public function getSettings(): DTO\Settings
     {
         return $this->settings;
     }
 
-    /**
-     * @param DTO\Settings $settings
-     *
-     * @return $this
-     */
     public function setSettings(DTO\Settings $settings)
     {
         $this->settings = $settings;
@@ -72,26 +60,12 @@ class Mapper
         return $this;
     }
 
-    /**
-     * @param ModelInterface $model
-     * @param array $data
-     *
-     * @throws Exception\ExceptionInterface
-     */
     public function map(ModelInterface $model, array $data)
     {
         $schema = $this->schemaGenerator->generate($model);
         $this->mapObject($schema, $model, $data, []);
     }
 
-    /**
-     * @param DTO\Schema\ObjectTypeInterface $schema
-     * @param ModelInterface $model
-     * @param $rawValue
-     * @param array $basePath
-     *
-     * @return ModelInterface
-     */
     private function mapObject(DTO\Schema\ObjectTypeInterface $schema, ModelInterface $model, $rawValue, array $basePath): ModelInterface
     {
         if (!is_array($rawValue) || (count($rawValue) > 0 && $this->isPlainArray($rawValue))) {
@@ -125,14 +99,6 @@ class Mapper
         return $model;
     }
 
-    /**
-     * @param ModelInterface $model
-     * @param string $propertyName
-     * @param DTO\Schema\TypeInterface $schema
-     * @param $rawValue
-     *
-     * @throws Exception\SetterDoesNotExistException
-     */
     private function setPropertyToModel(ModelInterface $model, string $propertyName, DTO\Schema\TypeInterface $schema, $rawValue, array $basePath)
     {
         $value = $this->mapType($schema, $rawValue, $this->resolvePath($basePath, $propertyName));
@@ -145,12 +111,6 @@ class Mapper
         call_user_func([$model, $setterName], $value);
     }
 
-    /**
-     * @param DTO\Schema\TypeInterface $schema
-     * @param mixed|null $rawValue
-     * @param array $basePath
-     * @return mixed|null
-     */
     private function mapType(DTO\Schema\TypeInterface $schema, $rawValue, array $basePath)
     {
         if ($schema->getNullable() && $rawValue === null) {
@@ -190,13 +150,6 @@ class Mapper
         return $value;
     }
 
-    /**
-     * @param DTO\Schema\ScalarTypeInterface $schema
-     * @param mixed $rawValue
-     * @param array $basePath
-     *
-     * @return mixed
-     */
     private function mapScalarType(DTO\Schema\ScalarTypeInterface $schema, $rawValue, array $basePath)
     {
         if (!is_scalar($rawValue)) {
@@ -206,14 +159,6 @@ class Mapper
         return $rawValue;
     }
 
-    /**
-     * @param DTO\Schema\CollectionTypeInterface $schema
-     * @param mixed $rawValue
-     * @param array $basePath
-     *
-     * @return array
-     * @throws Exception\MappingValidation\CollectionRequiredException
-     */
     private function mapCollectionType(DTO\Schema\CollectionTypeInterface $schema, $rawValue, array $basePath): array
     {
         if (!is_array($rawValue) || !$this->isPlainArray($rawValue)) {
@@ -229,22 +174,11 @@ class Mapper
         return $value;
     }
 
-    /**
-     * @param array $array
-     *
-     * @return bool
-     */
     private function isPlainArray(array $array): bool
     {
         return empty($array) || array_keys($array) === range(0, count($array) - 1);
     }
 
-    /**
-     * @param array $basePath
-     * @param $newNode
-     *
-     * @return array
-     */
     private function resolvePath(array $basePath, $newNode): array
     {
         $path = $basePath;
@@ -253,11 +187,6 @@ class Mapper
         return $path;
     }
 
-    /**
-     * @param TransformerInterface $transformer
-     *
-     * @return $this
-     */
     public function addTransformer(TransformerInterface $transformer)
     {
         $this->transformersByClass[get_class($transformer)] = $transformer;

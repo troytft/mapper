@@ -23,31 +23,17 @@ class SchemaGenerator
      */
     private $modelSchemasCache;
 
-    /**
-     * @param DTO\Settings $settings
-     */
     public function __construct(DTO\Settings $settings)
     {
         $this->settings = $settings;
         $this->annotationReader = new AnnotationReader();
     }
 
-    /**
-     * @param ModelInterface $model
-     *
-     * @return DTO\Schema\ObjectType
-     */
     public function generate(ModelInterface $model): DTO\Schema\ObjectType
     {
         return $this->processObjectType(new Annotation\ObjectType(), $model);
     }
 
-    /**
-     * @param DTO\Mapping\ObjectTypeInterface $type
-     * @param ModelInterface $model
-     *
-     * @return DTO\Schema\ObjectType
-     */
     private function processObjectType(DTO\Mapping\ObjectTypeInterface $type, ModelInterface $model): DTO\Schema\ObjectType
     {
         $class = get_class($model);
@@ -79,11 +65,6 @@ class SchemaGenerator
         return $schema;
     }
 
-    /**
-     * @param DTO\Mapping\ScalarTypeInterface $type
-     *
-     * @return DTO\Schema\ScalarType
-     */
     private function processScalarType(DTO\Mapping\ScalarTypeInterface $type): DTO\Schema\ScalarType
     {
         $schema = new DTO\Schema\ScalarType();
@@ -95,11 +76,6 @@ class SchemaGenerator
         return $schema;
     }
 
-    /**
-     * @param DTO\Mapping\CollectionTypeInterface $type
-     *
-     * @return DTO\Schema\CollectionType
-     */
     private function processCollectionType(DTO\Mapping\CollectionTypeInterface $type): DTO\Schema\CollectionType
     {
         $schema = new DTO\Schema\CollectionType();
@@ -110,11 +86,6 @@ class SchemaGenerator
         return $schema;
     }
 
-    /**
-     * @param DTO\Mapping\TypeInterface $type
-     *
-     * @return DTO\Schema\TypeInterface
-     */
     private function processType(DTO\Mapping\TypeInterface $type): DTO\Schema\TypeInterface
     {
         switch (true) {
@@ -141,11 +112,6 @@ class SchemaGenerator
         return $schema;
     }
 
-    /**
-     * @param DTO\Mapping\TypeInterface $type
-     *
-     * @return bool
-     */
     private function resolveNullable(DTO\Mapping\TypeInterface $type): bool
     {
         return is_bool($type->getNullable()) ? $type->getNullable() : $this->settings->getIsPropertiesNullableByDefault();
