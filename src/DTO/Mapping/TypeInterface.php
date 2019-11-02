@@ -4,8 +4,7 @@ namespace Mapper\DTO\Mapping;
 
 interface TypeInterface
 {
-    /**
-     * @return bool|null
-     */
     public function getNullable(): ?bool;
+    public function getTransformer(): ?string;
+    public function getTransformerOptions(): array;
 }
