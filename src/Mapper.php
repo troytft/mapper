@@ -14,7 +14,6 @@ use Mapper\Exception\Transformer\TransformerExceptionInterface;
 use Mapper\Exception\Transformer\WrappedTransformerException;
 use Mapper\Transformer\TransformerInterface;
 use function method_exists;
-use function sprintf;
 use function ucfirst;
 
 class Mapper
