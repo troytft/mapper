@@ -20,6 +20,16 @@ class ObjectType implements ObjectTypeInterface
     private $nullable;
 
     /**
+     * @var string|null
+     */
+    private $transformer;
+
+    /**
+     * @var array
+     */
+    private $transformerOptions;
+
+    /**
      * @return string
      */
     public function getClass(): string
@@ -75,6 +85,30 @@ class ObjectType implements ObjectTypeInterface
     public function setNullable(bool $nullable)
     {
         $this->nullable = $nullable;
+
+        return $this;
+    }
+
+    public function getTransformer(): ?string
+    {
+        return $this->transformer;
+    }
+
+    public function setTransformer(?string $transformer)
+    {
+        $this->transformer = $transformer;
+
+        return $this;
+    }
+
+    public function getTransformerOptions(): array
+    {
+        return $this->transformerOptions;
+    }
+
+    public function setTransformerOptions(array $transformerOptions)
+    {
+        $this->transformerOptions = $transformerOptions;
 
         return $this;
     }

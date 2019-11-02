@@ -10,7 +10,7 @@ class ScalarType implements ScalarTypeInterface
     private $nullable;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $transformer;
 
@@ -31,12 +31,12 @@ class ScalarType implements ScalarTypeInterface
         return $this;
     }
 
-    public function getTransformer(): string
+    public function getTransformer(): ?string
     {
         return $this->transformer;
     }
 
-    public function setTransformer(string $transformer)
+    public function setTransformer(?string $transformer)
     {
         $this->transformer = $transformer;
 

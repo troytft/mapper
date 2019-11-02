@@ -180,6 +180,14 @@ class Mapper
 
         }
 
+        if ($schema->getTransformer()) {
+            try {
+                $value = $this->transformersByClass[$schema->getTransformer()]->transform($value, $schema->getTransformerOptions());
+            } catch (TransformerExceptionInterface $transformerException) {
+                throw new WrappedTransformerException($transformerException, $basePath);
+            }
+        }
+
         return $value;
     }
 
@@ -196,17 +204,7 @@ class Mapper
             throw new Exception\MappingValidation\ScalarRequiredException($basePath);
         }
 
-        if (!isset($this->transformersByClass[$schema->getTransformer()])) {
-            throw new Exception\UndefinedTransformerException(sprintf('Can not find transformer with name "%s"', $schema->getTransformer()));
-        }
-
-        try {
-            $value = $this->transformersByClass[$schema->getTransformer()]->transform($rawValue, $schema->getTransformerOptions());
-        } catch (TransformerExceptionInterface $transformerException) {
-            throw new WrappedTransformerException($transformerException, $basePath);
-        }
-
-        return $value;
+        return $rawValue;
     }
 
     /**

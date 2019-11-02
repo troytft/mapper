@@ -19,9 +19,6 @@ class CollectionType implements CollectionTypeInterface
      */
     public $type;
 
-    /**
-     * @return TypeInterface
-     */
     public function getType(): TypeInterface
     {
         if (!$this->type instanceof TypeInterface) {
@@ -29,5 +26,15 @@ class CollectionType implements CollectionTypeInterface
         }
 
         return $this->type;
+    }
+
+    public function getTransformer(): ?string
+    {
+        return null;
+    }
+
+    public function getTransformerOptions(): array
+    {
+        return [];
     }
 }
