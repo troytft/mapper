@@ -9,13 +9,6 @@ class DateTransformer implements TransformerInterface
     public const FORMAT_OPTION_NAME = 'format';
     public const DEFAULT_FORMAT = 'Y-m-d';
 
-    /**
-     * @param $value
-     * @param array $options
-     *
-     * @return \DateTime
-     * @throws InvalidDateFormatException
-     */
     public function transform($value, array $options)
     {
         $format = static::DEFAULT_FORMAT;

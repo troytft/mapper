@@ -19,7 +19,7 @@ class SchemaGenerator
     private $annotationReader;
 
     /**
-     * @var DTO\Schema\TypeInterface[]
+     * @var DTO\Schema\ObjectType[]
      */
     private $modelSchemasCache;
 

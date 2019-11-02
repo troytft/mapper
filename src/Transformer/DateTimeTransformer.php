@@ -11,13 +11,6 @@ class DateTimeTransformer implements TransformerInterface
     public const DEFAULT_FORMAT = 'Y-m-d\TH:i:sP';
     public const DEFAULT_FORCE_LOCAL_TIMEZONE = true;
 
-    /**
-     * @param $value
-     * @param array $options
-     *
-     * @return \DateTime
-     * @throws InvalidDateTimeFormatException
-     */
     public function transform($value, array $options)
     {
         $format = static::DEFAULT_FORMAT;
