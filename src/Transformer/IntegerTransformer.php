@@ -2,14 +2,16 @@
 
 namespace Mapper\Transformer;
 
-use function is_integer;
 use Mapper\Exception\Transformer\IntegerRequiredException;
+use function filter_var;
 
 class IntegerTransformer implements TransformerInterface
 {
     public function transform($value, array $options)
     {
-        if (!is_integer($value)) {
+        $value = filter_var($value, FILTER_VALIDATE_INT);
+        
+        if ($value === false) {
             throw new IntegerRequiredException();
         }
 
