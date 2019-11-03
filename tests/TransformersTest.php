@@ -48,6 +48,19 @@ class TransformersTest extends TestCase
         }
     }
 
+    public function testTimestampTransformer()
+    {
+        $transformer = new Mapper\Transformer\TimestampTransformer();
+
+        $this->assertTrue($transformer->transform(1620000000) instanceof \DateTime);
+
+        try {
+            $transformer->transform('s');
+            $this->fail();
+        } catch (Mapper\Exception\Transformer\IntegerRequiredException $exception) {
+        }
+    }
+
     public function testDateTimeFormatOption()
     {
         $transformer = new Mapper\Transformer\DateTimeTransformer();

@@ -4,7 +4,7 @@ namespace Mapper\Transformer;
 
 class TimestampTransformer extends IntegerTransformer
 {
-    public function transform($value, array $options)
+    public function transform($value, array $options = [])
     {
         $timestamp = parent::transform($value, []);
 
