@@ -17,7 +17,7 @@ class Settings
     /**
      * @var bool
      */
-    private $isClearMissing = false;
+    private $isClearMissing = true;
 
     public function getIsPropertiesNullableByDefault(): bool
     {

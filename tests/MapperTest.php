@@ -63,11 +63,15 @@ class MapperTest extends TestCase
 
     public function testClearMissingDisabled()
     {
+        $settings = new Mapper\DTO\Settings();
+        $settings
+            ->setIsClearMissing(false);
+
         $movie = new Model\Movie();
         $movie
             ->setName('Taxi 2');
 
-        $mapper = new Mapper\Mapper();
+        $mapper = new Mapper\Mapper($settings);
         $mapper->map($movie, []);
 
         $this->assertSame('Taxi 2', $movie->getName());
