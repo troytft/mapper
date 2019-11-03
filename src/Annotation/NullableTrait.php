@@ -5,7 +5,7 @@ namespace Mapper\Annotation;
 trait NullableTrait
 {
     /**
-     * @var bool|null
+     * @var boolean
      */
     public $nullable;
 
