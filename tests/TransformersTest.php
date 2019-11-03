@@ -7,6 +7,47 @@ use PHPUnit\Framework\TestCase;
 
 class TransformersTest extends TestCase
 {
+    public function testBooleanTransformer()
+    {
+        $transformer = new Mapper\Transformer\BooleanTransformer();
+
+        $this->assertSame(true, $transformer->transform(true));
+        $this->assertSame(true, $transformer->transform('true'));
+        $this->assertSame(false, $transformer->transform(false));
+        $this->assertSame(false, $transformer->transform('false'));
+    }
+
+    public function testIntegerTransformer()
+    {
+        $transformer = new Mapper\Transformer\IntegerTransformer();
+
+        $this->assertSame(10, $transformer->transform(10));
+        $this->assertSame(10, $transformer->transform('10'));
+        $this->assertSame(10, $transformer->transform(10.0));
+
+        try {
+            $transformer->transform(10.1);
+            $this->fail();
+        } catch (Mapper\Exception\Transformer\IntegerRequiredException $exception) {
+        }
+    }
+
+    public function testFloatTransformer()
+    {
+        $transformer = new Mapper\Transformer\FloatTransformer();
+
+        $this->assertSame(10.0, $transformer->transform(10.0));
+        $this->assertSame(10.0, $transformer->transform(10));
+        $this->assertSame(10.0, $transformer->transform('10'));
+        $this->assertSame(10.1, $transformer->transform('10.1'));
+
+        try {
+            $transformer->transform('s');
+            $this->fail();
+        } catch (Mapper\Exception\Transformer\FloatRequiredException $exception) {
+        }
+    }
+
     public function testDateTimeFormatOption()
     {
         $transformer = new Mapper\Transformer\DateTimeTransformer();

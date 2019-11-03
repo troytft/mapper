@@ -7,7 +7,7 @@ use function filter_var;
 
 class IntegerTransformer implements TransformerInterface
 {
-    public function transform($value, array $options)
+    public function transform($value, array $options = [])
     {
         $value = filter_var($value, FILTER_VALIDATE_INT);
         

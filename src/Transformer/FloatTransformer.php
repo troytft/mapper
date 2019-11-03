@@ -2,14 +2,16 @@
 
 namespace Mapper\Transformer;
 
-use function is_float;
+use function filter_var;
 use Mapper\Exception\Transformer\FloatRequiredException;
 
 class FloatTransformer implements TransformerInterface
 {
-    public function transform($value, array $options)
+    public function transform($value, array $options = [])
     {
-        if (!is_float($value)) {
+        $value = filter_var($value, FILTER_VALIDATE_FLOAT);
+
+        if ($value === false) {
             throw new FloatRequiredException();
         }
 

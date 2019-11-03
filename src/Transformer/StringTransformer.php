@@ -7,7 +7,7 @@ use function is_string;
 
 class StringTransformer implements TransformerInterface
 {
-    public function transform($value, array $options)
+    public function transform($value, array $options = [])
     {
         if (!is_string($value)) {
             throw new StringRequiredException();
