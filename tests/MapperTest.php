@@ -56,7 +56,7 @@ class MapperTest extends TestCase
         try {
             $mapper->map(new Model\Movie(), []);
             $this->fail();
-        } catch (Mapper\Exception\MappingValidation\ScalarRequiredException $exception) {
+        } catch (Mapper\Exception\MappingValidation\CanNotBeNullException $exception) {
             $this->assertSame('name', $exception->getPathAsString());
         }
     }
@@ -92,7 +92,7 @@ class MapperTest extends TestCase
         try {
             $mapper->map($model, $data);
             $this->fail();
-        } catch (Mapper\Exception\MappingValidation\CollectionRequiredException $exception) {
+        } catch (Mapper\Exception\MappingValidation\CanNotBeNullException $exception) {
             $this->assertSame('genres', $exception->getPathAsString());
         }
 
@@ -109,7 +109,7 @@ class MapperTest extends TestCase
         try {
             $mapper->map($model, $data);
             $this->fail();
-        } catch (Mapper\Exception\MappingValidation\ObjectRequiredException $exception) {
+        } catch (Mapper\Exception\MappingValidation\CanNotBeNullException $exception) {
             $this->assertSame('releases.0', $exception->getPathAsString());
         }
 
@@ -129,7 +129,7 @@ class MapperTest extends TestCase
         try {
             $mapper->map($model, $data);
             $this->fail();
-        } catch (Mapper\Exception\MappingValidation\ScalarRequiredException $exception) {
+        } catch (Mapper\Exception\MappingValidation\CanNotBeNullException $exception) {
             $this->assertSame('releases.0.country', $exception->getPathAsString());
         }
     }
@@ -177,7 +177,7 @@ class MapperTest extends TestCase
         try {
             $mapper->map($model, $data);
             $this->fail();
-        } catch (Mapper\Exception\MappingValidation\ScalarRequiredException $exception) {
+        } catch (Mapper\Exception\MappingValidation\CanNotBeNullException $exception) {
             $this->assertSame('name', $exception->getPathAsString());
         }
     }

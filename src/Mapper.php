@@ -113,8 +113,10 @@ class Mapper
 
     private function mapType(DTO\Schema\TypeInterface $schema, $rawValue, array $basePath)
     {
-        if ($schema->getNullable() && $rawValue === null) {
+        if ($rawValue === null && $schema->getNullable()) {
             return null;
+        } elseif ($rawValue === null && !$schema->getNullable()) {
+            throw new Exception\MappingValidation\CanNotBeNullException($basePath);
         }
 
         switch (true) {
