@@ -4,7 +4,7 @@ namespace Mapper\Exception\MappingValidation;
 
 use Mapper\Exception\PathTrait;
 
-class ScalarRequiredException extends \Exception implements MappingValidationExceptionInterface
+class CanNotBeNullException extends \Exception implements MappingValidationExceptionInterface
 {
     use PathTrait;
 

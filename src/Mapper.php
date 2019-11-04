@@ -8,7 +8,6 @@ use function array_keys;
 use function count;
 use function get_class;
 use function is_array;
-use function is_scalar;
 use function call_user_func;
 use Mapper\Exception\Transformer\TransformerExceptionInterface;
 use Mapper\Exception\Transformer\WrappedTransformerException;
@@ -113,8 +112,10 @@ class Mapper
 
     private function mapType(DTO\Schema\TypeInterface $schema, $rawValue, array $basePath)
     {
-        if ($schema->getNullable() && $rawValue === null) {
+        if ($rawValue === null && $schema->getNullable()) {
             return null;
+        } elseif ($rawValue === null && !$schema->getNullable()) {
+            throw new Exception\MappingValidation\CanNotBeNullException($basePath);
         }
 
         switch (true) {
@@ -152,10 +153,6 @@ class Mapper
 
     private function mapScalarType(DTO\Schema\ScalarTypeInterface $schema, $rawValue, array $basePath)
     {
-        if (!is_scalar($rawValue)) {
-            throw new Exception\MappingValidation\ScalarRequiredException($basePath);
-        }
-
         return $rawValue;
     }
 
