@@ -8,6 +8,11 @@ use function is_numeric;
 
 class IntegerTransformer implements TransformerInterface
 {
+    public static function getName(): string
+    {
+        return static::class;
+    }
+
     public function transform($value, array $options = [])
     {
         if (!is_numeric($value)) {

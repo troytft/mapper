@@ -12,9 +12,9 @@ class IntegerType implements ScalarTypeInterface
 {
     use NullableTrait;
 
-    public function getTransformer(): string
+    public function getTransformerName(): string
     {
-        return IntegerTransformer::class;
+        return IntegerTransformer::getName();
     }
 
     public function getTransformerOptions(): array

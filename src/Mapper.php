@@ -30,7 +30,7 @@ class Mapper
     /**
      * @var TransformerInterface[]
      */
-    private $transformersByClass = [];
+    private $transformers = [];
 
     public function __construct(?DTO\Settings $settings = null)
     {
@@ -140,9 +140,9 @@ class Mapper
 
         }
 
-        if ($schema->getTransformer()) {
+        if ($schema->getTransformerName()) {
             try {
-                $value = $this->transformersByClass[$schema->getTransformer()]->transform($value, $schema->getTransformerOptions());
+                $value = $this->transformers[$schema->getTransformerName()]->transform($value, $schema->getTransformerOptions());
             } catch (TransformerExceptionInterface $transformerException) {
                 throw new WrappedTransformerException($transformerException, $basePath);
             }
@@ -186,7 +186,7 @@ class Mapper
 
     public function addTransformer(TransformerInterface $transformer)
     {
-        $this->transformersByClass[get_class($transformer)] = $transformer;
+        $this->transformers[$transformer::getName()] = $transformer;
 
         return $this;
     }

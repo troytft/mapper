@@ -12,9 +12,9 @@ class StringType implements ScalarTypeInterface
 {
     use NullableTrait;
 
-    public function getTransformer(): string
+    public function getTransformerName(): string
     {
-        return StringTransformer::class;
+        return StringTransformer::getName();
     }
 
     public function getTransformerOptions(): array

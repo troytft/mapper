@@ -59,7 +59,7 @@ class SchemaGenerator
             ->setClass($class)
             ->setNullable($this->resolveNullable($type))
             ->setProperties($properties)
-            ->setTransformer($type->getTransformer())
+            ->setTransformerName($type->getTransformerName())
             ->setTransformerOptions($type->getTransformerOptions());
 
         $this->modelSchemasCache[$class] = $schema;
@@ -72,7 +72,7 @@ class SchemaGenerator
         $schema = new DTO\Schema\ScalarType();
         $schema
             ->setNullable($this->resolveNullable($type))
-            ->setTransformer($type->getTransformer())
+            ->setTransformerName($type->getTransformerName())
             ->setTransformerOptions($type->getTransformerOptions());
 
         return $schema;
@@ -84,7 +84,7 @@ class SchemaGenerator
         $schema
             ->setItems($this->processType($type->getType()))
             ->setNullable($this->resolveNullable($type))
-            ->setTransformer($type->getTransformer())
+            ->setTransformerName($type->getTransformerName())
             ->setTransformerOptions($type->getTransformerOptions());
 
         return $schema;

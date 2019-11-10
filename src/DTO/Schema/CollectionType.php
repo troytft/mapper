@@ -17,7 +17,7 @@ class CollectionType implements CollectionTypeInterface
     /**
      * @var string|null
      */
-    private $transformer;
+    private $transformerName;
 
     /**
      * @var array
@@ -64,14 +64,14 @@ class CollectionType implements CollectionTypeInterface
         return $this;
     }
 
-    public function getTransformer(): ?string
+    public function getTransformerName(): ?string
     {
-        return $this->transformer;
+        return $this->transformerName;
     }
 
-    public function setTransformer(?string $transformer)
+    public function setTransformerName(?string $transformerName)
     {
-        $this->transformer = $transformer;
+        $this->transformerName = $transformerName;
 
         return $this;
     }
