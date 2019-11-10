@@ -6,7 +6,6 @@ use Mapper\DTO\Settings;
 use function array_diff;
 use function array_keys;
 use function count;
-use function get_class;
 use function is_array;
 use function call_user_func;
 use Mapper\Exception\Transformer\TransformerExceptionInterface;
