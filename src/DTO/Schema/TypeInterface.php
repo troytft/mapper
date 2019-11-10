@@ -9,6 +9,6 @@ interface TypeInterface
      */
     public function getNullable(): bool;
 
-    public function getTransformer(): ?string;
+    public function getTransformerName(): ?string;
     public function getTransformerOptions(): array;
 }

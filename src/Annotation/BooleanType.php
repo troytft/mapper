@@ -12,9 +12,9 @@ class BooleanType implements ScalarTypeInterface
 {
     use NullableTrait;
 
-    public function getTransformer(): string
+    public function getTransformerName(): string
     {
-        return BooleanTransformer::class;
+        return BooleanTransformer::getName();
     }
 
     public function getTransformerOptions(): array

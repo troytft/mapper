@@ -18,9 +18,9 @@ class DateTimeType implements ScalarTypeInterface
      */
     public $format;
 
-    public function getTransformer(): string
+    public function getTransformerName(): string
     {
-        return DateTimeTransformer::class;
+        return DateTimeTransformer::getName();
     }
 
     public function getTransformerOptions(): array

@@ -29,7 +29,7 @@ class ObjectType implements ObjectTypeInterface
         return $this->class;
     }
 
-    public function getTransformer(): ?string
+    public function getTransformerName(): ?string
     {
         return null;
     }

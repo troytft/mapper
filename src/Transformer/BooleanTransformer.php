@@ -8,6 +8,11 @@ use function is_string;
 
 class BooleanTransformer implements TransformerInterface
 {
+    public static function getName(): string
+    {
+        return static::class;
+    }
+
     public function transform($value, array $options = [])
     {
         if (!is_bool($value) && !is_string($value)) {

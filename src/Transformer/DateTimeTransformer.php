@@ -4,14 +4,14 @@ namespace Mapper\Transformer;
 
 use Mapper\Exception\Transformer\InvalidDateTimeFormatException;
 
-class DateTimeTransformer implements TransformerInterface
+class DateTimeTransformer extends StringTransformer
 {
     public const FORMAT_OPTION_NAME = 'format';
     public const FORCE_LOCAL_TIMEZONE_OPTION_NAME = 'forceLocalTimezone';
     public const DEFAULT_FORMAT = 'Y-m-d\TH:i:sP';
     public const DEFAULT_FORCE_LOCAL_TIMEZONE = true;
 
-    public function transform($value, array $options)
+    public function transform($value, array $options = [])
     {
         $format = static::DEFAULT_FORMAT;
         if (isset($options[static::FORMAT_OPTION_NAME])) {

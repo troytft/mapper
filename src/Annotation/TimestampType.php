@@ -12,9 +12,9 @@ class TimestampType implements ScalarTypeInterface
 {
     use NullableTrait;
 
-    public function getTransformer(): string
+    public function getTransformerName(): string
     {
-        return TimestampTransformer::class;
+        return TimestampTransformer::getName();
     }
 
     public function getTransformerOptions(): array

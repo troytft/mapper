@@ -6,7 +6,6 @@ use Mapper\DTO\Settings;
 use function array_diff;
 use function array_keys;
 use function count;
-use function get_class;
 use function is_array;
 use function call_user_func;
 use Mapper\Exception\Transformer\TransformerExceptionInterface;
@@ -30,7 +29,7 @@ class Mapper
     /**
      * @var TransformerInterface[]
      */
-    private $transformersByClass = [];
+    private $transformers = [];
 
     public function __construct(?DTO\Settings $settings = null)
     {
@@ -140,9 +139,9 @@ class Mapper
 
         }
 
-        if ($schema->getTransformer()) {
+        if ($schema->getTransformerName()) {
             try {
-                $value = $this->transformersByClass[$schema->getTransformer()]->transform($value, $schema->getTransformerOptions());
+                $value = $this->transformers[$schema->getTransformerName()]->transform($value, $schema->getTransformerOptions());
             } catch (TransformerExceptionInterface $transformerException) {
                 throw new WrappedTransformerException($transformerException, $basePath);
             }
@@ -186,7 +185,7 @@ class Mapper
 
     public function addTransformer(TransformerInterface $transformer)
     {
-        $this->transformersByClass[get_class($transformer)] = $transformer;
+        $this->transformers[$transformer::getName()] = $transformer;
 
         return $this;
     }

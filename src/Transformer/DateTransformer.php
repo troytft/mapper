@@ -4,12 +4,12 @@ namespace Mapper\Transformer;
 
 use Mapper\Exception\Transformer\InvalidDateFormatException;
 
-class DateTransformer implements TransformerInterface
+class DateTransformer extends StringTransformer
 {
     public const FORMAT_OPTION_NAME = 'format';
     public const DEFAULT_FORMAT = 'Y-m-d';
 
-    public function transform($value, array $options)
+    public function transform($value, array $options = [])
     {
         $format = static::DEFAULT_FORMAT;
         if (isset($options[static::FORMAT_OPTION_NAME])) {

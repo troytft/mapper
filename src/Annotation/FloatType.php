@@ -12,9 +12,9 @@ class FloatType implements ScalarTypeInterface
 {
     use NullableTrait;
 
-    public function getTransformer(): string
+    public function getTransformerName(): string
     {
-        return FloatTransformer::class;
+        return FloatTransformer::getName();
     }
 
     public function getTransformerOptions(): array
