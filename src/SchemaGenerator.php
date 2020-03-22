@@ -21,7 +21,7 @@ class SchemaGenerator
     /**
      * @var DTO\Schema\ObjectType[]
      */
-    private $modelSchemasCache;
+    private $schemaCache;
 
     public function __construct(DTO\Settings $settings)
     {
@@ -29,21 +29,34 @@ class SchemaGenerator
         $this->annotationReader = new AnnotationReader();
     }
 
+    /**
+     * @deprecated use getSchemaByClassInstance instead
+     */
     public function generate(ModelInterface $model): DTO\Schema\ObjectType
     {
-        return $this->processObjectType(new Annotation\ObjectType(), $model);
+        return $this->getSchemaByClassInstance($model);
     }
 
-    private function processObjectType(DTO\Mapping\ObjectTypeInterface $type, ModelInterface $model): DTO\Schema\ObjectType
+    public function getSchemaByClassInstance(ModelInterface $model): DTO\Schema\ObjectType
     {
-        $class = get_class($model);
+        return $this->processObjectType(new Annotation\ObjectType(), get_class($model));
+    }
 
-        if (isset($this->modelSchemasCache[$class])) {
-            return $this->modelSchemasCache[$class];
+    public function getSchemaByClassName(string $className): DTO\Schema\ObjectType
+    {
+        return $this->processObjectType(new Annotation\ObjectType(), $className);
+    }
+
+    private function processObjectType(DTO\Mapping\ObjectTypeInterface $mapping, string $className): DTO\Schema\ObjectType
+    {
+        $className = ltrim($className, '\\');
+
+        if (isset($this->schemaCache[$className])) {
+            return $this->schemaCache[$className];
         }
 
         $properties = [];
-        $reflectionClass = new \ReflectionClass($model);
+        $reflectionClass = new \ReflectionClass($className);
 
         foreach ($reflectionClass->getProperties() as $property) {
             $annotation = $this->annotationReader->getPropertyAnnotation($property, DTO\Mapping\TypeInterface::class);
@@ -56,13 +69,13 @@ class SchemaGenerator
 
         $schema = new DTO\Schema\ObjectType();
         $schema
-            ->setClass($class)
-            ->setNullable($this->resolveNullable($type))
+            ->setClassName($className)
+            ->setNullable($this->resolveNullable($mapping))
             ->setProperties($properties)
-            ->setTransformerName($type->getTransformerName())
-            ->setTransformerOptions($type->getTransformerOptions());
+            ->setTransformerName($mapping->getTransformerName())
+            ->setTransformerOptions($mapping->getTransformerOptions());
 
-        $this->modelSchemasCache[$class] = $schema;
+        $this->schemaCache[$className] = $schema;
 
         return $schema;
     }
@@ -94,8 +107,7 @@ class SchemaGenerator
     {
         switch (true) {
             case $type instanceof DTO\Mapping\ObjectTypeInterface:
-                $className = $type->getClassName();
-                $schema = $this->processObjectType($type, new $className());
+                $schema = $this->processObjectType($type, $type->getClassName());
 
                 break;
 
