@@ -4,7 +4,6 @@ namespace Tests;
 
 use Mapper;
 use PHPUnit\Framework\TestCase;
-use function var_dump;
 
 class SchemaGeneratorTest extends TestCase
 {
