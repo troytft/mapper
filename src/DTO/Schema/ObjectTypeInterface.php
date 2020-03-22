@@ -7,7 +7,7 @@ interface ObjectTypeInterface extends TypeInterface
     /**
      * @return string
      */
-    public function getClass(): string;
+    public function getClassName(): string;
 
     /**
      * @return TypeInterface[]

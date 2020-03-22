@@ -7,7 +7,7 @@ class ObjectType implements ObjectTypeInterface
     /**
      * @var string
      */
-    private $class;
+    private $className;
 
     /**
      * @var TypeInterface[]
@@ -32,19 +32,19 @@ class ObjectType implements ObjectTypeInterface
     /**
      * @return string
      */
-    public function getClass(): string
+    public function getClassName(): string
     {
-        return $this->class;
+        return $this->className;
     }
 
     /**
-     * @param string $class
+     * @param string $className
      *
      * @return $this
      */
-    public function setClass(string $class)
+    public function setClassName(string $className)
     {
-        $this->class = $class;
+        $this->className = $className;
 
         return $this;
     }
