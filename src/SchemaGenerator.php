@@ -2,6 +2,7 @@
 
 namespace Mapper;
 
+use Doctrine\Common\Annotations\DocParser;
 use function get_class;
 use function is_bool;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -26,7 +27,7 @@ class SchemaGenerator
     public function __construct(DTO\Settings $settings)
     {
         $this->settings = $settings;
-        $this->annotationReader = new AnnotationReader();
+        $this->annotationReader = Helper\AnnotationReaderFactory::create(true);
     }
 
     /**
