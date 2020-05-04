@@ -26,7 +26,7 @@ class SchemaGenerator
     public function __construct(DTO\Settings $settings)
     {
         $this->settings = $settings;
-        $this->annotationReader = new AnnotationReader();
+        $this->annotationReader = Helper\AnnotationReaderFactory::create(true);
     }
 
     /**
