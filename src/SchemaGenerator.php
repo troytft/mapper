@@ -2,7 +2,6 @@
 
 namespace Mapper;
 
-use Doctrine\Common\Annotations\DocParser;
 use function get_class;
 use function is_bool;
 use Doctrine\Common\Annotations\AnnotationReader;
