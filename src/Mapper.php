@@ -3,14 +3,15 @@
 namespace Mapper;
 
 use Mapper\DTO\Settings;
+use Mapper\Exception\Transformer\TransformerExceptionInterface;
+use Mapper\Exception\Transformer\WrappedTransformerException;
+use Mapper\Transformer\TransformerInterface;
+
 use function array_diff;
 use function array_keys;
 use function count;
 use function is_array;
 use function call_user_func;
-use Mapper\Exception\Transformer\TransformerExceptionInterface;
-use Mapper\Exception\Transformer\WrappedTransformerException;
-use Mapper\Transformer\TransformerInterface;
 use function method_exists;
 use function ucfirst;
 
