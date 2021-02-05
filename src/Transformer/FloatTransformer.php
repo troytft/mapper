@@ -2,8 +2,9 @@
 
 namespace Mapper\Transformer;
 
-use function filter_var;
 use Mapper\Exception\Transformer\FloatRequiredException;
+
+use function filter_var;
 use function is_numeric;
 
 class FloatTransformer implements TransformerInterface

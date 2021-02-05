@@ -2,8 +2,9 @@
 
 namespace Mapper\Annotation;
 
-use function is_string;
 use Mapper\DTO\Mapping\ObjectTypeInterface;
+
+use function is_string;
 
 /**
  * @Annotation
