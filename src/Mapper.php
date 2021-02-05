@@ -8,6 +8,7 @@ use Mapper\Exception\Transformer\WrappedTransformerException;
 use Mapper\Transformer\TransformerInterface;
 
 use function array_diff;
+use function array_is_list;
 use function array_keys;
 use function count;
 use function is_array;
@@ -67,7 +68,7 @@ class Mapper
 
     private function mapObject(DTO\Schema\ObjectTypeInterface $schema, ModelInterface $model, $rawValue, array $basePath): ModelInterface
     {
-        if (!is_array($rawValue) || (count($rawValue) > 0 && $this->isPlainArray($rawValue))) {
+        if (!is_array($rawValue) || (count($rawValue) > 0 && array_is_list($rawValue))) {
             throw new Exception\MappingValidation\ObjectRequiredException($basePath);
         }
 
@@ -158,7 +159,7 @@ class Mapper
 
     private function mapCollectionType(DTO\Schema\CollectionTypeInterface $schema, $rawValue, array $basePath): array
     {
-        if (!is_array($rawValue) || !$this->isPlainArray($rawValue)) {
+        if (!is_array($rawValue) || !array_is_list($rawValue)) {
             throw new Exception\MappingValidation\CollectionRequiredException($basePath);
         }
 
@@ -169,11 +170,6 @@ class Mapper
         }
 
         return $value;
-    }
-
-    private function isPlainArray(array $array): bool
-    {
-        return empty($array) || array_keys($array) === range(0, count($array) - 1);
     }
 
     private function resolvePath(array $basePath, $newNode): array
