@@ -3,6 +3,7 @@
 namespace Mapper\Transformer;
 
 use Mapper\Exception\Transformer\IntegerRequiredException;
+
 use function filter_var;
 use function is_numeric;
 

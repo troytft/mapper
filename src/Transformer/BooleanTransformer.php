@@ -3,6 +3,7 @@
 namespace Mapper\Transformer;
 
 use Mapper\Exception\Transformer\BooleanRequiredException;
+
 use function is_bool;
 use function is_string;
 

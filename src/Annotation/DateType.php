@@ -4,6 +4,7 @@ namespace Mapper\Annotation;
 
 use Mapper\DTO\Mapping\ScalarTypeInterface;
 use Mapper\Transformer\DateTransformer;
+
 use function is_string;
 
 /**

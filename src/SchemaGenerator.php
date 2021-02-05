@@ -2,9 +2,10 @@
 
 namespace Mapper;
 
+use Doctrine\Common\Annotations\AnnotationReader;
+
 use function get_class;
 use function is_bool;
-use Doctrine\Common\Annotations\AnnotationReader;
 
 class SchemaGenerator
 {

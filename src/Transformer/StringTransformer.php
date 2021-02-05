@@ -3,6 +3,7 @@
 namespace Mapper\Transformer;
 
 use Mapper\Exception\Transformer\StringRequiredException;
+
 use function is_string;
 
 class StringTransformer implements TransformerInterface
