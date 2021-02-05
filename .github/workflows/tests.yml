@@ -6,7 +6,6 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                composer-deps: ['lowest', 'stable']
                 php-versions: ['7.2', '8.0']
 
         steps:
@@ -26,7 +25,7 @@ jobs:
             - run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
             - name: Install Dependencies with --prefer-${{ matrix.composer-deps }}
-              run: composer update --prefer-${{ matrix.composer-deps }} --no-suggest --no-interaction --no-progress
+              run: composer update --prefer-stable --no-suggest --no-interaction --no-progress
 
             - name: Run PHPUnit
               run: vendor/bin/phpunit
