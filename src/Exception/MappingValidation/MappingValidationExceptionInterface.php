@@ -2,10 +2,8 @@
 
 namespace Mapper\Exception\MappingValidation;
 
-use Mapper\Exception\ExceptionInterface;
+use Mapper\Exception\StackableMappingExceptionInterface;
 
-interface MappingValidationExceptionInterface extends ExceptionInterface
+interface MappingValidationExceptionInterface extends StackableMappingExceptionInterface
 {
-    public function getPath(): array;
-    public function getPathAsString(): string;
 }

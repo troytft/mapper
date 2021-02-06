@@ -4,7 +4,7 @@ namespace Mapper\Exception;
 
 use function sprintf;
 
-class SetterDoesNotExistException extends \Exception implements ExceptionInterface
+class SetterDoesNotExistException extends \Exception
 {
     /**
      * @var string
