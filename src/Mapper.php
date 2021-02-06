@@ -3,7 +3,6 @@
 namespace Mapper;
 
 use Mapper\DTO\Settings;
-use Mapper\Exception\MappingValidation\MappingValidationExceptionInterface;
 use Mapper\Exception\StackableMappingExceptionInterface;
 use Mapper\Exception\StackedMappingException;
 use Mapper\Exception\Transformer\TransformerExceptionInterface;
@@ -13,14 +12,11 @@ use Mapper\Transformer\TransformerInterface;
 use function array_diff;
 use function array_is_list;
 use function array_keys;
-use function array_map;
 use function array_merge;
 use function count;
-use function get_class;
 use function is_array;
 use function call_user_func;
 use function method_exists;
-use function sprintf;
 use function ucfirst;
 use function var_dump;
 
@@ -74,9 +70,16 @@ class Mapper
         $this->mapObject($schema, $model, $data, []);
     }
 
-    private function mapObject(DTO\Schema\ObjectTypeInterface $schema, ModelInterface $model, $rawValue, array $basePath): ModelInterface
+    private function mapObject(DTO\Schema\ObjectTypeInterface $schema, ModelInterface $model, array $rawValue, array $basePath): ModelInterface
     {
-        $exceptionsStack = [];
+        if ($this->settings->getIsClearMissing()) {
+            $propertiesNotPresentedInData = array_diff(array_keys($schema->getProperties()), array_keys($rawValue));
+            foreach ($propertiesNotPresentedInData as $propertyName) {
+                $rawValue[$propertyName] = null;
+            }
+        }
+
+        $mappingExceptionsStack = [];
 
         foreach ($rawValue as $propertyName => $propertyValue) {
             try {
@@ -95,35 +98,14 @@ class Mapper
                     throw $exception;
                 }
 
-                $exceptionsStack[] = $exception;
+                $mappingExceptionsStack[] = $exception;
             } catch (StackedMappingException $exception) {
-                $exceptionsStack = array_merge($exceptionsStack, $exception->getExceptions());
+                $mappingExceptionsStack = array_merge($mappingExceptionsStack, $exception->getExceptions());
             }
         }
 
-        $propertiesNotPresentedInBody = array_diff(array_keys($schema->getProperties()), array_keys($rawValue));
-
-        foreach ($propertiesNotPresentedInBody as $propertyName) {
-            try {
-                $propertySchema = $schema->getProperties()[$propertyName];
-                if ($propertySchema->getNullable() || !$this->settings->getIsClearMissing()) {
-                    continue;
-                }
-
-                $this->setPropertyToModel($model, $propertyName, $propertySchema, null, $basePath);
-            } catch (StackableMappingExceptionInterface $exception) {
-                if (!$this->settings->getStackMappingExceptions()) {
-                    throw $exception;
-                }
-
-                $exceptionsStack[] = $exception;
-            } catch (StackedMappingException $exception) {
-                $exceptionsStack = array_merge($exceptionsStack, $exception->getExceptions());
-            }
-        }
-
-        if ($exceptionsStack) {
-            throw new StackedMappingException($exceptionsStack);
+        if ($mappingExceptionsStack) {
+            throw new StackedMappingException($mappingExceptionsStack);
         }
 
         return $model;
