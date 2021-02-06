@@ -2,10 +2,8 @@
 
 namespace Mapper\Exception\MappingValidation;
 
-use Mapper\Exception\ExceptionInterface;
+use Mapper\Exception\PathAwareExceptionInterface;
 
-interface MappingValidationExceptionInterface extends ExceptionInterface
+interface MappingValidationExceptionInterface extends PathAwareExceptionInterface
 {
-    public function getPath(): array;
-    public function getPathAsString(): string;
 }

@@ -2,11 +2,10 @@
 
 namespace Mapper\Exception\Transformer;
 
-use Mapper\Exception\ExceptionInterface;
-use Mapper\Exception\MappingValidation\MappingValidationExceptionInterface;
+use Mapper\Exception\PathAwareExceptionInterface;
 use Mapper\Exception\PathTrait;
 
-class WrappedTransformerException extends \Exception implements ExceptionInterface, MappingValidationExceptionInterface
+class WrappedTransformerException extends \Exception implements PathAwareExceptionInterface
 {
     use PathTrait;
 

@@ -2,7 +2,7 @@
 
 namespace Mapper\Exception;
 
-class UndefinedTransformerException extends \RuntimeException implements ExceptionInterface
+class UndefinedTransformerException extends \RuntimeException
 {
     public function __construct(string $message)
     {
