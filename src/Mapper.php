@@ -4,8 +4,8 @@ namespace Mapper;
 
 use Mapper\DTO\Settings;
 use Mapper\Exception\MappingValidation\MappingValidationExceptionInterface;
-use Mapper\Exception\PathAwareExceptionInterface;
-use Mapper\Exception\StackedMappingValidationException;
+use Mapper\Exception\StackableMappingExceptionInterface;
+use Mapper\Exception\StackedMappingException;
 use Mapper\Exception\Transformer\TransformerExceptionInterface;
 use Mapper\Exception\Transformer\WrappedTransformerException;
 use Mapper\Transformer\TransformerInterface;
@@ -90,13 +90,13 @@ class Mapper
 
                 $propertySchema = $schema->getProperties()[$propertyName];
                 $this->setPropertyToModel($model, $propertyName, $propertySchema, $propertyValue, $basePath);
-            } catch (PathAwareExceptionInterface $exception) {
-                if (!$this->settings->getStackMappingValidationExceptions()) {
+            } catch (StackableMappingExceptionInterface $exception) {
+                if (!$this->settings->getStackMappingExceptions()) {
                     throw $exception;
                 }
 
                 $exceptionsStack[] = $exception;
-            } catch (StackedMappingValidationException $exception) {
+            } catch (StackedMappingException $exception) {
                 $exceptionsStack = array_merge($exceptionsStack, $exception->getExceptions());
             }
         }
@@ -111,19 +111,19 @@ class Mapper
                 }
 
                 $this->setPropertyToModel($model, $propertyName, $propertySchema, null, $basePath);
-            } catch (PathAwareExceptionInterface $exception) {
-                if (!$this->settings->getStackMappingValidationExceptions()) {
+            } catch (StackableMappingExceptionInterface $exception) {
+                if (!$this->settings->getStackMappingExceptions()) {
                     throw $exception;
                 }
 
                 $exceptionsStack[] = $exception;
-            } catch (StackedMappingValidationException $exception) {
+            } catch (StackedMappingException $exception) {
                 $exceptionsStack = array_merge($exceptionsStack, $exception->getExceptions());
             }
         }
 
         if ($exceptionsStack) {
-            throw new StackedMappingValidationException($exceptionsStack);
+            throw new StackedMappingException($exceptionsStack);
         }
 
         return $model;

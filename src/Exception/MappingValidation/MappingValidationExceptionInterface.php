@@ -2,8 +2,8 @@
 
 namespace Mapper\Exception\MappingValidation;
 
-use Mapper\Exception\PathAwareExceptionInterface;
+use Mapper\Exception\StackableMappingExceptionInterface;
 
-interface MappingValidationExceptionInterface extends PathAwareExceptionInterface
+interface MappingValidationExceptionInterface extends StackableMappingExceptionInterface
 {
 }

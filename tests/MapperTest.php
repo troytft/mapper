@@ -6,8 +6,6 @@ use Mapper;
 use PHPUnit\Framework\TestCase;
 use function get_class;
 use function printf;
-use function str_repeat;
-use function var_dump;
 
 class MapperTest extends TestCase
 {
@@ -64,7 +62,7 @@ class MapperTest extends TestCase
         }
     }
 
-    private function renderStackedException(Mapper\Exception\StackedMappingValidationException $exception)
+    private function renderStackedException(Mapper\Exception\StackedMappingException $exception)
     {
         print "\n";
 

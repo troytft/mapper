@@ -2,7 +2,7 @@
 
 namespace Mapper\Exception;
 
-interface PathAwareExceptionInterface extends \Throwable
+interface StackableMappingExceptionInterface extends \Throwable
 {
     public function getPath(): array;
     public function getPathAsString(): string;

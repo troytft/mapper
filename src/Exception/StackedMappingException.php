@@ -4,15 +4,15 @@ namespace Mapper\Exception;
 
 use Mapper;
 
-class StackedMappingValidationException extends \Exception
+class StackedMappingException extends \Exception
 {
     /**
-     * @var Mapper\Exception\MappingValidation\MappingValidationExceptionInterface[]
+     * @var Mapper\Exception\StackableMappingExceptionInterface[]
      */
     private $exceptions;
 
     /**
-     * @param $exceptions Mapper\Exception\MappingValidation\MappingValidationExceptionInterface[]
+     * @param $exceptions Mapper\Exception\StackableMappingExceptionInterface[]
      */
     public function __construct(array $exceptions)
     {
@@ -22,7 +22,7 @@ class StackedMappingValidationException extends \Exception
     }
 
     /**
-     * @return Mapper\Exception\MappingValidation\MappingValidationExceptionInterface[]
+     * @return Mapper\Exception\StackableMappingExceptionInterface[]
      */
     public function getExceptions(): array
     {

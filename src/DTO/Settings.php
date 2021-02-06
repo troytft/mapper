@@ -22,7 +22,7 @@ class Settings
     /**
      * @var bool
      */
-    private $stackMappingValidationExceptions = false;
+    private $stackMappingExceptions = false;
 
     public function getIsPropertiesNullableByDefault(): bool
     {
@@ -60,14 +60,14 @@ class Settings
         return $this;
     }
 
-    public function getStackMappingValidationExceptions(): bool
+    public function getStackMappingExceptions(): bool
     {
-        return $this->stackMappingValidationExceptions;
+        return $this->stackMappingExceptions;
     }
 
-    public function setStackMappingValidationExceptions(bool $stackMappingValidationExceptions)
+    public function setStackMappingExceptions(bool $stackMappingExceptions)
     {
-        $this->stackMappingValidationExceptions = $stackMappingValidationExceptions;
+        $this->stackMappingExceptions = $stackMappingExceptions;
 
         return $this;
     }
