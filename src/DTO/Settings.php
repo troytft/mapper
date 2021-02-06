@@ -22,7 +22,7 @@ class Settings
     /**
      * @var bool
      */
-    private $stackMappingValidationExceptions = true;
+    private $stackMappingValidationExceptions = false;
 
     public function getIsPropertiesNullableByDefault(): bool
     {

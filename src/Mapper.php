@@ -4,6 +4,7 @@ namespace Mapper;
 
 use Mapper\DTO\Settings;
 use Mapper\Exception\MappingValidation\MappingValidationExceptionInterface;
+use Mapper\Exception\PathAwareExceptionInterface;
 use Mapper\Exception\StackedMappingValidationException;
 use Mapper\Exception\Transformer\TransformerExceptionInterface;
 use Mapper\Exception\Transformer\WrappedTransformerException;
@@ -89,7 +90,7 @@ class Mapper
 
                 $propertySchema = $schema->getProperties()[$propertyName];
                 $this->setPropertyToModel($model, $propertyName, $propertySchema, $propertyValue, $basePath);
-            } catch (MappingValidationExceptionInterface $exception) {
+            } catch (PathAwareExceptionInterface $exception) {
                 if (!$this->settings->getStackMappingValidationExceptions()) {
                     throw $exception;
                 }
@@ -110,7 +111,7 @@ class Mapper
                 }
 
                 $this->setPropertyToModel($model, $propertyName, $propertySchema, null, $basePath);
-            } catch (MappingValidationExceptionInterface $exception) {
+            } catch (PathAwareExceptionInterface $exception) {
                 if (!$this->settings->getStackMappingValidationExceptions()) {
                     throw $exception;
                 }
