@@ -3,6 +3,8 @@
 namespace Mapper;
 
 use Mapper\DTO\Settings;
+use Mapper\Exception\MappingValidation\MappingValidationExceptionInterface;
+use Mapper\Exception\StackedMappingValidationException;
 use Mapper\Exception\Transformer\TransformerExceptionInterface;
 use Mapper\Exception\Transformer\WrappedTransformerException;
 use Mapper\Transformer\TransformerInterface;
@@ -10,11 +12,16 @@ use Mapper\Transformer\TransformerInterface;
 use function array_diff;
 use function array_is_list;
 use function array_keys;
+use function array_map;
+use function array_merge;
 use function count;
+use function get_class;
 use function is_array;
 use function call_user_func;
 use function method_exists;
+use function sprintf;
 use function ucfirst;
+use function var_dump;
 
 class Mapper
 {
@@ -68,32 +75,54 @@ class Mapper
 
     private function mapObject(DTO\Schema\ObjectTypeInterface $schema, ModelInterface $model, $rawValue, array $basePath): ModelInterface
     {
-        if (!is_array($rawValue) || (count($rawValue) > 0 && array_is_list($rawValue))) {
-            throw new Exception\MappingValidation\ObjectRequiredException($basePath);
-        }
+        $exceptionsStack = [];
 
         foreach ($rawValue as $propertyName => $propertyValue) {
-            if (!isset($schema->getProperties()[$propertyName])) {
-                if ($this->settings->getIsAllowedUndefinedKeysInData()) {
-                    continue;
-                } else {
-                    throw new Exception\MappingValidation\UndefinedKeyException($this->resolvePath($basePath, $propertyName));
+            try {
+                if (!isset($schema->getProperties()[$propertyName])) {
+                    if ($this->settings->getIsAllowedUndefinedKeysInData()) {
+                        continue;
+                    } else {
+                        throw new Exception\MappingValidation\UndefinedKeyException($this->resolvePath($basePath, $propertyName));
+                    }
                 }
-            }
 
-            $propertySchema = $schema->getProperties()[$propertyName];
-            $this->setPropertyToModel($model, $propertyName, $propertySchema, $propertyValue, $basePath);
+                $propertySchema = $schema->getProperties()[$propertyName];
+                $this->setPropertyToModel($model, $propertyName, $propertySchema, $propertyValue, $basePath);
+            } catch (MappingValidationExceptionInterface $exception) {
+                if (!$this->settings->getStackMappingValidationExceptions()) {
+                    throw $exception;
+                }
+
+                $exceptionsStack[] = $exception;
+            } catch (StackedMappingValidationException $exception) {
+                $exceptionsStack = array_merge($exceptionsStack, $exception->getExceptions());
+            }
         }
 
         $propertiesNotPresentedInBody = array_diff(array_keys($schema->getProperties()), array_keys($rawValue));
 
         foreach ($propertiesNotPresentedInBody as $propertyName) {
-            $propertySchema = $schema->getProperties()[$propertyName];
-            if ($propertySchema->getNullable() || !$this->settings->getIsClearMissing()) {
-                continue;
-            }
+            try {
+                $propertySchema = $schema->getProperties()[$propertyName];
+                if ($propertySchema->getNullable() || !$this->settings->getIsClearMissing()) {
+                    continue;
+                }
 
-            $this->setPropertyToModel($model, $propertyName, $propertySchema, null, $basePath);
+                $this->setPropertyToModel($model, $propertyName, $propertySchema, null, $basePath);
+            } catch (MappingValidationExceptionInterface $exception) {
+                if (!$this->settings->getStackMappingValidationExceptions()) {
+                    throw $exception;
+                }
+
+                $exceptionsStack[] = $exception;
+            } catch (StackedMappingValidationException $exception) {
+                $exceptionsStack = array_merge($exceptionsStack, $exception->getExceptions());
+            }
+        }
+
+        if ($exceptionsStack) {
+            throw new StackedMappingValidationException($exceptionsStack);
         }
 
         return $model;
@@ -127,6 +156,9 @@ class Mapper
 
             case $schema instanceof DTO\Schema\ObjectTypeInterface:
                 $class = $schema->getClassName();
+                if (!is_array($rawValue) || (count($rawValue) > 0 && array_is_list($rawValue))) {
+                    throw new Exception\MappingValidation\ObjectRequiredException($basePath);
+                }
                 $value = $this->mapObject($schema, new $class(), $rawValue, $basePath);
 
                 break;

@@ -3,9 +3,10 @@
 namespace Mapper\Exception\Transformer;
 
 use Mapper\Exception\ExceptionInterface;
+use Mapper\Exception\MappingValidation\MappingValidationExceptionInterface;
 use Mapper\Exception\PathTrait;
 
-class WrappedTransformerException extends \Exception implements ExceptionInterface
+class WrappedTransformerException extends \Exception implements ExceptionInterface, MappingValidationExceptionInterface
 {
     use PathTrait;
 

@@ -4,6 +4,10 @@ namespace Tests;
 
 use Mapper;
 use PHPUnit\Framework\TestCase;
+use function get_class;
+use function printf;
+use function str_repeat;
+use function var_dump;
 
 class MapperTest extends TestCase
 {
@@ -52,12 +56,20 @@ class MapperTest extends TestCase
             ->setIsClearMissing(true);
 
         $mapper = new Mapper\Mapper($settings);
-
         try {
             $mapper->map(new Model\Movie(), []);
             $this->fail();
         } catch (Mapper\Exception\MappingValidation\CanNotBeNullException $exception) {
             $this->assertSame('name', $exception->getPathAsString());
+        }
+    }
+
+    private function renderStackedException(Mapper\Exception\StackedMappingValidationException $exception)
+    {
+        print "\n";
+
+        foreach ($exception->getExceptions() as $mappingValidationException) {
+            printf("%s => %s\n", $mappingValidationException->getPathAsString(), get_class($mappingValidationException));
         }
     }
 

@@ -19,6 +19,11 @@ class Settings
      */
     private $isClearMissing = true;
 
+    /**
+     * @var bool
+     */
+    private $stackMappingValidationExceptions = true;
+
     public function getIsPropertiesNullableByDefault(): bool
     {
         return $this->isPropertiesNullableByDefault;
@@ -51,6 +56,18 @@ class Settings
     public function setIsClearMissing(bool $isClearMissing)
     {
         $this->isClearMissing = $isClearMissing;
+
+        return $this;
+    }
+
+    public function getStackMappingValidationExceptions(): bool
+    {
+        return $this->stackMappingValidationExceptions;
+    }
+
+    public function setStackMappingValidationExceptions(bool $stackMappingValidationExceptions)
+    {
+        $this->stackMappingValidationExceptions = $stackMappingValidationExceptions;
 
         return $this;
     }
