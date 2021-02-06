@@ -18,7 +18,6 @@ use function is_array;
 use function call_user_func;
 use function method_exists;
 use function ucfirst;
-use function var_dump;
 
 class Mapper
 {

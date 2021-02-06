@@ -4,6 +4,7 @@ namespace Tests;
 
 use Mapper;
 use PHPUnit\Framework\TestCase;
+
 use function get_class;
 use function printf;
 
