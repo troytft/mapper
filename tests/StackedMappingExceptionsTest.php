@@ -227,9 +227,11 @@ class StackedMappingExceptionsTest extends TestCase
         } catch (Mapper\Exception\StackedMappingException $exception) {
             $this->assertCount(6, $exception->getExceptions());
 
-            $this->assertInstanceOf(Mapper\Exception\Transformer\WrappedTransformerException::class, $exception->getExceptions()[0]);
-            $this->assertSame('name', $exception->getExceptions()[0]->getPathAsString());
-            $this->assertInstanceOf(Mapper\Exception\Transformer\StringRequiredException::class, $exception->getExceptions()[0]->getTransformerException());
+            /** @var Mapper\Exception\Transformer\WrappedTransformerException $wrappedTransformerException */
+            $wrappedTransformerException = $exception->getExceptions()[0];
+            $this->assertInstanceOf(Mapper\Exception\Transformer\WrappedTransformerException::class, $wrappedTransformerException);
+            $this->assertSame('name', $wrappedTransformerException->getPathAsString());
+            $this->assertInstanceOf(Mapper\Exception\Transformer\StringRequiredException::class, $wrappedTransformerException->getTransformerException());
 
             $this->assertInstanceOf(Mapper\Exception\MappingValidation\CanNotBeNullException::class, $exception->getExceptions()[1]);
             $this->assertSame('rating', $exception->getExceptions()[1]->getPathAsString());

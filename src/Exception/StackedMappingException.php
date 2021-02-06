@@ -12,7 +12,7 @@ class StackedMappingException extends \Exception
     private $exceptions;
 
     /**
-     * @param $exceptions Mapper\Exception\StackableMappingExceptionInterface[]
+     * @param Mapper\Exception\StackableMappingExceptionInterface[] $exceptions
      */
     public function __construct(array $exceptions)
     {
