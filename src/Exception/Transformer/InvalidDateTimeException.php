@@ -2,12 +2,12 @@
 
 namespace Mapper\Exception\Transformer;
 
-class InvalidDateFormatException extends \Exception implements TransformerExceptionInterface
+class InvalidDateTimeException extends \Exception implements TransformerExceptionInterface
 {
     /**
      * @var string
      */
-    private $format;
+    private $errorMessage;
 
     /**
      * @param string $errorMessage
@@ -16,14 +16,14 @@ class InvalidDateFormatException extends \Exception implements TransformerExcept
     {
         parent::__construct();
 
-        $this->format = $errorMessage;
+        $this->errorMessage = $errorMessage;
     }
 
     /**
      * @return string
      */
-    public function getFormat(): string
+    public function getErrorMessage(): string
     {
-        return $this->format;
+        return $this->errorMessage;
     }
 }

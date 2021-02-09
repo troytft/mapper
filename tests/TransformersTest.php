@@ -125,4 +125,28 @@ class TransformersTest extends TestCase
         $value = $transformer->transform('2021-10-01T16:00:00+03:00', $options);
         $this->assertSame('UTC', $value->getTimezone()->getName());
     }
+
+    public function testInvalidDateException()
+    {
+        $transformer = new Mapper\Transformer\DateTransformer();
+
+        try {
+            $transformer->transform('2021-10-33');
+            $this->fail();
+        } catch (Mapper\Exception\Transformer\InvalidDateException $exception) {
+            $this->assertSame('The parsed date was invalid', $exception->getErrorMessage());
+        }
+    }
+
+    public function testInvalidDateTimeException()
+    {
+        $transformer = new Mapper\Transformer\DateTimeTransformer();
+
+        try {
+            $transformer->transform('2021-10-33T16:00:00+03:00');
+            $this->fail();
+        } catch (Mapper\Exception\Transformer\InvalidDateTimeException $exception) {
+            $this->assertSame('The parsed date was invalid', $exception->getErrorMessage());
+        }
+    }
 }
