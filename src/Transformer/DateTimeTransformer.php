@@ -2,7 +2,12 @@
 
 namespace Mapper\Transformer;
 
+use Mapper\Exception\Transformer\InvalidDateTimeException;
 use Mapper\Exception\Transformer\InvalidDateTimeFormatException;
+
+use function array_merge;
+use function array_values;
+use function implode;
 
 class DateTimeTransformer extends StringTransformer
 {
@@ -26,6 +31,13 @@ class DateTimeTransformer extends StringTransformer
         $result = \DateTime::createFromFormat($format, $value);
         if ($result === false) {
             throw new InvalidDateTimeFormatException($format);
+        }
+
+        $lastErrors = \DateTime::getLastErrors();
+        if ($lastErrors['warning_count'] || $lastErrors['error_count']) {
+            $errorMessage = implode(', ', array_merge(array_values($lastErrors['warnings']), array_values($lastErrors['errors'])));
+
+            throw new InvalidDateTimeException($errorMessage);
         }
 
         if ($isForceLocalTimezone) {

@@ -10,13 +10,13 @@ class InvalidDateTimeFormatException extends \Exception implements TransformerEx
     private $format;
 
     /**
-     * @param string $format
+     * @param string $errorMessage
      */
-    public function __construct(string $format)
+    public function __construct(string $errorMessage)
     {
         parent::__construct();
 
-        $this->format = $format;
+        $this->format = $errorMessage;
     }
 
     /**
