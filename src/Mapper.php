@@ -16,8 +16,6 @@ use function array_merge;
 use function count;
 use function is_array;
 use function call_user_func;
-use function method_exists;
-use function ucfirst;
 
 class Mapper
 {
