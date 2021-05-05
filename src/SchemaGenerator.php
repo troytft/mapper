@@ -6,7 +6,6 @@ use Doctrine\Common\Annotations\AnnotationReader;
 
 use function get_class;
 use function is_bool;
-use function method_exists;
 use function ucfirst;
 
 class SchemaGenerator
