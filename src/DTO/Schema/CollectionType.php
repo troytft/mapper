@@ -8,7 +8,6 @@ class CollectionType implements CollectionTypeInterface
     private bool $nullable;
     private ?string $transformerName;
     private array $transformerOptions = [];
-
     private ?string $setterName = null;
 
     /**

@@ -2,8 +2,6 @@
 
 namespace Mapper\DTO\Schema;
 
-use Mapper;
-
 class ScalarType implements ScalarTypeInterface
 {
     private bool $nullable;
