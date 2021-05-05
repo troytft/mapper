@@ -5,29 +5,14 @@ namespace Mapper\DTO\Schema;
 class ObjectType implements ObjectTypeInterface
 {
     /**
-     * @var string
-     */
-    private $className;
-
-    /**
      * @var TypeInterface[]
      */
-    private $properties;
-
-    /**
-     * @var bool
-     */
-    private $nullable;
-
-    /**
-     * @var string|null
-     */
-    private $transformerName;
-
-    /**
-     * @var array
-     */
-    private $transformerOptions;
+    private array $properties = [];
+    private string $className;
+    private bool $nullable;
+    private ?string $transformerName;
+    private array $transformerOptions = [];
+    private ?string $setterName = null;
 
     /**
      * @return string
@@ -109,6 +94,18 @@ class ObjectType implements ObjectTypeInterface
     public function setTransformerOptions(array $transformerOptions)
     {
         $this->transformerOptions = $transformerOptions;
+
+        return $this;
+    }
+
+    public function getSetterName(): ?string
+    {
+        return $this->setterName;
+    }
+
+    public function setSetterName(?string $setterName)
+    {
+        $this->setterName = $setterName;
 
         return $this;
     }

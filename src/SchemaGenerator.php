@@ -6,6 +6,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 
 use function get_class;
 use function is_bool;
+use function ucfirst;
 
 class SchemaGenerator
 {
@@ -59,13 +60,22 @@ class SchemaGenerator
         $properties = [];
         $reflectionClass = new \ReflectionClass($className);
 
-        foreach ($reflectionClass->getProperties() as $property) {
-            $annotation = $this->annotationReader->getPropertyAnnotation($property, DTO\Mapping\TypeInterface::class);
+        foreach ($reflectionClass->getProperties() as $reflectionProperty) {
+            $annotation = $this->annotationReader->getPropertyAnnotation($reflectionProperty, DTO\Mapping\TypeInterface::class);
             if (!$annotation instanceof DTO\Mapping\TypeInterface) {
                 continue;
             }
 
-            $properties[$property->getName()] = $this->processType($annotation);
+            $propertySchema = $this->processType($annotation);
+
+            $setterName = 'set' . ucfirst($reflectionProperty->getName());
+            if ($reflectionClass->hasMethod($setterName) && $reflectionClass->getMethod($setterName)->isPublic()) {
+                $propertySchema->setSetterName($setterName);
+            } elseif (!$reflectionProperty->isPublic()) {
+                throw new Exception\SetterDoesNotExistException($setterName);
+            }
+
+            $properties[$reflectionProperty->getName()] = $propertySchema;
         }
 
         $schema = new DTO\Schema\ObjectType();

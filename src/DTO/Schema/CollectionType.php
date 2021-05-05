@@ -4,25 +4,11 @@ namespace Mapper\DTO\Schema;
 
 class CollectionType implements CollectionTypeInterface
 {
-    /**
-     * @var TypeInterface
-     */
-    private $items;
-
-    /**
-     * @var bool
-     */
-    private $nullable;
-
-    /**
-     * @var string|null
-     */
-    private $transformerName;
-
-    /**
-     * @var array
-     */
-    private $transformerOptions;
+    private TypeInterface $items;
+    private bool $nullable;
+    private ?string $transformerName;
+    private array $transformerOptions = [];
+    private ?string $setterName = null;
 
     /**
      * @return TypeInterface
@@ -84,6 +70,18 @@ class CollectionType implements CollectionTypeInterface
     public function setTransformerOptions(array $transformerOptions)
     {
         $this->transformerOptions = $transformerOptions;
+
+        return $this;
+    }
+
+    public function getSetterName(): ?string
+    {
+        return $this->setterName;
+    }
+
+    public function setSetterName(?string $setterName)
+    {
+        $this->setterName = $setterName;
 
         return $this;
     }
