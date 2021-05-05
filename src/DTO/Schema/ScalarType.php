@@ -2,22 +2,14 @@
 
 namespace Mapper\DTO\Schema;
 
+use Mapper;
+
 class ScalarType implements ScalarTypeInterface
 {
-    /**
-     * @var bool
-     */
-    private $nullable;
-
-    /**
-     * @var string|null
-     */
-    private $transformerName;
-
-    /**
-     * @var array
-     */
-    private $transformerOptions;
+    private bool $nullable;
+    private ?string $transformerName;
+    private array $transformerOptions = [];
+    private ?string $setterName = null;
 
     public function getNullable(): bool
     {
@@ -51,6 +43,18 @@ class ScalarType implements ScalarTypeInterface
     public function setTransformerOptions(array $transformerOptions)
     {
         $this->transformerOptions = $transformerOptions;
+
+        return $this;
+    }
+
+    public function getSetterName(): ?string
+    {
+        return $this->setterName;
+    }
+
+    public function setSetterName(?string $setterName)
+    {
+        $this->setterName = $setterName;
 
         return $this;
     }

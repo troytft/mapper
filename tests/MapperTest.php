@@ -5,9 +5,6 @@ namespace Tests;
 use Mapper;
 use PHPUnit\Framework\TestCase;
 
-use function get_class;
-use function printf;
-
 class MapperTest extends TestCase
 {
     public function testSuccessFilledModel()
@@ -36,14 +33,14 @@ class MapperTest extends TestCase
 
         $mapper->map($model, $data);
 
-        $this->assertSame($model->getName(), $data['name']);
+        $this->assertSame($model->name, $data['name']);
         $this->assertSame($model->getGenres(), $data['genres']);
         $this->assertIsArray($model->getReleases());
         $this->assertArrayHasKey(0, $model->getReleases());
         $this->assertInstanceOf(Model\Release::class, $model->getReleases()[0]);
         $this->assertSame($model->getReleases()[0]->getCountry(), $data['releases'][0]['country']);
         $this->assertSame($model->getReleases()[0]->getDate()->format('Y-m-d'), $data['releases'][0]['date']);
-        $this->assertSame($model->getRating(), $data['rating']);
+        $this->assertSame($model->rating, $data['rating']);
         $this->assertSame($model->getLengthMinutes(), $data['lengthMinutes']);
         $this->assertSame($model->getIsOnlineWatchAvailable(), $data['isOnlineWatchAvailable']);
     }
@@ -63,15 +60,6 @@ class MapperTest extends TestCase
         }
     }
 
-    private function renderStackedException(Mapper\Exception\StackedMappingException $exception)
-    {
-        print "\n";
-
-        foreach ($exception->getExceptions() as $mappingValidationException) {
-            printf("%s => %s\n", $mappingValidationException->getPathAsString(), get_class($mappingValidationException));
-        }
-    }
-
     public function testClearMissingDisabled()
     {
         $settings = new Mapper\DTO\Settings();
@@ -80,12 +68,12 @@ class MapperTest extends TestCase
 
         $movie = new Model\Movie();
         $movie
-            ->setName('Taxi 2');
+            ->name = 'Taxi 2';
 
         $mapper = new Mapper\Mapper($settings);
         $mapper->map($movie, []);
 
-        $this->assertSame('Taxi 2', $movie->getName());
+        $this->assertSame('Taxi 2', $movie->name);
     }
 
     public function testErrorPath()
@@ -163,7 +151,7 @@ class MapperTest extends TestCase
         ];
 
         $mapper->map($model, $data);
-        $this->assertSame(null, $model->getName());
+        $this->assertSame(null, $model->name);
     }
 
     public function testNotNullablePropertyNotPresentedInData()

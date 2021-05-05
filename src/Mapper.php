@@ -114,12 +114,11 @@ class Mapper
     {
         $value = $this->mapType($schema, $rawValue, $this->resolvePath($basePath, $propertyName));
 
-        $setterName = 'set' . ucfirst($propertyName);
-        if (!method_exists($model, $setterName)) {
-            throw new Exception\SetterDoesNotExistException($setterName);
+        if ($schema->getSetterName()) {
+            call_user_func([$model, $schema->getSetterName()], $value);
+        } else {
+            $model->$propertyName = $value;
         }
-
-        call_user_func([$model, $setterName], $value);
     }
 
     private function mapType(DTO\Schema\TypeInterface $schema, $rawValue, array $basePath)

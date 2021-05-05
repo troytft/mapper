@@ -8,18 +8,14 @@ use Mapper\ModelInterface;
 class Movie implements ModelInterface
 {
     /**
-     * @var string|null
-     *
      * @Mapper\StringType()
      */
-    private $name;
+    public ?string $name;
 
     /**
-     * @var float|null
-     *
      * @Mapper\FloatType()
      */
-    private $rating;
+    public ?float $rating;
 
     /**
      * @var int|null
@@ -48,26 +44,6 @@ class Movie implements ModelInterface
      * @Mapper\CollectionType(type=@Mapper\ObjectType(class="Tests\Model\Release"))
      */
     private $releases;
-
-    /**
-     * @return string|null
-     */
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string|null $name
-     *
-     * @return $this
-     */
-    public function setName(?string $name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
 
     /**
      * @return string[]|null
@@ -105,26 +81,6 @@ class Movie implements ModelInterface
     public function setReleases(?array $releases)
     {
         $this->releases = $releases;
-
-        return $this;
-    }
-
-    /**
-     * @return float|null
-     */
-    public function getRating(): ?float
-    {
-        return $this->rating;
-    }
-
-    /**
-     * @param float|null $rating
-     *
-     * @return $this
-     */
-    public function setRating(?float $rating)
-    {
-        $this->rating = $rating;
 
         return $this;
     }

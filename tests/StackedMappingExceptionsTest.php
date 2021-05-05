@@ -5,9 +5,6 @@ namespace Tests;
 use Mapper;
 use PHPUnit\Framework\TestCase;
 
-use function get_class;
-use function printf;
-
 class StackedMappingExceptionsTest extends TestCase
 {
     private function getDefaultSettings(): Mapper\DTO\Settings
@@ -52,15 +49,6 @@ class StackedMappingExceptionsTest extends TestCase
         }
     }
 
-    private function renderStackedException(Mapper\Exception\StackedMappingException $exception)
-    {
-        print "\n";
-
-        foreach ($exception->getExceptions() as $mappingValidationException) {
-            printf("%s => %s\n", $mappingValidationException->getPathAsString(), get_class($mappingValidationException));
-        }
-    }
-
     public function testClearMissingDisabled()
     {
         $settings = $this->getDefaultSettings();
@@ -69,12 +57,12 @@ class StackedMappingExceptionsTest extends TestCase
 
         $movie = new Model\Movie();
         $movie
-            ->setName('Taxi 2');
+            ->name = 'Taxi 2';
 
         $mapper = new Mapper\Mapper($settings);
         $mapper->map($movie, []);
 
-        $this->assertSame('Taxi 2', $movie->getName());
+        $this->assertSame('Taxi 2', $movie->name);
     }
 
     public function testErrorPath()
