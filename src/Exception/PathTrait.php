@@ -9,7 +9,7 @@ trait PathTrait
     /**
      * @var array
      */
-    protected $path;
+    protected array $path = [];
 
     public function getPath(): array
     {
