@@ -6,37 +6,18 @@ use Doctrine\Common\Annotations\AnnotationReader;
 
 use function get_class;
 use function is_bool;
+use function ltrim;
 use function ucfirst;
 
-class SchemaGenerator
+class SchemaGenerator implements SchemaGeneratorInterface
 {
-    /**
-     * @var DTO\Settings
-     */
-    private $settings;
-
-    /**
-     * @var AnnotationReader
-     */
-    private $annotationReader;
-
-    /**
-     * @var DTO\Schema\ObjectType[]
-     */
-    private $schemaCache;
+    private DTO\Settings $settings;
+    private AnnotationReader $annotationReader;
 
     public function __construct(DTO\Settings $settings)
     {
         $this->settings = $settings;
         $this->annotationReader = Helper\AnnotationReaderFactory::create(true);
-    }
-
-    /**
-     * @deprecated use getSchemaByClassInstance instead
-     */
-    public function generate(ModelInterface $model): DTO\Schema\ObjectType
-    {
-        return $this->getSchemaByClassInstance($model);
     }
 
     public function getSchemaByClassInstance(ModelInterface $model): DTO\Schema\ObjectType
@@ -52,13 +33,9 @@ class SchemaGenerator
     private function processObjectType(DTO\Mapping\ObjectTypeInterface $mapping, string $className): DTO\Schema\ObjectType
     {
         $className = ltrim($className, '\\');
-
-        if (isset($this->schemaCache[$className])) {
-            return $this->schemaCache[$className];
-        }
+        $reflectionClass = new \ReflectionClass($className);
 
         $properties = [];
-        $reflectionClass = new \ReflectionClass($className);
 
         foreach ($reflectionClass->getProperties() as $reflectionProperty) {
             $annotation = $this->annotationReader->getPropertyAnnotation($reflectionProperty, DTO\Mapping\TypeInterface::class);
@@ -85,8 +62,6 @@ class SchemaGenerator
             ->setProperties($properties)
             ->setTransformerName($mapping->getTransformerName())
             ->setTransformerOptions($mapping->getTransformerOptions());
-
-        $this->schemaCache[$className] = $schema;
 
         return $schema;
     }
@@ -146,6 +121,6 @@ class SchemaGenerator
 
     public function isModelHasProperty(ModelInterface $model, string $name): bool
     {
-        return isset($this->generate($model)->getProperties()[$name]);
+        return isset($this->getSchemaByClassInstance($model)->getProperties()[$name]);
     }
 }

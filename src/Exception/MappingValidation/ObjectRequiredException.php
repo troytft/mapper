@@ -8,9 +8,6 @@ class ObjectRequiredException extends \Exception implements MappingValidationExc
 {
     use PathTrait;
 
-    /**
-     * @param array $path
-     */
     public function __construct(array $path)
     {
         $this->path = $path;

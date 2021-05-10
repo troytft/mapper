@@ -9,7 +9,7 @@ class StackedMappingException extends \Exception
     /**
      * @var Mapper\Exception\StackableMappingExceptionInterface[]
      */
-    private $exceptions;
+    private array $exceptions;
 
     /**
      * @param Mapper\Exception\StackableMappingExceptionInterface[] $exceptions

@@ -19,26 +19,25 @@ use function call_user_func;
 
 class Mapper
 {
-    /**
-     * @var DTO\Settings
-     */
-    private $settings;
-
-    /**
-     * @var SchemaGenerator
-     */
-    private $schemaGenerator;
+    private DTO\Settings $settings;
+    private SchemaGeneratorInterface $schemaGenerator;
 
     /**
      * @var TransformerInterface[]
      */
-    private $transformers = [];
+    private array $transformers = [];
 
-    public function __construct(?DTO\Settings $settings = null)
-    {
+    public function __construct(
+        ?DTO\Settings $settings = null,
+        ?SchemaGeneratorInterface $schemaGenerator = null
+    ) {
         $this->settings = $settings ?: new Settings();
-        $this->schemaGenerator = new SchemaGenerator($this->settings);
+        $this->schemaGenerator = $schemaGenerator ?: new SchemaGenerator($this->settings);
+        $this->loadDefaultTransformers();
+    }
 
+    private function loadDefaultTransformers(): void
+    {
         $this
             ->addTransformer(new Transformer\StringTransformer())
             ->addTransformer(new Transformer\FloatTransformer())
@@ -49,21 +48,9 @@ class Mapper
             ->addTransformer(new Transformer\TimestampTransformer());
     }
 
-    public function getSettings(): DTO\Settings
-    {
-        return $this->settings;
-    }
-
-    public function setSettings(DTO\Settings $settings)
-    {
-        $this->settings = $settings;
-
-        return $this;
-    }
-
     public function map(ModelInterface $model, array $data)
     {
-        $schema = $this->schemaGenerator->generate($model);
+        $schema = $this->schemaGenerator->getSchemaByClassInstance($model);
         $this->mapObject($schema, $model, $data, []);
     }
 
@@ -196,10 +183,5 @@ class Mapper
         $this->transformers[$transformer::getName()] = $transformer;
 
         return $this;
-    }
-
-    public function getSchemaGenerator(): SchemaGenerator
-    {
-        return $this->schemaGenerator;
     }
 }

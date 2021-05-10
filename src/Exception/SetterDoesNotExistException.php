@@ -6,10 +6,7 @@ use function sprintf;
 
 class SetterDoesNotExistException extends \Exception
 {
-    /**
-     * @var string
-     */
-    private $setterName;
+    private string $setterName;
 
     public function __construct(string $setterName)
     {
