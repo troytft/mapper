@@ -1,5 +1,6 @@
 {
     "name": "troytft/mapper",
+    "abandoned": true,
     "description": "Mapper is a PHP library for mapping data to objects, type of property can be configured by annotation",
     "keywords": ["mapper"],
     "type": "library",
